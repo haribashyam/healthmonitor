@@ -26,7 +26,19 @@ import {
   ShieldAlert,
   CreditCard,
   LogIn,
-  Cookie
+  Cookie,
+  Mail,
+  FileSpreadsheet,
+  Cloud,
+  Dumbbell,
+  Pill,
+  Scale,
+  FlaskConical,
+  Sun,
+  Users,
+  Brain,
+  Cpu,
+  GitMerge
 } from 'lucide-react';
 import { WebBluetoothManager, BLEHeartRateData } from '../utils/bluetooth';
 
@@ -37,6 +49,7 @@ interface NavbarProps {
   onOpenWhatChanged: () => void;
   onOpenDoctorReport: () => void;
   onOpenDataMap: () => void;
+  onOpenWorkspace?: (tab?: 'gmail' | 'sheets' | 'picker' | 'firebase') => void;
   searchQuery: string;
   setSearchQuery: (q: string) => void;
   liveBpm: number;
@@ -52,6 +65,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenWhatChanged,
   onOpenDoctorReport,
   onOpenDataMap,
+  onOpenWorkspace,
   searchQuery,
   setSearchQuery,
   liveBpm,
@@ -64,6 +78,17 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navItems = [
     { id: 'command', label: 'Command Center', icon: Activity },
+    { id: 'strength', label: 'Strength & 1RM', icon: Dumbbell },
+    { id: 'supplements', label: 'Meds & Supplements', icon: Pill },
+    { id: 'metabolic', label: 'Body & Metabolic', icon: Scale },
+    { id: 'experiments', label: 'Experiments Lab', icon: FlaskConical },
+    { id: 'circadian', label: 'Circadian & Env', icon: Sun },
+    { id: 'injury', label: 'Injury & Recovery', icon: ShieldCheck },
+    { id: 'family', label: 'Family & Emergency', icon: ShieldAlert },
+    { id: 'focus', label: 'Focus & Wellness', icon: Brain },
+    { id: 'ai-lab', label: 'AI Multi-Model Lab', icon: Cpu },
+    { id: 'clubs', label: 'Social Clubs & PRs', icon: Users },
+    { id: 'data-quality', label: 'Data Quality & Provenance', icon: GitMerge },
     { id: 'plan', label: 'Adaptive Plan', icon: Sparkles },
     { id: 'ask', label: 'Ask My Data', icon: Zap },
     { id: 'sources', label: 'Data Hub & OCR', icon: Layers },
@@ -161,6 +186,19 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="hidden sm:inline">What Changed?</span>
             </button>
 
+            {/* Google Workspace & Cloud Trigger */}
+            {onOpenWorkspace && (
+              <button
+                id="navbar-workspace-btn"
+                onClick={() => onOpenWorkspace('gmail')}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-red-500/15 via-emerald-500/15 to-blue-500/15 border border-slate-700 hover:border-cyan-500/40 text-slate-200 hover:text-white transition-all shadow-sm"
+                title="Google Workspace (Gmail, Sheets, Drive) & Firebase Sync"
+              >
+                <Cloud className="w-3.5 h-3.5 text-cyan-400" />
+                <span className="hidden sm:inline">Workspace</span>
+              </button>
+            )}
+
             {/* Doctor Report Modal Trigger */}
             <button
               id="doctor-report-btn"
@@ -202,6 +240,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <span className="font-bold text-white block">Alex Vance</span>
                     <span className="text-[10px] text-cyan-400 font-mono">Pro Biohacker Member</span>
                   </div>
+
+                  {onOpenWorkspace && (
+                    <button
+                      onClick={() => { onOpenWorkspace('gmail'); setShowUserDropdown(false); }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left text-cyan-300 hover:bg-slate-800 font-medium"
+                    >
+                      <Cloud className="w-4 h-4 text-cyan-400" /> Google Workspace & Cloud
+                    </button>
+                  )}
 
                   <button
                     onClick={() => { setActiveTab('lifecycle'); setShowUserDropdown(false); }}

@@ -1,0 +1,115 @@
+{
+  "entities": {
+    "userProfile": {
+      "title": "UserProfile",
+      "description": "User profile, baseline physiological metrics, and integration settings",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Firebase Auth UID" },
+        "email": { "type": "string", "description": "User email address" },
+        "displayName": { "type": "string", "description": "Display name" },
+        "targetReadiness": { "type": "number", "description": "Target daily readiness score" },
+        "restingHRBaseline": { "type": "number", "description": "Baseline resting heart rate in BPM" },
+        "hrvBaseline": { "type": "number", "description": "Baseline HRV in ms" },
+        "vo2MaxBaseline": { "type": "number", "description": "Baseline VO2 max in mL/kg/min" },
+        "createdAt": { "type": "string", "description": "ISO timestamp of profile creation" },
+        "updatedAt": { "type": "string", "description": "ISO timestamp of last update" }
+      },
+      "required": ["userId", "email"]
+    },
+    "healthMetricEntry": {
+      "title": "HealthMetricEntry",
+      "description": "Daily or real-time wearable telemetry and vitals record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Metric entry ID" },
+        "userId": { "type": "string", "description": "User ID who owns this metric" },
+        "date": { "type": "string", "description": "Date string YYYY-MM-DD" },
+        "heartRate": { "type": "number", "description": "Heart rate in BPM" },
+        "restingHeartRate": { "type": "number", "description": "Resting heart rate in BPM" },
+        "hrv": { "type": "number", "description": "HRV in ms" },
+        "sleepScore": { "type": "number", "description": "Sleep recovery score 0-100" },
+        "steps": { "type": "number", "description": "Step count" },
+        "spo2": { "type": "number", "description": "Blood oxygen percentage" },
+        "vo2Max": { "type": "number", "description": "VO2 Max" },
+        "deviceSource": { "type": "string", "description": "Originating wearable device" },
+        "timestamp": { "type": "string", "description": "ISO timestamp" }
+      },
+      "required": ["id", "userId", "date"]
+    },
+    "adaptivePlanDoc": {
+      "title": "AdaptivePlanDoc",
+      "description": "AI-generated adaptive training split and nutrition regimen",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Plan document ID" },
+        "userId": { "type": "string", "description": "User ID who owns this plan" },
+        "planName": { "type": "string", "description": "Title of the adaptive plan" },
+        "vitalScoreTarget": { "type": "number", "description": "Target VitalScore" },
+        "summary": { "type": "string", "description": "Executive summary" },
+        "workoutSplitJson": { "type": "string", "description": "JSON stringified workout days" },
+        "nutritionJson": { "type": "string", "description": "JSON stringified nutrition targets" },
+        "groceryJson": { "type": "string", "description": "JSON stringified groceries list" },
+        "adaptiveRulesJson": { "type": "string", "description": "JSON stringified adaptive recovery rules" },
+        "createdAt": { "type": "string", "description": "ISO timestamp" },
+        "updatedAt": { "type": "string", "description": "ISO timestamp" }
+      },
+      "required": ["id", "userId", "planName"]
+    },
+    "labReportDoc": {
+      "title": "LabReportDoc",
+      "description": "Diagnostic laboratory biomarker panels and reports",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Lab report ID" },
+        "userId": { "type": "string", "description": "User ID who owns this report" },
+        "title": { "type": "string", "description": "Report title" },
+        "laboratory": { "type": "string", "description": "Lab vendor name" },
+        "collectionDate": { "type": "string", "description": "Date of collection" },
+        "summary": { "type": "string", "description": "Clinical summary" },
+        "biomarkersJson": { "type": "string", "description": "JSON stringified biomarkers array" },
+        "source": { "type": "string", "description": "Source (Google Drive, Quest, Manual Upload)" },
+        "driveFileId": { "type": "string", "description": "Optional Google Drive file ID if imported via Picker" },
+        "createdAt": { "type": "string", "description": "ISO timestamp" }
+      },
+      "required": ["id", "userId", "title"]
+    },
+    "workspaceLog": {
+      "title": "WorkspaceLog",
+      "description": "Log of Google Workspace sync actions (Gmail, Sheets, Picker, Calendar, Tasks)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Log entry ID" },
+        "userId": { "type": "string", "description": "User ID" },
+        "actionType": { "type": "string", "description": "gmail_send | sheets_export | sheets_import | picker_import | calendar_sync | tasks_sync" },
+        "target": { "type": "string", "description": "Recipient email, Sheet ID/name, or Drive File title" },
+        "details": { "type": "string", "description": "Summary description of what was synchronized" },
+        "status": { "type": "string", "description": "success | pending | error" },
+        "timestamp": { "type": "string", "description": "ISO timestamp" }
+      },
+      "required": ["id", "userId", "actionType", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "userProfile",
+      "description": "Stores user profile and health baseline preferences"
+    },
+    "/users/{userId}/metrics/{metricId}": {
+      "schema": "healthMetricEntry",
+      "description": "Stores user biometric telemetry and daily vitals"
+    },
+    "/users/{userId}/plans/{planId}": {
+      "schema": "adaptivePlanDoc",
+      "description": "Stores user AI health and training plans"
+    },
+    "/users/{userId}/labReports/{reportId}": {
+      "schema": "labReportDoc",
+      "description": "Stores user laboratory biomarker panels and reports"
+    },
+    "/users/{userId}/workspaceLogs/{logId}": {
+      "schema": "workspaceLog",
+      "description": "Stores logs of Google Workspace integrations"
+    }
+  }
+}

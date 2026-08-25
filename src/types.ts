@@ -370,3 +370,233 @@ export interface InsightEngineReport {
   engineVersion: string;
   sensitivityMode: 'conservative' | 'standard' | 'aggressive';
 }
+
+// ----------------------------------------------------
+// System 3: STRENGTH TRAINING & PROGRESSIVE OVERLOAD
+// ----------------------------------------------------
+export interface StrengthExerciseSet {
+  setNumber: number;
+  type: 'warmup' | 'working' | 'dropset' | 'failure';
+  weightKg: number;
+  reps: number;
+  rpe?: number; // 1 - 10
+  isCompleted: boolean;
+  notes?: string;
+}
+
+export interface StrengthExercise {
+  id: string;
+  name: string;
+  primaryMuscle: 'Chest' | 'Back' | 'Quads' | 'Hamstrings' | 'Shoulders' | 'Biceps' | 'Triceps' | 'Core' | 'Calves' | 'Glutes';
+  secondaryMuscles: string[];
+  equipment: 'Barbell' | 'Dumbbell' | 'Cable' | 'Machine' | 'Bodyweight' | 'Bands';
+  estimatedOneRepMaxKg: number;
+  personalRecord: { weightKg: number; reps: number; date: string };
+  fourWeekVolumeProgressionPct: number; // e.g. +14.2%
+  substitutions: { name: string; rationale: string }[];
+  contraindications?: string[];
+  historySets: StrengthExerciseSet[];
+}
+
+export interface StrengthWorkoutSession {
+  id: string;
+  title: string;
+  date: string;
+  durationMinutes: number;
+  totalVolumeKg: number;
+  rpeAverage: number;
+  splitType: 'Push' | 'Pull' | 'Legs' | 'Upper' | 'Lower' | 'Full Body';
+  exercises: {
+    exercise: StrengthExercise;
+    sets: StrengthExerciseSet[];
+  }[];
+  notes?: string;
+  aiCoachInsight?: string;
+}
+
+// ----------------------------------------------------
+// System 9: MEDICATION & SUPPLEMENT TRACKING
+// ----------------------------------------------------
+export interface MedicationSupplement {
+  id: string;
+  name: string;
+  type: 'medication' | 'supplement' | 'vitamin';
+  dosage: string;
+  frequency: 'Daily' | 'Twice Daily' | 'As Needed' | 'Weekly' | 'Custom';
+  timing: 'Morning' | 'With Breakfast' | 'Afternoon' | 'With Dinner' | 'Bedtime' | 'Pre-Workout';
+  startDate: string;
+  endDate?: string;
+  purpose: string;
+  adherencePercentage: number;
+  stockRemainingPills?: number;
+  interactionNotes?: string;
+  synergies?: string;
+  activeReminderTime?: string;
+  takenToday?: boolean;
+}
+
+// ----------------------------------------------------
+// System 10 & 11: BODY COMPOSITION & METABOLIC HEALTH
+// ----------------------------------------------------
+export interface BodyCompositionData {
+  date: string;
+  weightKg: number;
+  bmi: number;
+  bodyFatPercent: number;
+  skeletalMuscleKg: number;
+  bodyWaterPercent: number;
+  boneMassKg: number;
+  visceralFatRating: number;
+  waistCircumferenceCm: number;
+  source: string;
+}
+
+export interface MetabolicGlucosePoint {
+  timestamp: string;
+  glucoseMgDl: number;
+  isPostprandial?: boolean;
+  mealTag?: string;
+}
+
+// ----------------------------------------------------
+// Systems 19 & 20: HEALTH EXPERIMENTS LAB & RESEARCH
+// ----------------------------------------------------
+export interface HealthExperiment {
+  id: string;
+  title: string;
+  hypothesis: string;
+  durationDays: number;
+  startDate: string;
+  endDate: string;
+  status: 'active' | 'completed' | 'draft';
+  targetMetric: string;
+  baselineValue: number;
+  experimentValue: number;
+  percentageChange: number;
+  statisticalConfidence: 'High (p < 0.01)' | 'Moderate (p < 0.05)' | 'Inconclusive';
+  sampleSizeDays: number;
+  confoundingFactors: string[];
+  verdict: string;
+}
+
+// ----------------------------------------------------
+// Systems 21-25 & 45-47: ENVIRONMENTAL & CIRCADIAN
+// ----------------------------------------------------
+export interface EnvironmentalContext {
+  timestamp: string;
+  aqi: number; // Air Quality Index
+  pm25: number; // ug/m3
+  uvIndex: number;
+  temperatureC: number;
+  humidityPercent: number;
+  ambientNoiseDb: number;
+  outdoorTrainingRecommendation: 'Ideal' | 'Moderate (Reduce Intensity)' | 'Indoor Advised';
+  sunExposureMinutesToday: number;
+}
+
+export interface CircadianRoutineMetric {
+  typicalBedtime: string;
+  typicalWakeTime: string;
+  sleepConsistencyScore: number; // 0 - 100
+  socialJetlagMinutes: number; // Weekend vs weekday variance
+  morningLightExposureMinutes: number;
+  eveningScreenTimeMinutes: number;
+  recommendation: string;
+}
+
+// ----------------------------------------------------
+// Systems 43-44: FAMILY / CAREGIVER & EMERGENCY HEALTH
+// ----------------------------------------------------
+export interface EmergencyHealthCard {
+  fullName: string;
+  dob: string;
+  bloodType: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-' | 'Unknown';
+  criticalAllergies: string[];
+  chronicConditions: string[];
+  activeMedications: string[];
+  emergencyContacts: { name: string; relation: string; phone: string }[];
+  primaryDoctor: { name: string; clinic: string; phone: string };
+  organDonorStatus: boolean;
+  notes: string;
+  qrPayload: string;
+}
+
+export interface CaregiverProfile {
+  id: string;
+  name: string;
+  role: 'Self' | 'Elderly Parent' | 'Child' | 'Spouse' | 'Dependent';
+  avatarColor: string;
+  vitalScore: number;
+  unreadAlertsCount: number;
+  medicationAdherencePct: number;
+  emergencyContact: string;
+  lastActive: string;
+}
+
+// ----------------------------------------------------
+// Systems 50-52: INJURY & ACTIVE RECOVERY PROTOCOLS
+// ----------------------------------------------------
+export interface InjuryRecord {
+  id: string;
+  bodyRegion: 'Left Knee' | 'Right Knee' | 'Lower Back' | 'Right Shoulder' | 'Left Shoulder' | 'Right Ankle' | 'Neck' | 'Wrist';
+  title: string;
+  dateReported: string;
+  painLevel: number; // 1-10
+  severity: 'Mild Strain' | 'Moderate Sprain' | 'Chronic Overuse' | 'Post-Surgical';
+  recoveryStage: 'Acute' | 'Subacute' | 'Strengthening' | 'Full Return';
+  restrictedExercises: string[];
+  allowedSubstitutions: string[];
+  rehabProtocols: string[];
+  notes: string;
+}
+
+export interface RecoveryToolSession {
+  id: string;
+  toolType: 'Sauna' | 'Cold Plunge' | 'Foam Rolling' | 'Compression Boots' | 'Percussive Massage' | 'Mobility Flow';
+  durationMinutes: number;
+  intensityOrTemp: string; // e.g. "85°C (185°F)" or "10°C (50°F)"
+  date: string;
+  subjectivePerceivedBenefit: number; // 1-10
+}
+
+// ----------------------------------------------------
+// Systems 77-78: AI MODEL COMPARISON LAB & SYNTHESIS
+// ----------------------------------------------------
+export interface AIModelEvaluation {
+  modelName: 'Gemini 2.5 Pro (Google)' | 'Claude 3.7 Sonnet (Anthropic)' | 'GPT-4o (OpenAI)';
+  recommendationSummary: string;
+  confidenceScorePct: number;
+  primaryEvidenceCited: string;
+  contradictionsOrHallucinations: string;
+  riskAssessment: 'Safe & Evidence-Grounded' | 'Moderate Caution' | 'High Uncertainty';
+}
+
+export interface MultiModelConsensusReport {
+  timestamp: string;
+  userQueryOrContext: string;
+  evaluations: AIModelEvaluation[];
+  synthesizedActionPlan: string;
+  modelAgreementScorePct: number;
+}
+
+// ----------------------------------------------------
+// Systems 29-31: DATA QUALITY & SOURCE CONFLICTS
+// ----------------------------------------------------
+export interface SourceConflictItem {
+  id: string;
+  metric: string;
+  date: string;
+  sourceA: { name: string; value: string | number; rawPacket: string };
+  sourceB: { name: string; value: string | number; rawPacket: string };
+  discrepancyDescription: string;
+  resolutionStrategy: 'Prefer Garmin (High Precision GPS)' | 'Prefer Apple Watch (Optical HR)' | 'Average Both' | 'Keep Separate';
+  isResolved: boolean;
+}
+
+export interface DataCompletenessCategory {
+  category: string;
+  completenessPct: number;
+  daysAvailable: number;
+  status: 'Excellent' | 'Good' | 'Partial' | 'Conflicting';
+  missingGaps: string[];
+}

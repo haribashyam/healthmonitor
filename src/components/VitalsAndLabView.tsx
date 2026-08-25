@@ -18,12 +18,14 @@ interface VitalsAndLabViewProps {
   biomarkers: Biomarker[];
   labReports: LabReport[];
   onOpenDataSources: () => void;
+  onOpenDoctorReport?: () => void;
 }
 
 export const VitalsAndLabView: React.FC<VitalsAndLabViewProps> = ({
   biomarkers,
   labReports,
-  onOpenDataSources
+  onOpenDataSources,
+  onOpenDoctorReport
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
@@ -51,7 +53,16 @@ export const VitalsAndLabView: React.FC<VitalsAndLabViewProps> = ({
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5">
+          {onOpenDoctorReport && (
+            <button
+              onClick={onOpenDoctorReport}
+              className="px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/40 transition-all flex items-center gap-1.5 shadow-sm"
+              title="Export complete biomarker panels and metrics as PDF"
+            >
+              <FileText className="w-3.5 h-3.5 text-emerald-400" /> Export Doctor PDF
+            </button>
+          )}
           <button
             onClick={onOpenDataSources}
             className="px-4 py-2 rounded-xl text-xs font-bold bg-cyan-500 text-slate-950 hover:bg-cyan-400 shadow-md shadow-cyan-500/20 transition-all flex items-center gap-1.5"

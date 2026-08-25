@@ -18,7 +18,8 @@ import {
   Clock,
   Heart,
   ListTodo,
-  ExternalLink
+  ExternalLink,
+  FileText
 } from 'lucide-react';
 import { AdaptivePlan, WorkoutPlanDay, GroceryItemCategory } from '../types';
 import { generateAdaptivePlan } from '../services/api';
@@ -28,12 +29,14 @@ interface AIPlanViewProps {
   adaptivePlan: AdaptivePlan;
   setAdaptivePlan: React.Dispatch<React.SetStateAction<AdaptivePlan>>;
   onOpenLiveWorkout: () => void;
+  onOpenDoctorReport?: () => void;
 }
 
 export const AIPlanView: React.FC<AIPlanViewProps> = ({
   adaptivePlan,
   setAdaptivePlan,
-  onOpenLiveWorkout
+  onOpenLiveWorkout,
+  onOpenDoctorReport
 }) => {
   const [activePlanTab, setActivePlanTab] = useState<'workouts' | 'nutrition' | 'groceries' | 'rules'>('workouts');
   const [isRegenerating, setIsRegenerating] = useState(false);
@@ -126,6 +129,15 @@ export const AIPlanView: React.FC<AIPlanViewProps> = ({
         </div>
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+          {onOpenDoctorReport && (
+            <button
+              onClick={onOpenDoctorReport}
+              className="px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/40 transition-all flex items-center justify-center gap-1.5 shadow-sm"
+              title="Export complete plan and metrics for doctor or physical therapist"
+            >
+              <FileText className="w-3.5 h-3.5 text-emerald-400" /> Export Plan PDF
+            </button>
+          )}
           <button
             onClick={() => setShowConfigModal(true)}
             className="px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-200 hover:text-white hover:bg-slate-700 border border-slate-700 transition-all flex items-center justify-center gap-1.5"

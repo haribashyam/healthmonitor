@@ -1,6 +1,6 @@
 {
   "name": "VitalSync",
-  "description": "Personal Health Intelligence Platform featuring universal health app and wearable integrations, multi-device real-time telemetry streaming, granular OAuth scope permissions, custom source connectors, AI diagnostics, and Google Calendar syncing.",
+  "description": "Personal Health Intelligence Platform featuring comprehensive clinical PDF report exports for medical professionals, universal health app and wearable integrations, multi-device real-time telemetry streaming, granular OAuth scope permissions, custom source connectors, AI diagnostics, and Google Calendar syncing.",
   "requestFramePermissions": ["bluetooth"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

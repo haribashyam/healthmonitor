@@ -18,6 +18,20 @@ import { HealthJournalView } from './components/HealthJournalView';
 import { DoctorReportModal } from './components/DoctorReportModal';
 import { WhatChangedModal } from './components/WhatChangedModal';
 import { DataMapModal } from './components/DataMapModal';
+import { GoogleWorkspaceModal } from './components/GoogleWorkspaceModal';
+
+// VITALOS Advanced 100-Feature Engines
+import { StrengthTrainingView } from './components/StrengthTrainingView';
+import { MedicationSupplementView } from './components/MedicationSupplementView';
+import { BodyMetabolicView } from './components/BodyMetabolicView';
+import { HealthExperimentsLabView } from './components/HealthExperimentsLabView';
+import { EnvironmentalCircadianView } from './components/EnvironmentalCircadianView';
+import { InjuryMobilityRecoveryView } from './components/InjuryMobilityRecoveryView';
+import { FamilyEmergencyCareView } from './components/FamilyEmergencyCareView';
+import { CognitiveDigitalWellnessView } from './components/CognitiveDigitalWellnessView';
+import { AIModelLabView } from './components/AIModelLabView';
+import { SocialClubsChallengesView } from './components/SocialClubsChallengesView';
+import { DataQualityAuditView } from './components/DataQualityAuditView';
 
 // Production-Grade Pages & Compliance Suites
 import { LegalPagesView, LegalDocType } from './components/production/LegalPagesView';
@@ -56,6 +70,8 @@ export default function App() {
   const [isWhatChangedOpen, setIsWhatChangedOpen] = useState<boolean>(false);
   const [isDoctorReportOpen, setIsDoctorReportOpen] = useState<boolean>(false);
   const [isDataMapOpen, setIsDataMapOpen] = useState<boolean>(false);
+  const [isWorkspaceModalOpen, setIsWorkspaceModalOpen] = useState<boolean>(false);
+  const [workspaceInitialTab, setWorkspaceInitialTab] = useState<'gmail' | 'sheets' | 'picker' | 'firebase'>('gmail');
 
   // Core Unified Health State
   const [vitalScore, setVitalScore] = useState(initialVitalScore);
@@ -180,6 +196,10 @@ export default function App() {
           onOpenWhatChanged={() => setIsWhatChangedOpen(true)}
           onOpenDoctorReport={() => setIsDoctorReportOpen(true)}
           onOpenDataMap={() => setIsDataMapOpen(true)}
+          onOpenWorkspace={(tab) => {
+            setWorkspaceInitialTab(tab || 'gmail');
+            setIsWorkspaceModalOpen(true);
+          }}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           liveBpm={liveBpm}
@@ -206,8 +226,57 @@ export default function App() {
               onOpenDataSources={() => setActiveTab('sources')}
               onOpenSimulator={() => setActiveTab('simulator')}
               onOpenDoctorReport={() => setIsDoctorReportOpen(true)}
+              onOpenWorkspace={(tab) => {
+                setWorkspaceInitialTab(tab || 'gmail');
+                setIsWorkspaceModalOpen(true);
+              }}
               onNavigateTab={(tab) => setActiveTab(tab)}
             />
+          )}
+
+          {/* VITALOS Advanced Systems */}
+          {activeTab === 'strength' && (
+            <StrengthTrainingView />
+          )}
+
+          {activeTab === 'supplements' && (
+            <MedicationSupplementView />
+          )}
+
+          {activeTab === 'metabolic' && (
+            <BodyMetabolicView />
+          )}
+
+          {activeTab === 'experiments' && (
+            <HealthExperimentsLabView />
+          )}
+
+          {activeTab === 'circadian' && (
+            <EnvironmentalCircadianView />
+          )}
+
+          {activeTab === 'injury' && (
+            <InjuryMobilityRecoveryView />
+          )}
+
+          {activeTab === 'family' && (
+            <FamilyEmergencyCareView />
+          )}
+
+          {activeTab === 'focus' && (
+            <CognitiveDigitalWellnessView />
+          )}
+
+          {activeTab === 'ai-lab' && (
+            <AIModelLabView />
+          )}
+
+          {activeTab === 'clubs' && (
+            <SocialClubsChallengesView />
+          )}
+
+          {activeTab === 'data-quality' && (
+            <DataQualityAuditView />
           )}
 
           {activeTab === 'plan' && (
@@ -215,6 +284,7 @@ export default function App() {
               adaptivePlan={adaptivePlan}
               setAdaptivePlan={setAdaptivePlan}
               onOpenLiveWorkout={() => setIsLiveWorkoutOpen(true)}
+              onOpenDoctorReport={() => setIsDoctorReportOpen(true)}
             />
           )}
 
@@ -239,6 +309,7 @@ export default function App() {
               biomarkers={biomarkers}
               labReports={labReports}
               onOpenDataSources={() => setActiveTab('sources')}
+              onOpenDoctorReport={() => setIsDoctorReportOpen(true)}
             />
           )}
 
@@ -361,6 +432,14 @@ export default function App() {
         biomarkers={biomarkers}
         activities={activities}
         sleepRecords={sleepRecords}
+        adaptivePlan={adaptivePlan}
+        vitalScore={vitalScore}
+        sources={sources}
+        labReports={labReports}
+        onOpenWorkspace={(tab) => {
+          setWorkspaceInitialTab(tab || 'gmail');
+          setIsWorkspaceModalOpen(true);
+        }}
       />
 
       {/* Modal: My Data Map & Provenance Ledger */}
@@ -368,6 +447,18 @@ export default function App() {
         isOpen={isDataMapOpen}
         onClose={() => setIsDataMapOpen(false)}
         sources={sources}
+      />
+
+      {/* Modal: Google Workspace (Gmail, Sheets, Drive) & Firebase Integration Hub */}
+      <GoogleWorkspaceModal
+        isOpen={isWorkspaceModalOpen}
+        onClose={() => setIsWorkspaceModalOpen(false)}
+        initialTab={workspaceInitialTab}
+        biomarkers={biomarkers}
+        activities={activities}
+        sleepRecords={sleepRecords}
+        adaptivePlan={adaptivePlan}
+        vitalScore={vitalScore}
       />
 
     </div>

@@ -20,7 +20,10 @@ import {
   Layers,
   FileText,
   Sliders,
-  Info
+  Info,
+  Mail,
+  FileSpreadsheet,
+  Database
 } from 'lucide-react';
 import {
   VitalScore,
@@ -50,6 +53,7 @@ interface CommandCenterProps {
   onOpenDataSources: () => void;
   onOpenSimulator: () => void;
   onOpenDoctorReport: () => void;
+  onOpenWorkspace?: (tab?: 'gmail' | 'sheets' | 'picker' | 'firebase') => void;
   onNavigateTab: (tab: string) => void;
 }
 
@@ -69,6 +73,7 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
   onOpenDataSources,
   onOpenSimulator,
   onOpenDoctorReport,
+  onOpenWorkspace,
   onNavigateTab
 }) => {
   const [showFormulaModal, setShowFormulaModal] = useState(false);
@@ -224,6 +229,27 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
             </p>
 
             <div className="pt-2 flex flex-wrap items-center gap-3">
+              <button
+                id="hero-clinical-pdf-btn"
+                onClick={onOpenDoctorReport}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 transition-all shadow-md shadow-emerald-500/10"
+                title="Export comprehensive medical brief & plan for doctor consultation"
+              >
+                <FileText className="w-3.5 h-3.5 text-emerald-400" />
+                Export Clinical PDF Report
+              </button>
+              {onOpenWorkspace && (
+                <button
+                  id="hero-workspace-cloud-btn"
+                  onClick={() => onOpenWorkspace('gmail')}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-red-500/20 via-emerald-500/20 to-blue-500/20 text-slate-200 border border-slate-700 hover:border-cyan-400/50 hover:text-white transition-all shadow-sm"
+                  title="Google Workspace (Gmail, Sheets, Drive) & Cloud Sync"
+                >
+                  <Mail className="w-3.5 h-3.5 text-red-400" />
+                  <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Workspace & Cloud</span>
+                </button>
+              )}
               <button
                 onClick={onOpenWhatChanged}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30 hover:bg-amber-500/25 transition-all"
@@ -482,6 +508,44 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
         </div>
       </div>
 
+      {/* PHYSICIAN & MEDICAL PROFESSIONAL CLINICAL PDF REPORT BANNER */}
+      <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-emerald-950/40 rounded-2xl p-5 border border-emerald-500/30 shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="flex items-start gap-3.5">
+          <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex-shrink-0 mt-0.5">
+            <FileText className="w-6 h-6" />
+          </div>
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm font-bold text-white tracking-wide">
+                Physician & Medical Professional Health Brief
+              </h3>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase tracking-wider">
+                PDF Export
+              </span>
+            </div>
+            <p className="text-xs text-slate-300 leading-relaxed max-w-2xl">
+              Generate a comprehensive clinical report synthesizing your 90-day multi-device biometrics, Quest lab diagnostic panels, and AI-adapted training & nutrition plan for sharing with your doctor, cardiologist, or trainer.
+            </p>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-400 pt-0.5">
+              <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-emerald-400" /> Cardiovascular & HRV Baselines</span>
+              <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-emerald-400" /> Quest Lab Reference Intervals</span>
+              <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-emerald-400" /> 7-Day Workout Split Rationale</span>
+              <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-emerald-400" /> EHR/EMR Copy Support</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 w-full md:w-auto flex-shrink-0">
+          <button
+            onClick={onOpenDoctorReport}
+            className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 hover:from-emerald-400 hover:to-cyan-400 flex items-center justify-center gap-2 transition-all shadow-md shadow-emerald-500/20 font-sans"
+          >
+            <FileText className="w-4 h-4" />
+            Generate Doctor PDF Report
+          </button>
+        </div>
+      </div>
+
       {/* SECONDARY ROW: Today's Adaptive Action Protocol & Real-Time Ingestion */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
@@ -678,6 +742,25 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
                 </div>
                 <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-emerald-400" />
               </button>
+
+              {onOpenWorkspace && (
+                <button
+                  id="quick-action-workspace-btn"
+                  onClick={() => onOpenWorkspace('gmail')}
+                  className="w-full text-left p-2.5 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-cyan-500/40 hover:bg-slate-950 transition-all flex items-center justify-between group"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="p-2 rounded-lg bg-red-500/10 text-red-400">
+                      <Mail className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-white group-hover:text-cyan-300 block">Google Workspace & Cloud Hub</span>
+                      <span className="text-[11px] text-slate-400">Gmail doctor reports, Sheets export, Drive picker</span>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-cyan-400" />
+                </button>
+              )}
             </div>
           </div>
 
