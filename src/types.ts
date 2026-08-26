@@ -622,3 +622,86 @@ export interface DataCompletenessCategory {
   status: 'Excellent' | 'Good' | 'Partial' | 'Conflicting';
   missingGaps: string[];
 }
+
+// ----------------------------------------------------
+// PERSONA & CLINICAL WORKSTATION MODELS (Part 1 & Part 2)
+// ----------------------------------------------------
+export type UserPersona = 'patient' | 'clinician';
+
+export interface DemographicReferenceRange {
+  metricKey: string;
+  metricLabel: string;
+  ageBracket: string;
+  gender: string;
+  normalMin: number;
+  normalMax: number;
+  unit: string;
+  clinicalGuidelineRef: string;
+  percentileRank: number; // e.g. 85th percentile
+  status: 'optimal' | 'in_range' | 'needs_attention' | 'critical';
+}
+
+export interface PatientTrustSettings {
+  doctorAccessEnabled: boolean;
+  doctorName: string;
+  doctorNpi: string;
+  clinicName: string;
+  allowHistoricalSync: boolean;
+  canRevokeAnytime: boolean;
+  categories: {
+    category: HealthCategory | 'cardiovascular' | 'biomarkers' | 'sleep' | 'activity' | 'nutrition' | 'gps_location';
+    label: string;
+    description: string;
+    isShared: boolean;
+    sensitivityLevel: 'standard' | 'sensitive' | 'strictly_confidential';
+  }[];
+}
+
+export interface ClinicianPatientRecord {
+  id: string;
+  mrn: string;
+  name: string;
+  age: number;
+  gender: 'M' | 'F' | 'Other';
+  dob: string;
+  primaryDiagnosis: string;
+  riskTier: 'stable' | 'monitoring' | 'alert' | 'critical';
+  lastVisitDate: string;
+  nextScheduledVisit: string;
+  consentStatus: 'active' | 'revocable' | 'revoked';
+  complianceRate: number; // 0-100%
+  vitals: {
+    bloodPressure: { systolic: number; diastolic: number; lastVisitValue: string; delta: string; status: 'in_range' | 'elevated' | 'stage1_htn' | 'stage2_htn' };
+    restingHr: { current: number; lastVisit: number; unit: string; delta: number; status: 'in_range' | 'elevated' };
+    hrvMs: { current: number; lastVisit: number; delta: number; status: 'in_range' | 'depressed' };
+    glucoseMgDl: { current: number; lastVisit: number; hba1c: number; delta: string; status: 'normal' | 'prediabetes' | 'diabetic' };
+    sleepHours: { current: number; deepPct: number; ahi: number; status: 'in_range' | 'apnea_warning' };
+  };
+  activeMedications: { name: string; dosage: string; frequency: string; adherencePct: number }[];
+  labAlerts: string[];
+  planStatus: 'ai_draft' | 'clinician_approved' | 'modified_order';
+  clinicianOrder?: {
+    signedBy: string;
+    clinicianRole: string;
+    npi: string;
+    timestamp: string;
+    clinicalRationale: string;
+    rxOrder: string[];
+    isOfficialEhrOrder: boolean;
+  };
+}
+
+export interface AccessAuditLogEntry {
+  id: string;
+  timestamp: string;
+  clinicianName: string;
+  role: string;
+  npi: string;
+  action: 'CHART_OPENED' | 'VITALS_REVIEWED' | 'LABS_ACCESSED' | 'PLAN_APPROVED' | 'FHIR_EXPORTED' | 'PDF_CHART_DOWNLOADED';
+  patientMrn: string;
+  purposeOfUse: 'TREATMENT' | 'CARE_COORDINATION' | 'QUALITY_AUDIT' | 'CHART_REVIEW';
+  ipAddress: string;
+  sessionToken: string;
+  baaStatus: 'HIPAA_BAA_VERIFIED';
+}
+

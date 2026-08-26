@@ -127,6 +127,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navItems = [
     { id: 'command', label: 'Command Center', icon: Activity },
+    { id: 'clinician', label: 'Clinician Portal (EHR)', icon: ShieldCheck },
     { id: 'strength', label: 'Strength & 1RM', icon: Dumbbell },
     { id: 'supplements', label: 'Meds & Supplements', icon: Pill },
     { id: 'metabolic', label: 'Body & Metabolic', icon: Scale },
@@ -219,6 +220,36 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Right Action Cluster */}
             <div className="flex items-center gap-2 sm:gap-2.5">
               
+              {/* Persona Switcher Pill (Patient vs Clinician) */}
+              <div className="flex items-center p-0.5 rounded-lg bg-slate-900 border border-slate-800 text-xs">
+                <button
+                  id="persona-patient-btn"
+                  onClick={() => setActiveTab('command')}
+                  className={`px-2.5 py-1 rounded-md transition-all font-medium flex items-center gap-1 ${
+                    activeTab !== 'clinician'
+                      ? 'bg-cyan-500/20 text-cyan-300 font-semibold shadow-xs'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                  title="Patient / Everyday Health Mode"
+                >
+                  <User className="w-3 h-3" />
+                  <span className="hidden sm:inline">Patient</span>
+                </button>
+                <button
+                  id="persona-clinician-btn"
+                  onClick={() => setActiveTab('clinician')}
+                  className={`px-2.5 py-1 rounded-md transition-all font-medium flex items-center gap-1 ${
+                    activeTab === 'clinician'
+                      ? 'bg-emerald-500/20 text-emerald-300 font-semibold shadow-xs'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                  title="Doctor / Clinician EHR Workstation"
+                >
+                  <ShieldCheck className="w-3 h-3 text-emerald-400" />
+                  <span className="hidden sm:inline">Clinician</span>
+                </button>
+              </div>
+
               {/* Theme toggle */}
               <ThemeToggle theme={theme} onToggle={onToggleTheme} />
 

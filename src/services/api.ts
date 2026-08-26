@@ -125,9 +125,70 @@ export async function analyzeLabDocument(params: {
     body: JSON.stringify(params),
   });
   if (!res.ok) {
-    throw new Error(`Failed to parse lab document: ${res.statusText}`);
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.error || `Failed to parse lab document: ${res.statusText}`);
   }
   return res.json();
+}
+
+export interface StoredFileRecord {
+  id: string;
+  storageKey: string;
+  originalFilename: string;
+  sanitizedFilename: string;
+  mimeType: string;
+  sizeBytes: number;
+  sha256: string;
+  uploadedAt: string;
+  ownerUid?: string;
+  category: string;
+  objectStorageUrl: string;
+  status: 'stored_and_scanned' | 'quarantined' | 'archived';
+  metadata?: Record<string, any>;
+}
+
+export interface FileUploadResult {
+  success: boolean;
+  message?: string;
+  object?: StoredFileRecord;
+  error?: string;
+  code?: string;
+  details?: any;
+}
+
+export async function uploadAndValidateFileToStorage(params: {
+  filename: string;
+  fileBase64: string;
+  claimedMimeType: string;
+  category?: 'clinical_lab_report' | 'imaging_scan' | 'telemetry_archive' | 'general_doc';
+  metadata?: Record<string, any>;
+}): Promise<FileUploadResult> {
+  const res = await fetch('/api/storage/upload', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(params),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || `Upload validation error (${res.status}): ${res.statusText}`);
+  }
+  return data;
+}
+
+export async function listStoredFiles(): Promise<StoredFileRecord[]> {
+  const res = await fetch('/api/storage/files');
+  if (!res.ok) {
+    throw new Error('Failed to list stored files');
+  }
+  const data = await res.json();
+  return data.files || [];
+}
+
+export async function deleteStoredFile(id: string): Promise<boolean> {
+  const res = await fetch(`/api/storage/files/${id}`, {
+    method: 'DELETE',
+  });
+  return res.ok;
 }
 
 export async function analyzeWhatChanged(params: {

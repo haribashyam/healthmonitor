@@ -19,6 +19,9 @@ import { DoctorReportModal } from './components/DoctorReportModal';
 import { WhatChangedModal } from './components/WhatChangedModal';
 import { DataMapModal } from './components/DataMapModal';
 import { GoogleWorkspaceModal } from './components/GoogleWorkspaceModal';
+import { ClinicianPortalView } from './components/ClinicianPortalView';
+import { PatientTrustModal } from './components/production/PatientTrustModal';
+import { HistoricalDataImportModal } from './components/production/HistoricalDataImportModal';
 
 // VITALOS Advanced 100-Feature Engines
 import { StrengthTrainingView } from './components/StrengthTrainingView';
@@ -113,6 +116,8 @@ export default function App() {
   const [isDataMapOpen, setIsDataMapOpen] = useState<boolean>(false);
   const [isWorkspaceModalOpen, setIsWorkspaceModalOpen] = useState<boolean>(false);
   const [workspaceInitialTab, setWorkspaceInitialTab] = useState<'gmail' | 'sheets' | 'picker' | 'firebase'>('gmail');
+  const [isPatientTrustOpen, setIsPatientTrustOpen] = useState<boolean>(false);
+  const [isHistoricalImportOpen, setIsHistoricalImportOpen] = useState<boolean>(false);
 
   // Core Unified Health State
   const [vitalScore, setVitalScore] = useState(initialVitalScore);
@@ -287,6 +292,19 @@ export default function App() {
                 setIsWorkspaceModalOpen(true);
               }}
               onNavigateTab={(tab) => setActiveTab(tab)}
+              onOpenPatientTrust={() => setIsPatientTrustOpen(true)}
+              onOpenHistoricalImport={() => setIsHistoricalImportOpen(true)}
+              onSwitchToClinician={() => setActiveTab('clinician')}
+            />
+          )}
+
+          {/* Clinician / Doctor EHR Workstation View */}
+          {activeTab === 'clinician' && (
+            <ClinicianPortalView
+              patientBiomarkers={biomarkers}
+              patientActivities={activities}
+              patientSleepRecords={sleepRecords}
+              onSwitchToPatientView={() => setActiveTab('command')}
             />
           )}
 
@@ -534,6 +552,26 @@ export default function App() {
       <FloatingSupportBubble
         onOpenAskData={() => setActiveTab('ask')}
         onOpenHelpCenter={() => setActiveTab('help')}
+      />
+
+      {/* Patient Privacy, Sharing Controls & Account Deletion Modal */}
+      <PatientTrustModal
+        isOpen={isPatientTrustOpen}
+        onClose={() => setIsPatientTrustOpen(false)}
+        onOpenDoctorReport={() => {
+          setIsPatientTrustOpen(false);
+          setIsDoctorReportOpen(true);
+        }}
+      />
+
+      {/* Historical Data Archive Ingestion Modal (Apple Health, Garmin, Oura, Dexcom) */}
+      <HistoricalDataImportModal
+        isOpen={isHistoricalImportOpen}
+        onClose={() => setIsHistoricalImportOpen(false)}
+        onImportSuccess={() => {
+          // Re-trigger sync or update status
+          console.debug('Historical archive ingested successfully');
+        }}
       />
 
     </div>

@@ -4,6 +4,7 @@ import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 import { z } from "zod";
+import { validateUploadFile, ObjectStorageVault, FILE_UPLOAD_LIMITS } from "./src/services/fileValidationService";
 
 dotenv.config();
 
@@ -156,6 +157,14 @@ const AnalyzeLabDocSchema = z.object({
   docText: z.string().max(50000).optional(),
   imageBase64: z.string().max(15000000).optional(), // max 15MB base64
   mimeType: z.string().regex(/^(image\/(png|jpeg|webp|heic)|application\/pdf)$/).optional()
+});
+
+const UploadAndValidateFileSchema = z.object({
+  filename: z.string().min(1).max(255),
+  fileBase64: z.string().min(1).max(FILE_UPLOAD_LIMITS.MAX_TELEMETRY_ARCHIVE_SIZE_BYTES * 1.4), // Base64 encoding overhead
+  claimedMimeType: z.string().min(1).max(100),
+  category: z.enum(['clinical_lab_report', 'imaging_scan', 'telemetry_archive', 'general_doc']).optional().default('clinical_lab_report'),
+  metadata: z.record(z.string(), z.any()).optional().default({})
 });
 
 const WhatChangedSchema = z.object({
@@ -453,6 +462,23 @@ app.post("/api/ai/analyze-lab-doc", aiRateLimiter, async (req, res, next) => {
       });
     }
 
+    // If an image or PDF base64 is supplied, validate it using server-side binary magic byte & size checks
+    if (parseResult.data.imageBase64) {
+      const validation = validateUploadFile({
+        base64String: parseResult.data.imageBase64,
+        claimedMimeType: parseResult.data.mimeType || 'application/pdf',
+        category: 'clinical_lab_report'
+      });
+
+      if (!validation.isValid) {
+        return res.status(400).json({
+          error: `File security validation failed: ${validation.error}`,
+          code: validation.code || "INVALID_FILE_SIGNATURE",
+          detectedMime: validation.detectedMime,
+          sizeBytes: validation.sizeBytes
+        });
+      }
+    }
 
     if (!checkSpendCap()) {
       return res.status(429).json({
@@ -540,6 +566,127 @@ Return JSON matching:
   } catch (error) {
     next(error);
   }
+});
+
+// ============================================================================
+// SERVER-SIDE OBJECT STORAGE & CLINICAL DOCUMENT VALIDATION PIPELINE
+// 1. Validates MIME type & Magic Bytes
+// 2. Enforces strict file size quotas (15MB for docs, 250MB for archives)
+// 3. Sanitizes filename against path traversal
+// 4. Computes SHA-256 integrity hash
+// 5. Moves validated file to secure object storage vault
+// ============================================================================
+
+// POST /api/storage/upload: Server-Side File Upload & Validation Pipeline
+app.post("/api/storage/upload", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const parseResult = UploadAndValidateFileSchema.safeParse(req.body);
+    if (!parseResult.success) {
+      return res.status(400).json({
+        error: "Invalid upload request parameters.",
+        details: parseResult.error.issues.map(e => e.message),
+        code: "INVALID_UPLOAD_PARAMS"
+      });
+    }
+
+    const { filename, fileBase64, claimedMimeType, category, metadata } = parseResult.data;
+    const auth = verifyUserAuth(req);
+
+    // Run deep server-side validation: magic byte inspection, size limits, and sanitization
+    const validation = validateUploadFile({
+      base64String: fileBase64,
+      claimedMimeType,
+      filename,
+      category
+    });
+
+    if (!validation.isValid) {
+      return res.status(400).json({
+        success: false,
+        error: validation.error,
+        code: validation.code || "VALIDATION_FAILED",
+        details: {
+          detectedMime: validation.detectedMime,
+          claimedMime: claimedMimeType,
+          sizeBytes: validation.sizeBytes,
+          maxAllowedBytes: category === 'telemetry_archive' 
+            ? FILE_UPLOAD_LIMITS.MAX_TELEMETRY_ARCHIVE_SIZE_BYTES 
+            : FILE_UPLOAD_LIMITS.MAX_LAB_DOC_SIZE_BYTES
+        }
+      });
+    }
+
+    // Move file to Object Storage Vault
+    const vault = ObjectStorageVault.getInstance();
+    const storedObject = vault.storeObject({
+      storageKey: validation.storageKey!,
+      originalFilename: filename,
+      sanitizedFilename: validation.sanitizedFilename!,
+      mimeType: validation.detectedMime || claimedMimeType,
+      sizeBytes: validation.sizeBytes!,
+      sha256: validation.sha256!,
+      ownerUid: auth.uid || 'patient-primary',
+      category: validation.category || category,
+      metadata: {
+        ...metadata,
+        validatedAt: new Date().toISOString(),
+        validationPassed: true
+      }
+    });
+
+    console.log(`[VITALOS Storage Vault] Successfully validated and stored file: ${storedObject.sanitizedFilename} (${storedObject.sizeBytes} bytes, SHA-256: ${storedObject.sha256.substring(0, 12)}...)`);
+
+    return res.status(201).json({
+      success: true,
+      message: "File successfully validated and stored in clinical object storage vault.",
+      object: storedObject
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// GET /api/storage/files: List Stored Clinical Documents
+app.get("/api/storage/files", (req: Request, res: Response) => {
+  const vault = ObjectStorageVault.getInstance();
+  const objects = vault.listObjects();
+  res.json({
+    success: true,
+    totalFiles: objects.length,
+    files: objects
+  });
+});
+
+// GET /api/storage/files/:id: Retrieve Object Storage Details
+app.get("/api/storage/files/:id", (req: Request, res: Response) => {
+  const vault = ObjectStorageVault.getInstance();
+  const object = vault.getObject(req.params.id);
+  if (!object) {
+    return res.status(404).json({
+      error: "Requested file was not found in object storage vault.",
+      code: "OBJECT_NOT_FOUND"
+    });
+  }
+  res.json({
+    success: true,
+    file: object
+  });
+});
+
+// DELETE /api/storage/files/:id: Remove Stored Document
+app.delete("/api/storage/files/:id", (req: Request, res: Response) => {
+  const vault = ObjectStorageVault.getInstance();
+  const deleted = vault.deleteObject(req.params.id);
+  if (!deleted) {
+    return res.status(404).json({
+      error: "File to delete was not found.",
+      code: "OBJECT_NOT_FOUND"
+    });
+  }
+  res.json({
+    success: true,
+    message: "File deleted from object storage vault."
+  });
 });
 
 // AI: "What Changed Today?" Root-Cause Multi-Signal Synthesis

@@ -55,6 +55,9 @@ interface CommandCenterProps {
   onOpenDoctorReport: () => void;
   onOpenWorkspace?: (tab?: 'gmail' | 'sheets' | 'picker' | 'firebase') => void;
   onNavigateTab: (tab: string) => void;
+  onOpenPatientTrust?: () => void;
+  onOpenHistoricalImport?: () => void;
+  onSwitchToClinician?: () => void;
 }
 
 export const CommandCenter: React.FC<CommandCenterProps> = ({
@@ -74,7 +77,10 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
   onOpenSimulator,
   onOpenDoctorReport,
   onOpenWorkspace,
-  onNavigateTab
+  onNavigateTab,
+  onOpenPatientTrust,
+  onOpenHistoricalImport,
+  onSwitchToClinician
 }) => {
   const [showFormulaModal, setShowFormulaModal] = useState(false);
   const [downgradedWorkout, setDowngradedWorkout] = useState(false);
@@ -363,97 +369,139 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
         isScanning={isScanning}
       />
 
-      {/* LIVE HEALTH STREAMING MATRIX: High Density, Real Time */}
+      {/* LIVE HEALTH STREAMING MATRIX: Compact Vital-Stat Cards Grid with Demographic Context */}
       <div>
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
           <div className="flex items-center gap-2">
             <h2 className="text-base font-bold text-white tracking-wide">Live Vital Signals & Baselines</h2>
-            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
-              Normalized Feed
+            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Demographic Benchmark Verified
             </span>
           </div>
-          <button
-            onClick={() => onNavigateTab('vitals')}
-            className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 flex items-center gap-1"
-          >
-            All Vitals & Lab Panels <ChevronRight className="w-3.5 h-3.5" />
-          </button>
+          <div className="flex items-center gap-3 text-xs">
+            {onOpenHistoricalImport && (
+              <button
+                id="cmd-import-history-btn"
+                onClick={onOpenHistoricalImport}
+                className="text-slate-300 hover:text-cyan-400 flex items-center gap-1 font-medium transition-colors"
+                title="Import past archives from Apple Health, Garmin, Oura, Dexcom"
+              >
+                <Layers className="w-3.5 h-3.5 text-cyan-400" />
+                Import Past Data
+              </button>
+            )}
+            {onOpenPatientTrust && (
+              <button
+                id="cmd-patient-trust-btn"
+                onClick={onOpenPatientTrust}
+                className="text-slate-300 hover:text-cyan-400 flex items-center gap-1 font-medium transition-colors"
+                title="Manage Doctor Sharing, Privacy & Data Deletion"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                Privacy & Doctor Access
+              </button>
+            )}
+            <button
+              onClick={() => onNavigateTab('vitals')}
+              className="font-semibold text-cyan-400 hover:text-cyan-300 flex items-center gap-1"
+            >
+              All Panels <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
           
           {/* Tile 1: Heart Rate & Live Pulse */}
-          <div className="bg-slate-900/80 rounded-xl p-4 border border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between shadow-sm">
+          <div 
+            onClick={() => onNavigateTab('vitals')}
+            className="bg-slate-900/80 rounded-xl p-4 border border-slate-800 hover:border-cyan-500/40 cursor-pointer transition-all flex flex-col justify-between shadow-sm group"
+          >
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Heart Rate</span>
-              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${hrZoneInfo.color}`}>
-                {hrZoneInfo.zone}
+              <div className="flex items-center gap-1.5">
+                <Heart className="w-3.5 h-3.5 text-rose-400" />
+                <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Resting Heart Rate</span>
+              </div>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                In Range
               </span>
             </div>
 
             <div className="my-2 flex items-baseline gap-2">
-              <span className="text-3xl font-extrabold text-white tracking-tight">{liveBpm}</span>
+              <span className="text-3xl font-extrabold text-white tracking-tight">{latestSleep.restingHr}</span>
               <span className="text-xs text-slate-400 font-medium">BPM</span>
               <span className="text-[11px] text-emerald-400 font-medium ml-auto flex items-center gap-0.5">
-                <TrendingUp className="w-3 h-3" /> Stable
+                <TrendingDown className="w-3 h-3" /> ↓ 3 BPM (14d)
               </span>
             </div>
 
-            {/* Live animated waveform bar */}
-            <div className="h-6 flex items-end gap-1 my-1 overflow-hidden">
-              {[40, 60, 30, 80, 50, 95, 45, 70, 85, 35, 65, 90, 50, 75, 40, 85].map((h, i) => (
-                <div
-                  key={i}
-                  className="w-full bg-rose-500/60 rounded-t-sm transition-all duration-300"
-                  style={{ height: `${(h * (liveBpm / 140)) % 100}%` }}
-                />
-              ))}
+            {/* Age/Demographic benchmark context */}
+            <div className="p-2 rounded-lg bg-slate-950/60 border border-slate-800/80 text-[10px] text-slate-400 my-1 space-y-0.5">
+              <div className="flex justify-between text-slate-300 font-medium">
+                <span>Age 30–39 Male Avg:</span>
+                <span className="font-mono text-cyan-400">58–68 BPM</span>
+              </div>
+              <span className="text-emerald-400 font-semibold block">● You are in Top 12% for your demographic</span>
             </div>
 
             <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
-              <span>Resting: <strong className={latestSleep.restingHr > 63 ? 'text-amber-400' : 'text-slate-300'}>{latestSleep.restingHr} BPM</strong></span>
+              <span>Live: <strong className="text-white">{liveBpm} BPM</strong></span>
               <span className="text-slate-400 font-medium">
-                {isBleConnected ? `LIVE • ${bleDeviceName}` : 'LIVE • Apple Watch'}
+                {isBleConnected ? `LIVE • ${bleDeviceName}` : 'Apple Watch BLE'}
               </span>
             </div>
           </div>
 
-          {/* Tile 2: Autonomic Recovery / HRV */}
-          <div className="bg-slate-900/80 rounded-xl p-4 border border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between shadow-sm">
+          {/* Tile 2: Blood Pressure & Cardiovascular Risk */}
+          <div 
+            onClick={() => onNavigateTab('vitals')}
+            className="bg-slate-900/80 rounded-xl p-4 border border-slate-800 hover:border-cyan-500/40 cursor-pointer transition-all flex flex-col justify-between shadow-sm group"
+          >
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">HRV (RMSSD)</span>
-              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
-                latestSleep.hrvAvg < 55
-                  ? 'bg-rose-500/15 text-rose-400 border-rose-500/30'
-                  : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-              }`}>
-                {latestSleep.hrvAvg < 55 ? `${Math.round(((latestSleep.hrvAvg - 64) / 64) * 100)}% Drop` : '+5% vs Baseline'}
+              <div className="flex items-center gap-1.5">
+                <Activity className="w-3.5 h-3.5 text-cyan-400" />
+                <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Blood Pressure</span>
+              </div>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                In Range
               </span>
             </div>
 
             <div className="my-2 flex items-baseline gap-2">
-              <span className="text-3xl font-extrabold text-white tracking-tight">{latestSleep.hrvAvg}</span>
-              <span className="text-xs text-slate-400 font-medium">ms</span>
-              <span className="text-[11px] text-slate-400 ml-auto">Baseline: 64 ms</span>
+              <span className="text-3xl font-extrabold text-white tracking-tight">116/74</span>
+              <span className="text-xs text-slate-400 font-medium">mmHg</span>
+              <span className="text-[11px] text-emerald-400 font-medium ml-auto flex items-center gap-0.5">
+                <TrendingDown className="w-3 h-3" /> ↓ 4/2 vs last
+              </span>
             </div>
 
-            <p className="text-xs text-slate-300 my-1 line-clamp-2">
-              {latestSleep.hrvAvg < 55
-                ? 'Parasympathetic suppression. Body is in sympathetic dominance recovering from fatigue.'
-                : 'Parasympathetic tone is optimal. Cardiovascular recovery is ready for interval loading.'}
-            </p>
+            {/* Age/Demographic benchmark context */}
+            <div className="p-2 rounded-lg bg-slate-950/60 border border-slate-800/80 text-[10px] text-slate-400 my-1 space-y-0.5">
+              <div className="flex justify-between text-slate-300 font-medium">
+                <span>AHA Clinical Target:</span>
+                <span className="font-mono text-cyan-400">&lt; 120/80 mmHg</span>
+              </div>
+              <span className="text-emerald-400 font-semibold block">● Normotensive Optimal Control</span>
+            </div>
 
             <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
-              <span>Readiness: <strong className={latestSleep.sleepScore < 75 ? 'text-amber-400' : 'text-slate-300'}>{latestSleep.sleepScore}/100</strong></span>
-              <span className="text-slate-400 font-medium">Oura Ring Gen3</span>
+              <span>Mean Arterial: <strong className="text-white">88 mmHg</strong></span>
+              <span className="text-slate-400 font-medium">Withings BPM Core</span>
             </div>
           </div>
 
-          {/* Tile 3: Sleep Staging & Duration */}
-          <div className="bg-slate-900/80 rounded-xl p-4 border border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between shadow-sm">
+          {/* Tile 3: Sleep Staging & Recovery */}
+          <div 
+            onClick={() => onNavigateTab('sleep')}
+            className="bg-slate-900/80 rounded-xl p-4 border border-slate-800 hover:border-cyan-500/40 cursor-pointer transition-all flex flex-col justify-between shadow-sm group"
+          >
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Sleep Recovery</span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/30">
+              <div className="flex items-center gap-1.5">
+                <Moon className="w-3.5 h-3.5 text-indigo-400" />
+                <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Sleep Architecture</span>
+              </div>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">
                 Score: {latestSleep.sleepScore}
               </span>
             </div>
@@ -462,45 +510,57 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
               <span className="text-3xl font-extrabold text-white tracking-tight">
                 {Math.floor(latestSleep.totalMinutes / 60)}h {latestSleep.totalMinutes % 60}m
               </span>
-              <span className="text-xs text-slate-400 font-medium">Total</span>
-              <span className="text-[11px] text-emerald-400 ml-auto">{latestSleep.efficiencyPercent || 93}% Efficiency</span>
+              <span className="text-xs text-slate-400 font-medium">Rest</span>
+              <span className="text-[11px] text-emerald-400 ml-auto">93% Efficiency</span>
             </div>
 
-            {/* Stage bar */}
-            <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden flex my-2">
-              <div className="bg-indigo-600 h-full" style={{ width: `${(latestSleep.deepMinutes / latestSleep.totalMinutes) * 100}%` }} title={`Deep Sleep ${latestSleep.deepMinutes}m`} />
-              <div className="bg-cyan-500 h-full" style={{ width: `${(latestSleep.remMinutes / latestSleep.totalMinutes) * 100}%` }} title={`REM Sleep ${latestSleep.remMinutes}m`} />
-              <div className="bg-blue-400 h-full" style={{ width: '45%' }} title="Core Sleep" />
-              <div className="bg-amber-400 h-full" style={{ width: '8%' }} title="Awake" />
+            {/* Stage breakdown */}
+            <div className="p-2 rounded-lg bg-slate-950/60 border border-slate-800/80 text-[10px] text-slate-400 my-1 space-y-0.5">
+              <div className="flex justify-between text-slate-300 font-medium">
+                <span>Deep Sleep: {latestSleep.deepMinutes}m</span>
+                <span className="font-mono text-cyan-400">REM: {latestSleep.remMinutes}m</span>
+              </div>
+              <span className="text-emerald-400 font-semibold block">● Meets Stage 4 Slow-Wave Benchmark</span>
             </div>
 
             <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
-              <span>Deep: <strong className="text-slate-300">{latestSleep.deepMinutes}m</strong> • REM: <strong className="text-slate-300">{latestSleep.remMinutes}m</strong></span>
-              <span className="text-slate-400 font-medium">Oura Ring</span>
+              <span>HRV: <strong className="text-white">{latestSleep.hrvAvg} ms</strong></span>
+              <span className="text-slate-400 font-medium">Oura Ring Gen3</span>
             </div>
           </div>
 
-          {/* Tile 4: Daily Steps & Activity Fusion */}
-          <div className="bg-slate-900/80 rounded-xl p-4 border border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between shadow-sm">
+          {/* Tile 4: Daily Steps & Activity Load */}
+          <div 
+            onClick={() => onNavigateTab('activity')}
+            className="bg-slate-900/80 rounded-xl p-4 border border-slate-800 hover:border-cyan-500/40 cursor-pointer transition-all flex flex-col justify-between shadow-sm group"
+          >
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Daily Movement</span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
-                Verified Fusion
+              <div className="flex items-center gap-1.5">
+                <Flame className="w-3.5 h-3.5 text-orange-400" />
+                <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Daily Movement</span>
+              </div>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                Target Met
               </span>
             </div>
 
             <div className="my-2 flex items-baseline gap-2">
               <span className="text-3xl font-extrabold text-white tracking-tight">11,420</span>
               <span className="text-xs text-slate-400 font-medium">steps</span>
-              <span className="text-[11px] text-emerald-400 font-semibold ml-auto">Goal 10k ✓</span>
+              <span className="text-[11px] text-emerald-400 font-semibold ml-auto">114% of 10k</span>
             </div>
 
-            <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden my-2">
-              <div className="bg-gradient-to-r from-cyan-500 to-emerald-400 h-full rounded-full" style={{ width: '100%' }} />
+            {/* Daily burn */}
+            <div className="p-2 rounded-lg bg-slate-950/60 border border-slate-800/80 text-[10px] text-slate-400 my-1 space-y-0.5">
+              <div className="flex justify-between text-slate-300 font-medium">
+                <span>Active Energy:</span>
+                <span className="font-mono text-cyan-400">680 kcal</span>
+              </div>
+              <span className="text-emerald-400 font-semibold block">● Zone 2 Aerobic Volume: 42 mins</span>
             </div>
 
             <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
-              <span>Active Energy: 680 kcal</span>
+              <span>Goal: 10,000 steps</span>
               <span className="text-slate-400 font-medium">Apple Watch + Strava</span>
             </div>
           </div>
@@ -668,6 +728,56 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
               </div>
             </div>
 
+          </div>
+
+          {/* Active Constraints Badge & Stated Real-World Boundaries */}
+          <div className="bg-slate-950/60 rounded-xl p-3 border border-slate-800/80 flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Active Constraints:</span>
+              <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700 font-medium">
+                ⏱ Schedule: 45m max
+              </span>
+              <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700 font-medium">
+                🥗 Gluten & Dairy Sensitive
+              </span>
+              <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 font-medium">
+                🛡 Knee Tendinopathy Safe
+              </span>
+            </div>
+            <span className="text-slate-400 text-[11px]">All plans filter through constraints</span>
+          </div>
+
+          {/* Projection & Velocity Estimator: "How long until I see a difference?" */}
+          <div className="bg-gradient-to-br from-slate-950 to-slate-900/80 rounded-xl p-4 border border-cyan-500/20 space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <TrendingDown className="w-4 h-4 text-cyan-400" />
+                <span className="text-xs font-bold text-white tracking-wide">Physiological Adaptation Velocity</span>
+              </div>
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400">
+                Adherence: 94%
+              </span>
+            </div>
+            <p className="text-xs text-slate-300">
+              Based on your continuous 14-day Zone 2 cardiac training and sleep compliance, here are realistic physiological timeline projections:
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 text-xs">
+              <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                <span className="text-[10px] text-slate-400 uppercase block font-semibold">Target Resting HR (50 BPM)</span>
+                <span className="text-sm font-bold text-white">~3.5 Weeks</span>
+                <span className="text-[10px] text-emerald-400 block mt-0.5">Current pace: -0.8 BPM/wk</span>
+              </div>
+              <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                <span className="text-[10px] text-slate-400 uppercase block font-semibold">VO₂ Max Peak (+2.5 ml)</span>
+                <span className="text-sm font-bold text-white">~6.0 Weeks</span>
+                <span className="text-[10px] text-cyan-400 block mt-0.5">Needs 2x weekly tempo</span>
+              </div>
+              <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                <span className="text-[10px] text-slate-400 uppercase block font-semibold">Blood Pressure (&lt;115/70)</span>
+                <span className="text-sm font-bold text-white">~4.0 Weeks</span>
+                <span className="text-[10px] text-indigo-400 block mt-0.5">High sodium sensitivity</span>
+              </div>
+            </div>
           </div>
 
           {/* Quick AI Explanation Rationale Accordion */}

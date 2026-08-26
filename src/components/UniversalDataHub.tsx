@@ -37,6 +37,7 @@ import { calculateDataCoverageScore, deduplicateSteps } from '../utils/healthCal
 import { WebBluetoothManager } from '../utils/bluetooth';
 import { AddCustomSourceModal } from './AddCustomSourceModal';
 import { LiveMultiDeviceStreamHub } from './LiveMultiDeviceStreamHub';
+import { LabReportUploadModal } from './production/LabReportUploadModal';
 
 interface UniversalDataHubProps {
   sources: DataSource[];
@@ -66,6 +67,7 @@ export const UniversalDataHub: React.FC<UniversalDataHubProps> = ({
 
   // Add Custom Source Modal
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isLabUploadModalOpen, setIsLabUploadModalOpen] = useState(false);
 
   // OAuth Modal State
   const [selectedOAuthSource, setSelectedOAuthSource] = useState<DataSource | null>(null);
@@ -680,13 +682,24 @@ export const UniversalDataHub: React.FC<UniversalDataHubProps> = ({
           {/* Left 2 Cols: Ingestion Area */}
           <div className="lg:col-span-2 bg-slate-900 rounded-3xl p-6 border border-slate-800 space-y-4">
             <div className="space-y-1">
-              <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <FileText className="w-4 h-4 text-cyan-400" />
-                Medical Document & Lab Panel Ingestion (OCR)
-              </h3>
-              <p className="text-xs text-slate-400">
-                Paste diagnostic test text or upload routine blood panels. VitalSync extracts and normalizes biomarkers automatically via Gemini OCR.
-              </p>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h3 className="text-base font-bold text-white flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-cyan-400" />
+                    Medical Document & Lab Panel Ingestion (OCR)
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    Upload official diagnostic PDFs or paste test summaries. All files undergo strict server-side validation before storage.
+                  </p>
+                </div>
+                <button
+                  id="open-secure-lab-uploader-btn"
+                  onClick={() => setIsLabUploadModalOpen(true)}
+                  className="px-4 py-2 rounded-xl text-xs font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-md shadow-cyan-500/20 transition-all flex items-center gap-1.5 flex-shrink-0"
+                >
+                  <ShieldCheck className="w-4 h-4" /> Upload & Validate Lab PDF
+                </button>
+              </div>
             </div>
 
             {/* Paste or Sample Text Ingest */}
@@ -905,6 +918,17 @@ Total Testosterone: 692 ng/dL (Reference: 300-1000) - Normal`)
         onClose={() => setIsAddModalOpen(false)}
         onAddSource={handleAddCustomSource}
         onAddBiomarker={handleAddCustomBiomarker}
+      />
+
+      {/* Secure Server-Side Lab Report Upload & Storage Modal */}
+      <LabReportUploadModal
+        isOpen={isLabUploadModalOpen}
+        onClose={() => setIsLabUploadModalOpen(false)}
+        onBiomarkersExtracted={(newBios, newReport) => {
+          setBiomarkers((prev) => [...newBios, ...prev]);
+          setLabReports((prev) => [newReport, ...prev]);
+          setUploadSuccess(true);
+        }}
       />
 
     </div>
