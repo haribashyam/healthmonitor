@@ -1,66 +1,197 @@
 @import "tailwindcss";
 
-/* Theme Custom Variables */
-:root {
-  --bg-primary: #020617;
-  --bg-secondary: #0f172a;
-  --bg-card: #1e293b;
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --accent-cyan: #06b6d4;
-  --accent-emerald: #10b981;
-  --border-color: #334155;
+/* =========================================================================
+   VITALSYNC — Newsprint × Neo-Brutalism× Bauhaus accent design system
+   The whole app uses hardcoded slate / cyan / emerald Tailwind utilities.
+   To restyle it in one pass we remap those tokens via @theme:
+   - slate ramp FLIPPED (dark theme -> light cream/ink)
+   - cyan -> editorial RED (primary accent)
+   - emerald -> Bauhaus BLUE (secondary accent, readable on cream)
+   - amber/rose/indigo/etc tuned dark enough to read on cream
+   ========================================================================= */
+@theme {
+  /* Flipped slate ramp: low numbers = ink, high numbers = off-white */
+  --color-slate-50: #111111;
+  --color-slate-100: #1a1a1a;
+  --color-slate-200: #262626;
+  --color-slate-300: #404040;
+  --color-slate-400: #525252;
+  --color-slate-500: #737373;
+  --color-slate-600: #8c8c8c;
+  --color-slate-700: #d4d4cc;
+  --color-slate-800: #e5e5e0;
+  --color-slate-900: #f1efea;
+  --color-slate-950: #fffdf5;
+
+  /* Primary accent: cyan -> Newsprint / Bauhaus editorial RED */
+  --color-cyan-300: #c81d2b;
+  --color-cyan-400: #c8102e;
+  --color-cyan-500: #d02020;
+  --color-cyan-600: #a2191f;
+  --color-cyan-700: #7d131a;
+  --color-cyan-800: #5a0e14;
+  --color-cyan-900: #3d090d;
+  --color-cyan-950: #6b0a0a;
+
+  /* Secondary accent: emerald -> Bauhaus BLUE (readable on cream) */
+  --color-emerald-300: #1d4ed8;
+  --color-emerald-400: #1d4ed8;
+  --color-emerald-500: #1040c0;
+  --color-emerald-600: #0b30a0;
+  --color-emerald-700: #082776;
+  --color-emerald-800: #061d52;
+  --color-emerald-900: #04143a;
+  --color-emerald-950: #020e28;
+
+  /* Indigo (sleep) tuned dark for cream legibility */
+  --color-indigo-300: #4338ca;
+  --color-indigo-400: #4338ca;
+  --color-indigo-500: #3730a3;
+
+  /* Barken/amber: warning text dark, background keeps a Bauhaus yellow */
+  --color-amber-300: #92400e;
+  --color-amber-400: #a16207;
+  --color-amber-500: #f0c020;
+  --color-amber-600: #b4880a;
+
+  /* Rose (live HR / alert) tuned readable */
+  --color-rose-300: #be123c;
+  --color-rose-400: #e11d48;
+  --color-rose-500: #e11d48;
+  --color-rose-600: #be123c;
+  --color-rose-950: #4c0519;
+
+  /* Standard alert colors tuned readable on cream */
+  --color-red-300: #b91c1c;
+  --color-red-400: #c8102e;
+  --color-red-500: #d02020;
+  --color-red-600: #a2191f;
+
+  /* Blue used sparingly for integrations */
+  --color-blue-400: #1d4ed8;
+  --color-blue-500: #1040c0;
+  --color-blue-600: #1040c0;
+  --color-blue-700: #0b30a0;
+
+  /* Orange (movement) tuned readable */
+  --color-orange-400: #c2410c;
+  --color-orange-500: #ea580c;
+
+  /* Purple tuned readable */
+  --color-purple-300: #6d28d9;
+  --color-purple-400: #7c3aed;
+  --color-purple-500: #6d28d9;
+
+  /* Typography */
+  --font-sans: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Courier New", monospace;
 }
 
-[data-theme="light"] {
-  --bg-primary: #f8fafc;
-  --bg-secondary: #f1f5f9;
-  --bg-card: #ffffff;
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --accent-cyan: #0891b2;
-  --accent-emerald: #059669;
-  --border-color: #cbd5e1;
+/* ---------------- Base ---------------- */
+html {
+  font-family: var(--font-sans);
+  background-color: #fffdf5;
+  color: #111111;
 }
 
-/* Accessibility: Skip-to-content Link */
+body {
+  margin: 0;
+  background-color: #fffdf5;
+  color: #111111;
+  /* Newsprint dot-grid texture */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23111111' fill-opacity='0.04' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
+}
+
+/* Serif display families for headings / editorial moments */
+.font-serif-display { font-family: "Playfair Display", serif; }
+.font-body-serif { font-family: "Lora", Georgia, serif; }
+
+/* ---------------- Force sharp corners (except pills/dots) ---------------- */
+.rounded,
+.rounded-sm,
+.rounded-md,
+.rounded-lg,
+.rounded-xl,
+.rounded-2xl,
+.rounded-3xl {
+  border-radius: 0 !important;
+}
+
+/* ---------------- text-white remap ----------------
+   The dark theme used 500+ `text-white` on dark panels. After the slate flip
+   those panels are light, so white text becomes invisible -> force ink. */
+.text-white {
+  color: #111111 !important;
+}
+
+/* ---------------- Hard offset shadows (Neo-Brutalist signature) ---------------- */
+.hard-shadow-sm { box-shadow: 4px 4px 0px 0px #111111; }
+.hard-shadow { box-shadow: 6px 6px 0px 0px #111111; }
+.hard-shadow-lg { box-shadow: 8px 8px 0px 0px #111111; }
+.hard-shadow-xl { box-shadow: 12px 12px 0px 0px #111111; }
+.hard-shadow-hover {
+  transition: transform 0.18s ease-out, box-shadow 0.18s ease-out;
+}
+.hard-shadow-hover:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0px 0px #111111;
+}
+
+/* ---------------- Newsprint section texture (graph-paper overlay) ---------------- */
+.newsprint-texture { position: relative; }
+.newsprint-texture::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(0deg, transparent 98%, rgba(0, 0, 0, 0.03) 100%),
+    linear-gradient(90deg, transparent 98%, rgba(0, 0, 0, 0.03) 100%);
+  background-size: 3px 3px;
+  pointer-events: none;
+  opacity: 0.5;
+  z-index: 0;
+}
+.newsprint-texture > * { position: relative; z-index: 1; }
+
+/* ---------------- Accessibility ---------------- */
 .skip-link {
   position: absolute;
   top: -100px;
   left: 16px;
-  background: #06b6d4;
-  color: #020617;
+  background: #d02020;
+  color: #fffdf5;
   font-weight: 700;
   padding: 8px 16px;
-  border-radius: 8px;
+  border: 2px solid #111111;
   z-index: 9999;
   transition: top 0.2s ease;
 }
 
 .skip-link:focus {
   top: 16px;
-  outline: 2px solid #ffffff;
+  outline: 2px solid #111111;
+  outline-offset: 2px;
 }
 
-/* Universal Focus Visible Ring */
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid #06b6d4;
+  outline: 2px solid #111111;
   outline-offset: 2px;
 }
 
-/* Print Stylesheet */
+/* ---------------- Print Stylesheet ---------------- */
 @media print {
   body {
     background: #ffffff !important;
     color: #000000 !important;
+    background-image: none !important;
     font-size: 12pt !important;
+    font-family: "Lora", Georgia, serif !important;
   }
 
-  /* Hide navigation, cookie banners, floating controls, live animations */
   header,
   footer,
   #cookie-consent-banner,
@@ -74,7 +205,6 @@ textarea:focus-visible {
     display: none !important;
   }
 
-  /* Expand containers for full page printing */
   main, #main-content {
     margin: 0 !important;
     padding: 0 !important;
@@ -98,11 +228,6 @@ textarea:focus-visible {
     color: #111111 !important;
   }
 
-  /* Expand details/summary for full clinical review */
-  details {
-    display: block !important;
-  }
-  details[open] summary, details summary {
-    font-weight: bold !important;
-  }
+  details { display: block !important; }
+  details[open] summary, details summary { font-weight: bold !important; }
 }

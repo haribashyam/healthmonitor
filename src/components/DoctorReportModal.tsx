@@ -579,7 +579,7 @@ DISCLAIMER: This report synthesizes consumer biometric wearables and user-import
                 <button
                   onClick={() => setPreviewTheme('paper')}
                   className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                    previewTheme === 'paper' ? 'bg-white text-slate-950 font-black' : 'bg-slate-800 text-slate-400'
+                    previewTheme === 'paper' ? 'bg-white text-black font-black' : 'bg-slate-800 text-slate-400'
                   }`}
                 >
                   Paper Preview
@@ -723,7 +723,7 @@ DISCLAIMER: This report synthesizes consumer biometric wearables and user-import
         <div
           id="clinical-report-content"
           className={`p-6 sm:p-8 space-y-6 text-xs leading-relaxed max-h-[80vh] overflow-y-auto print:max-h-none print:overflow-visible print:p-0 print:space-y-4 ${
-            previewTheme === 'paper' ? 'bg-white text-slate-900' : 'text-slate-100'
+            previewTheme === 'paper' ? 'bg-white text-black' : 'text-slate-100'
           }`}
         >
           

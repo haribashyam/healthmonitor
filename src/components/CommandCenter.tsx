@@ -187,85 +187,96 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
   return (
     <div className="space-y-6 animate-fadeIn">
       
-      {/* HERO STATUS BANNER: Apple Health x Garmin x Futuristic OS */}
-      <div className={`relative overflow-hidden rounded-2xl border p-5 sm:p-6 lg:p-7 shadow-xl transition-all ${
+      {/* HERO STATUS BANNER: Newsprint front-page hero */}
+      <div className={`relative border-4 border-slate-50 p-5 sm:p-6 lg:p-7 hard-shadow-lg transition-all newsprint-texture ${
         dynamicVitalScore.status === 'Rest Advised' || dynamicVitalScore.status === 'Moderate Strain'
-          ? 'bg-gradient-to-br from-slate-900 via-slate-900 to-rose-950/40 border-rose-500/40'
-          : 'bg-gradient-to-br from-slate-900 via-slate-900 to-cyan-950/40 border-slate-800'
+          ? 'bg-rose-500 text-slate-50'
+          : 'bg-slate-900 text-slate-900'
       }`}>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
-        <div className="absolute bottom-0 left-1/3 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-
         <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
           {/* Left: Overall Health Readiness Status */}
           <div className="space-y-2 max-w-2xl">
+            {/* Edition metadata */}
+            <div className={`flex items-center justify-between font-mono uppercase tracking-widest text-[10px] border-b-2 pb-1.5 mb-1 ${
+              dynamicVitalScore.status === 'Rest Advised' || dynamicVitalScore.status === 'Moderate Strain'
+                ? 'border-slate-50/40 text-slate-50/80'
+                : 'border-slate-50 text-slate-400'
+            }`}>
+              <span>Daily Health Brief · {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
+              <span>Fig. 01</span>
+            </div>
+
             <div className="flex flex-wrap items-center gap-2">
-              <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border ${
+              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold uppercase tracking-wider border-2 ${
                 dynamicVitalScore.status === 'Peak Condition' || dynamicVitalScore.status === 'Optimal Recovery'
-                  ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
-                  : 'bg-rose-500/15 text-rose-300 border-rose-500/30'
+                  ? 'bg-emerald-500 text-slate-50 border-slate-50'
+                  : 'bg-slate-50 text-rose-600 border-slate-50'
               }`}>
                 <span className={`w-2 h-2 rounded-full ${
                   dynamicVitalScore.status === 'Peak Condition' || dynamicVitalScore.status === 'Optimal Recovery'
-                    ? 'bg-emerald-400 animate-pulse'
-                    : 'bg-rose-400 animate-pulse'
+                    ? 'bg-slate-50 animate-pulse'
+                    : 'bg-rose-600 animate-pulse'
                 }`} />
                 {dynamicVitalScore.status}
               </span>
-              <span className="text-xs text-slate-400 flex items-center gap-1 font-medium">
-                <Clock className="w-3.5 h-3.5 text-slate-400" />
-                Updated Just Now from 4 Connected Streams
+              <span className={`text-xs flex items-center gap-1 font-mono uppercase tracking-widest ${
+                dynamicVitalScore.status === 'Rest Advised' || dynamicVitalScore.status === 'Moderate Strain' ? 'text-slate-50/80' : 'text-slate-400'
+              }`}>
+                <Clock className="w-3.5 h-3.5" />
+                Updated Just Now · 4 Streams
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-[0.95] font-serif-display">
               {dynamicVitalScore.status === 'Rest Advised' || dynamicVitalScore.status === 'Moderate Strain' ? (
-                <>Autonomic Recovery <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-amber-400">Deficit & Fatigue Detected</span></>
+                <>Recovery Deficit & Fatigue Detected</>
               ) : (
-                <>Ready for <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400">Targeted Aerobic Output</span></>
+                <>Ready for Targeted Aerobic Output</>
               )}
             </h1>
 
-            <p className="text-sm text-slate-300 leading-relaxed">
+            <p className={`text-sm leading-relaxed font-body-serif ${
+              dynamicVitalScore.status === 'Rest Advised' || dynamicVitalScore.status === 'Moderate Strain' ? 'text-slate-50/90' : 'text-slate-300'
+            }`}>
               {dynamicVitalScore.status === 'Rest Advised' || dynamicVitalScore.status === 'Moderate Strain' ? (
-                <>Your overnight HRV dropped to <strong className="text-rose-400">{latestSleep.hrvAvg}ms</strong> with resting heart rate elevated to <strong className="text-amber-400">{latestSleep.restingHr} BPM</strong>. Active recovery is prioritized.</>
+                <><span className="font-semibold first-letter:text-4xl first-letter:font-black first-letter:float-left first-letter:mr-1 first-letter:leading-[0.8] first-letter:font-serif-display">Y</span>our overnight HRV dropped to <strong className="text-slate-50">{latestSleep.hrvAvg}ms</strong> with resting heart rate elevated to <strong className="text-slate-50">{latestSleep.restingHr} BPM</strong>. Active recovery is prioritized.</>
               ) : (
-                <>Your autonomic recovery is <span className="text-emerald-400 font-semibold">+5% above your 14-day baseline</span>. Overnight HRV normalized to {latestSleep.hrvAvg}ms with {latestSleep.deepMinutes} minutes in deep restoration.</>
+                <><span className="font-semibold first-letter:text-4xl first-letter:font-black first-letter:float-left first-letter:mr-1 first-letter:leading-[0.8] first-letter:font-serif-display">Y</span>our autonomic recovery is <strong className="font-semibold">+5% above your 14-day baseline</strong>. Overnight HRV normalized to {latestSleep.hrvAvg}ms with {latestSleep.deepMinutes} minutes in deep restoration.</>
               )}
             </p>
 
-            <div className="pt-2 flex flex-wrap items-center gap-3">
+            <div className="pt-2 flex flex-wrap items-center gap-2">
               <button
                 id="hero-clinical-pdf-btn"
                 onClick={onOpenDoctorReport}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 transition-all shadow-md shadow-emerald-500/10"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold uppercase tracking-wider bg-emerald-500 text-slate-50 border-2 border-slate-50 hover:translate-x-[2px] hover:translate-y-[2px] hard-shadow-sm hover:shadow-none transition-all"
                 title="Export comprehensive medical brief & plan for doctor consultation"
               >
-                <FileText className="w-3.5 h-3.5 text-emerald-400" />
-                Export Clinical PDF Report
+                <FileText className="w-3.5 h-3.5" />
+                Export Clinical PDF
               </button>
               {onOpenWorkspace && (
                 <button
                   id="hero-workspace-cloud-btn"
                   onClick={() => onOpenWorkspace('gmail')}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-red-500/20 via-emerald-500/20 to-blue-500/20 text-slate-200 border border-slate-700 hover:border-cyan-400/50 hover:text-white transition-all shadow-sm"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold uppercase tracking-wider bg-amber-500 text-slate-950 border-2 border-slate-50 hover:translate-x-[2px] hover:translate-y-[2px] hard-shadow-sm hover:shadow-none transition-all"
                   title="Google Workspace (Gmail, Sheets, Drive) & Cloud Sync"
                 >
-                  <Mail className="w-3.5 h-3.5 text-red-400" />
-                  <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Workspace & Cloud</span>
+                  <Mail className="w-3.5 h-3.5" />
+                  <FileSpreadsheet className="w-3.5 h-3.5" />
+                  <span>Workspace</span>
                 </button>
               )}
               <button
                 onClick={onOpenWhatChanged}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30 hover:bg-amber-500/25 transition-all"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold uppercase tracking-wider bg-slate-50 text-slate-950 border-2 border-slate-50 hover:bg-cyan-500 hover:text-slate-950 hover:translate-x-[2px] hover:translate-y-[2px] hard-shadow-sm hover:shadow-none transition-all"
               >
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <Sparkles className="w-3.5 h-3.5" />
                 Why Am I Different Today?
               </button>
               <button
                 onClick={onOpenLiveWorkout}
-                className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:from-cyan-400 hover:to-blue-500 shadow-md shadow-cyan-500/20 transition-all"
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold uppercase tracking-wider bg-cyan-500 text-slate-950 border-2 border-slate-50 hover:translate-x-[2px] hover:translate-y-[2px] hard-shadow-sm hover:shadow-none transition-all"
               >
                 <Radio className="w-3.5 h-3.5" />
                 Start Live Workout HUD
@@ -280,16 +291,21 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
                     onOpenAskData();
                   }
                 }}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-all border border-slate-700"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold uppercase tracking-wider bg-transparent text-current border-2 border-current hover:bg-current hover:text-slate-900 transition-all"
+                style={dynamicVitalScore.status === 'Rest Advised' || dynamicVitalScore.status === 'Moderate Strain' ? ({color:'#fffdf5'} as React.CSSProperties) : ({color:'#111111'} as React.CSSProperties)}
               >
-                <Zap className="w-3.5 h-3.5 text-cyan-400" />
+                <Zap className="w-3.5 h-3.5" />
                 Ask My Data Copilot
               </button>
             </div>
           </div>
 
           {/* Right: Interactive Vital Score Ring */}
-          <div className="flex items-center gap-4 bg-slate-950/60 backdrop-blur-md p-4 rounded-xl border border-slate-800/80 shadow-lg">
+          <div className={`flex items-center gap-4 p-4 border-2 ${
+            dynamicVitalScore.status === 'Rest Advised' || dynamicVitalScore.status === 'Moderate Strain'
+              ? 'bg-slate-50 text-slate-900 border-slate-50'
+              : 'bg-slate-50 text-slate-950 border-slate-50'
+          }`}>
             <div className="relative flex items-center justify-center w-24 h-24 sm:w-28 sm:h-28">
               <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                 <circle
@@ -315,37 +331,37 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
                 />
                 <defs>
                   <linearGradient id="vitalScoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor={dynamicVitalScore.overall < 70 ? '#f43f5e' : '#06b6d4'} />
-                    <stop offset="100%" stopColor={dynamicVitalScore.overall < 70 ? '#f59e0b' : '#10b981'} />
+                    <stop offset="0%" stopColor={dynamicVitalScore.overall < 70 ? '#c8102e' : '#d02020'} />
+                    <stop offset="100%" stopColor={dynamicVitalScore.overall < 70 ? '#92400e' : '#1040c0'} />
                   </linearGradient>
                 </defs>
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                <span className="text-2xl sm:text-3xl font-black text-white">{dynamicVitalScore.overall}</span>
-                <span className="text-[10px] font-semibold tracking-wider text-slate-400 uppercase">Vital Score</span>
+                <span className="text-3xl sm:text-4xl font-black text-slate-950 font-serif-display">{dynamicVitalScore.overall}</span>
+                <span className="text-[10px] font-bold tracking-widest text-slate-500 uppercase font-mono">Vital Score</span>
               </div>
             </div>
 
-            <div className="space-y-1 text-xs">
-              <div className="flex items-center justify-between gap-3 text-slate-300">
-                <span className="text-slate-400">Recovery:</span>
-                <span className={`font-semibold ${dynamicVitalScore.recovery < 60 ? 'text-rose-400' : 'text-emerald-400'}`}>
+            <div className="space-y-1 text-xs font-mono">
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-slate-500 uppercase tracking-wider">Recovery:</span>
+                <span className={`font-bold ${dynamicVitalScore.recovery < 60 ? 'text-rose-600' : 'text-emerald-600'}`}>
                   {dynamicVitalScore.recovery}/100
                 </span>
               </div>
-              <div className="flex items-center justify-between gap-3 text-slate-300">
-                <span className="text-slate-400">Activity Load:</span>
-                <span className="font-semibold text-cyan-400">{dynamicVitalScore.activity}/100</span>
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-slate-500 uppercase tracking-wider">Activity:</span>
+                <span className="font-bold text-cyan-600">{dynamicVitalScore.activity}/100</span>
               </div>
-              <div className="flex items-center justify-between gap-3 text-slate-300">
-                <span className="text-slate-400">Sleep Quality:</span>
-                <span className={`font-semibold ${dynamicVitalScore.sleep < 70 ? 'text-amber-400' : 'text-indigo-400'}`}>
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-slate-500 uppercase tracking-wider">Sleep:</span>
+                <span className={`font-bold ${dynamicVitalScore.sleep < 70 ? 'text-amber-600' : 'text-indigo-600'}`}>
                   {dynamicVitalScore.sleep}/100
                 </span>
               </div>
               <button
                 onClick={() => setShowFormulaModal(true)}
-                className="pt-1 text-[11px] text-cyan-400 hover:text-cyan-300 underline flex items-center gap-0.5"
+                className="pt-1 text-[11px] text-cyan-600 hover:text-cyan-500 underline flex items-center gap-0.5"
               >
                 <Info className="w-3 h-3" /> View transparent formula
               </button>
@@ -371,12 +387,12 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
 
       {/* LIVE HEALTH STREAMING MATRIX: Compact Vital-Stat Cards Grid with Demographic Context */}
       <div>
-        <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-3 border-b-4 border-slate-50 pb-2">
           <div className="flex items-center gap-2">
-            <h2 className="text-base font-bold text-white tracking-wide">Live Vital Signals & Baselines</h2>
-            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Demographic Benchmark Verified
+            <h2 className="text-lg font-black tracking-tight text-slate-100 font-serif-display">Live Vital Signals & Baselines</h2>
+            <span className="text-[10px] font-bold px-2 py-0.5 bg-emerald-500 text-slate-50 border border-slate-50 flex items-center gap-1 uppercase tracking-widest">
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-50 animate-pulse" />
+              Benchmark Verified
             </span>
           </div>
           <div className="flex items-center gap-3 text-xs">
@@ -384,10 +400,10 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
               <button
                 id="cmd-import-history-btn"
                 onClick={onOpenHistoricalImport}
-                className="text-slate-300 hover:text-cyan-400 flex items-center gap-1 font-medium transition-colors"
+                className="text-slate-300 hover:text-cyan-500 flex items-center gap-1 font-bold uppercase tracking-wider transition-colors"
                 title="Import past archives from Apple Health, Garmin, Oura, Dexcom"
               >
-                <Layers className="w-3.5 h-3.5 text-cyan-400" />
+                <Layers className="w-3.5 h-3.5 text-cyan-500" />
                 Import Past Data
               </button>
             )}
@@ -395,16 +411,16 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
               <button
                 id="cmd-patient-trust-btn"
                 onClick={onOpenPatientTrust}
-                className="text-slate-300 hover:text-cyan-400 flex items-center gap-1 font-medium transition-colors"
+                className="text-slate-300 hover:text-cyan-500 flex items-center gap-1 font-bold uppercase tracking-wider transition-colors"
                 title="Manage Doctor Sharing, Privacy & Data Deletion"
               >
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
                 Privacy & Doctor Access
               </button>
             )}
             <button
               onClick={() => onNavigateTab('vitals')}
-              className="font-semibold text-cyan-400 hover:text-cyan-300 flex items-center gap-1"
+              className="font-bold text-cyan-500 hover:text-cyan-600 flex items-center gap-1 uppercase tracking-wider"
             >
               All Panels <ChevronRight className="w-3.5 h-3.5" />
             </button>
@@ -416,14 +432,14 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
           {/* Tile 1: Heart Rate & Live Pulse */}
           <div 
             onClick={() => onNavigateTab('vitals')}
-            className="bg-slate-900/80 rounded-xl p-4 border border-slate-800 hover:border-cyan-500/40 cursor-pointer transition-all flex flex-col justify-between shadow-sm group"
+            className="bg-slate-900 p-4 border-2 border-slate-50 hover:border-cyan-500 cursor-pointer transition-all flex flex-col justify-between hard-shadow-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none group"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
                 <Heart className="w-3.5 h-3.5 text-rose-400" />
                 <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Resting Heart Rate</span>
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+              <span className="text-[10px] font-bold px-2 py-0.5 bg-emerald-500 text-slate-50 border-2 border-slate-50 uppercase tracking-widest">
                 In Range
               </span>
             </div>
@@ -456,14 +472,14 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
           {/* Tile 2: Blood Pressure & Cardiovascular Risk */}
           <div 
             onClick={() => onNavigateTab('vitals')}
-            className="bg-slate-900/80 rounded-xl p-4 border border-slate-800 hover:border-cyan-500/40 cursor-pointer transition-all flex flex-col justify-between shadow-sm group"
+            className="bg-slate-900 p-4 border-2 border-slate-50 hover:border-cyan-500 cursor-pointer transition-all flex flex-col justify-between hard-shadow-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none group"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
                 <Activity className="w-3.5 h-3.5 text-cyan-400" />
                 <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Blood Pressure</span>
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+              <span className="text-[10px] font-bold px-2 py-0.5 bg-emerald-500 text-slate-50 border-2 border-slate-50 uppercase tracking-widest">
                 In Range
               </span>
             </div>
@@ -494,14 +510,14 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
           {/* Tile 3: Sleep Staging & Recovery */}
           <div 
             onClick={() => onNavigateTab('sleep')}
-            className="bg-slate-900/80 rounded-xl p-4 border border-slate-800 hover:border-cyan-500/40 cursor-pointer transition-all flex flex-col justify-between shadow-sm group"
+            className="bg-slate-900 p-4 border-2 border-slate-50 hover:border-cyan-500 cursor-pointer transition-all flex flex-col justify-between hard-shadow-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none group"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
                 <Moon className="w-3.5 h-3.5 text-indigo-400" />
                 <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Sleep Architecture</span>
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">
+              <span className="text-[10px] font-bold px-2 py-0.5 bg-indigo-500 text-slate-50 border-2 border-slate-50 uppercase tracking-widest">
                 Score: {latestSleep.sleepScore}
               </span>
             </div>
@@ -532,14 +548,14 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
           {/* Tile 4: Daily Steps & Activity Load */}
           <div 
             onClick={() => onNavigateTab('activity')}
-            className="bg-slate-900/80 rounded-xl p-4 border border-slate-800 hover:border-cyan-500/40 cursor-pointer transition-all flex flex-col justify-between shadow-sm group"
+            className="bg-slate-900 p-4 border-2 border-slate-50 hover:border-cyan-500 cursor-pointer transition-all flex flex-col justify-between hard-shadow-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none group"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
                 <Flame className="w-3.5 h-3.5 text-orange-400" />
                 <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Daily Movement</span>
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+              <span className="text-[10px] font-bold px-2 py-0.5 bg-emerald-500 text-slate-50 border-2 border-slate-50 uppercase tracking-widest">
                 Target Met
               </span>
             </div>
@@ -569,36 +585,36 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
       </div>
 
       {/* PHYSICIAN & MEDICAL PROFESSIONAL CLINICAL PDF REPORT BANNER */}
-      <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-emerald-950/40 rounded-2xl p-5 border border-emerald-500/30 shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div className="flex items-start gap-3.5">
-          <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex-shrink-0 mt-0.5">
+      <div className="bg-slate-900 p-5 border-2 border-slate-50 hard-shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4 newsprint-texture">
+        <div className="flex items-start gap-3.5 relative z-10">
+          <div className="p-3 bg-emerald-500 text-slate-50 border-2 border-slate-50 flex-shrink-0 mt-0.5 hard-shadow-sm">
             <FileText className="w-6 h-6" />
           </div>
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-bold text-white tracking-wide">
+              <h3 className="text-base font-black tracking-tight text-slate-100 font-serif-display">
                 Physician & Medical Professional Health Brief
               </h3>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase tracking-wider">
+              <span className="text-[10px] font-bold px-2 py-0.5 bg-emerald-500 text-slate-50 border-2 border-slate-50 uppercase tracking-widest">
                 PDF Export
               </span>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed max-w-2xl">
+            <p className="text-xs text-slate-300 leading-relaxed max-w-2xl font-body-serif">
               Generate a comprehensive clinical report synthesizing your 90-day multi-device biometrics, Quest lab diagnostic panels, and AI-adapted training & nutrition plan for sharing with your doctor, cardiologist, or trainer.
             </p>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-400 pt-0.5">
-              <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-emerald-400" /> Cardiovascular & HRV Baselines</span>
-              <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-emerald-400" /> Quest Lab Reference Intervals</span>
-              <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-emerald-400" /> 7-Day Workout Split Rationale</span>
-              <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-emerald-400" /> EHR/EMR Copy Support</span>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-400 pt-0.5 font-mono uppercase tracking-wider">
+              <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Cardiovascular & HRV Baselines</span>
+              <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Quest Lab Reference Intervals</span>
+              <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> 7-Day Workout Split Rationale</span>
+              <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> EHR/EMR Copy Support</span>
             </div>
           </div>
         </div>
 
-        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 w-full md:w-auto flex-shrink-0">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 w-full md:w-auto flex-shrink-0 relative z-10">
           <button
             onClick={onOpenDoctorReport}
-            className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 hover:from-emerald-400 hover:to-cyan-400 flex items-center justify-center gap-2 transition-all shadow-md shadow-emerald-500/20 font-sans"
+            className="w-full sm:w-auto px-4 py-2.5 text-xs font-bold uppercase tracking-wider bg-emerald-500 text-slate-50 hover:bg-cyan-500 border-2 border-slate-50 flex items-center justify-center gap-2 transition-all hard-shadow-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none font-sans"
           >
             <FileText className="w-4 h-4" />
             Generate Doctor PDF Report
@@ -610,7 +626,7 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Left 2 Cols: Adaptive Health Protocol for Today */}
-        <div className="lg:col-span-2 bg-slate-900/90 rounded-2xl p-5 sm:p-6 border border-slate-800 space-y-4 shadow-md">
+        <div className="lg:col-span-2 bg-slate-900 p-5 sm:p-6 border-2 border-slate-50 space-y-4 hard-shadow-sm newsprint-texture">
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
             <div>
               <div className="flex items-center gap-2">
@@ -798,7 +814,7 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
         <div className="space-y-4">
           
           {/* Quick Launch Control Hub */}
-          <div className="bg-slate-900/90 rounded-2xl p-5 border border-slate-800 space-y-3 shadow-md">
+          <div className="bg-slate-900 p-5 border-2 border-slate-50 space-y-3 hard-shadow-sm">
             <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
               <Zap className="w-4 h-4 text-cyan-400" />
               Quick Actions
@@ -875,7 +891,7 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
           </div>
 
           {/* Connected Streams Quick Ledger */}
-          <div className="bg-slate-900/90 rounded-2xl p-5 border border-slate-800 space-y-3 shadow-md">
+          <div className="bg-slate-900 p-5 border-2 border-slate-50 space-y-3 hard-shadow-sm">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Connected Ecosystem</span>
               <button
@@ -910,47 +926,48 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({
 
       {/* MODAL: Transparent Vital Score Calculation Formula */}
       {showFormulaModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl animate-scaleUp">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div className="fixed inset-0 z-50 bg-slate-50/40 flex items-center justify-center p-4">
+          <div className="bg-slate-900 border-2 border-slate-50 max-w-lg w-full p-6 space-y-4 hard-shadow-lg animate-scaleUp">
+            <div className="flex items-center justify-between border-b-2 border-slate-50 pb-3">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-cyan-400" />
-                <h3 className="text-base font-bold text-white">Vital Score Formula Transparency</h3>
+                <ShieldCheck className="w-5 h-5 text-cyan-500" />
+                <h3 className="text-base font-black text-slate-100 font-serif-display">Vital Score Formula Transparency</h3>
               </div>
               <button
                 onClick={() => setShowFormulaModal(false)}
-                className="text-slate-400 hover:text-white p-1"
+                className="text-slate-400 hover:text-slate-100 hover:bg-cyan-500 hover:text-slate-950 p-1 border-2 border-slate-50 transition-all"
+                aria-label="Close"
               >
                 ✕
               </button>
             </div>
 
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-slate-300 leading-relaxed font-body-serif">
               Unlike black-box fitness algorithms, VITALOS computes your daily readiness using verifiable, weighted physiological dimensions:
             </p>
 
             <div className="space-y-3">
               {formulaBreakdown.map((item, idx) => (
-                <div key={idx} className="bg-slate-950 p-3 rounded-xl border border-slate-800/80 flex items-center justify-between">
+                <div key={idx} className="bg-slate-950/60 p-3 border-2 border-slate-50 flex items-center justify-between">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-white">{item.label}</span>
-                      <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400">
-                        Weight: {item.weight}
+                      <span className="text-xs font-bold text-slate-100 uppercase tracking-wider">{item.label}</span>
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 bg-cyan-500 text-slate-950 border border-slate-50 font-mono">
+                        W: {item.weight}
                       </span>
                     </div>
-                    <span className="text-[11px] text-slate-400 mt-0.5 block">{item.metricRef}</span>
+                    <span className="text-[11px] text-slate-400 mt-0.5 block font-mono">{item.metricRef}</span>
                   </div>
-                  <span className="text-sm font-black text-cyan-400">{item.value}/100</span>
+                  <span className="text-lg font-black text-cyan-500 font-mono">{item.value}/100</span>
                 </div>
               ))}
             </div>
 
-            <div className="pt-3 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
-              <span>Overall: <strong className="text-white">{dynamicVitalScore.overall} / 100</strong> ({dynamicVitalScore.status})</span>
+            <div className="pt-3 border-t-2 border-slate-50 text-[11px] text-slate-400 flex items-center justify-between font-mono uppercase tracking-wider">
+              <span>Overall: <strong className="text-slate-100">{dynamicVitalScore.overall} / 100</strong> ({dynamicVitalScore.status})</span>
               <button
                 onClick={() => setShowFormulaModal(false)}
-                className="px-3 py-1 rounded bg-cyan-500 text-slate-950 font-bold text-xs hover:bg-cyan-400 transition-all"
+                className="px-3 py-1.5 bg-cyan-500 text-slate-950 border-2 border-slate-50 font-bold text-xs uppercase tracking-wider hover:translate-x-[2px] hover:translate-y-[2px] hard-shadow-sm hover:shadow-none transition-all"
               >
                 Close
               </button>

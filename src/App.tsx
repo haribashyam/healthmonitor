@@ -235,7 +235,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-cyan-500 selection:text-slate-950 flex flex-col justify-between">
+    <div className="min-h-screen text-slate-100 font-sans selection:bg-cyan-500 selection:text-slate-950 flex flex-col justify-between bg-[#fffdf5]/0">
       {/* Accessibility Skip-to-content Link (Part 2 Item 12) */}
       <a href="#main-content" className="skip-link">
         Skip to main health content
