@@ -582,6 +582,27 @@ export interface MultiModelConsensusReport {
 // ----------------------------------------------------
 // Systems 29-31: DATA QUALITY & SOURCE CONFLICTS
 // ----------------------------------------------------
+export interface DeviceConflictRecord {
+  id: string;
+  timestamp: string;
+  metricName: string;
+  deviceA: { name: string; value: string | number; confidenceScore: number };
+  deviceB: { name: string; value: string | number; confidenceScore: number };
+  resolvedValue: string | number;
+  chosenSource: string;
+  resolutionReason: string;
+  status: 'auto_resolved' | 'manual_review' | 'flagged';
+}
+
+export interface DataQualityMetric {
+  source: string;
+  metricCategory: string;
+  samplingFrequency: string;
+  missingDataPercentage: number;
+  anomalyCount: number;
+  trustScore: number;
+}
+
 export interface SourceConflictItem {
   id: string;
   metric: string;
@@ -592,6 +613,7 @@ export interface SourceConflictItem {
   resolutionStrategy: 'Prefer Garmin (High Precision GPS)' | 'Prefer Apple Watch (Optical HR)' | 'Average Both' | 'Keep Separate';
   isResolved: boolean;
 }
+
 
 export interface DataCompletenessCategory {
   category: string;

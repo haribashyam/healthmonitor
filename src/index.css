@@ -1,1 +1,108 @@
 @import "tailwindcss";
+
+/* Theme Custom Variables */
+:root {
+  --bg-primary: #020617;
+  --bg-secondary: #0f172a;
+  --bg-card: #1e293b;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent-cyan: #06b6d4;
+  --accent-emerald: #10b981;
+  --border-color: #334155;
+}
+
+[data-theme="light"] {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #f1f5f9;
+  --bg-card: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --accent-cyan: #0891b2;
+  --accent-emerald: #059669;
+  --border-color: #cbd5e1;
+}
+
+/* Accessibility: Skip-to-content Link */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  background: #06b6d4;
+  color: #020617;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 8px;
+  z-index: 9999;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 16px;
+  outline: 2px solid #ffffff;
+}
+
+/* Universal Focus Visible Ring */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #06b6d4;
+  outline-offset: 2px;
+}
+
+/* Print Stylesheet */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 12pt !important;
+  }
+
+  /* Hide navigation, cookie banners, floating controls, live animations */
+  header,
+  footer,
+  #cookie-consent-banner,
+  #back-to-top-btn,
+  #floating-support-bubble,
+  #live-workout-modal,
+  .no-print,
+  button,
+  .animate-pulse,
+  .animate-ping {
+    display: none !important;
+  }
+
+  /* Expand containers for full page printing */
+  main, #main-content {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .bg-slate-900,
+  .bg-slate-950,
+  .bg-slate-800 {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border-color: #cccccc !important;
+    box-shadow: none !important;
+  }
+
+  .text-white,
+  .text-slate-100,
+  .text-slate-200,
+  .text-slate-300,
+  .text-slate-400 {
+    color: #111111 !important;
+  }
+
+  /* Expand details/summary for full clinical review */
+  details {
+    display: block !important;
+  }
+  details[open] summary, details summary {
+    font-weight: bold !important;
+  }
+}

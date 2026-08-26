@@ -40,6 +40,11 @@ import { HelpCenterView } from './components/production/HelpCenterView';
 import { UXStatesView, UXStateType } from './components/production/UXStatesView';
 import { Footer } from './components/Footer';
 import { CookieBanner } from './components/CookieBanner';
+import { ScrollProgressBar } from './components/production/ScrollProgressBar';
+import { BackToTopButton } from './components/production/BackToTopButton';
+import { FloatingSupportBubble } from './components/production/FloatingSupportBubble';
+import { GlobalSearchModal } from './components/production/GlobalSearchModal';
+import { initUTMTracking } from './utils/utmTracker';
 
 import {
   initialDataSources,
@@ -59,6 +64,42 @@ import { Activity as ActivityType, HealthJournalEntry } from './types';
 export default function App() {
   const [activeTab, setActiveTab] = useState<string>('command');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [isGlobalSearchOpen, setIsGlobalSearchOpen] = useState<boolean>(false);
+
+  // Theme Management (Light / Dark)
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    try {
+      const savedTheme = localStorage.getItem('vitalos_theme');
+      if (savedTheme === 'light' || savedTheme === 'dark') {
+        return savedTheme;
+      }
+      if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        return 'light';
+      }
+    } catch (e) {
+      console.debug('Theme initialization error:', e);
+    }
+    return 'dark';
+  });
+
+  // Synchronize 'data-theme' attribute to the root html element and save to localStorage
+  useEffect(() => {
+    try {
+      document.documentElement.setAttribute('data-theme', theme);
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      localStorage.setItem('vitalos_theme', theme);
+    } catch (e) {
+      console.debug('Failed to set theme attribute/storage:', e);
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
   // Sub-routes for Production Pages
   const [activeLegalDoc, setActiveLegalDoc] = useState<LegalDocType>('privacy');
@@ -89,6 +130,10 @@ export default function App() {
   const [liveBpm, setLiveBpm] = useState<number>(72);
   const [isBleConnected, setIsBleConnected] = useState<boolean>(false);
   const [bleDeviceName, setBleDeviceName] = useState<string>('Apple Watch Live Pulse');
+
+  useEffect(() => {
+    initUTMTracking();
+  }, []);
 
   useEffect(() => {
     const ble = WebBluetoothManager.getInstance();
@@ -186,7 +231,14 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-cyan-500 selection:text-slate-950 flex flex-col justify-between">
-      
+      {/* Accessibility Skip-to-content Link (Part 2 Item 12) */}
+      <a href="#main-content" className="skip-link">
+        Skip to main health content
+      </a>
+
+      {/* Global Scroll Depth Indicator (Part 2 Item 8) */}
+      <ScrollProgressBar />
+
       <div>
         {/* Top Main Navigation & Command Bar */}
         <Navbar
@@ -196,6 +248,7 @@ export default function App() {
           onOpenWhatChanged={() => setIsWhatChangedOpen(true)}
           onOpenDoctorReport={() => setIsDoctorReportOpen(true)}
           onOpenDataMap={() => setIsDataMapOpen(true)}
+          onOpenGlobalSearch={() => setIsGlobalSearchOpen(true)}
           onOpenWorkspace={(tab) => {
             setWorkspaceInitialTab(tab || 'gmail');
             setIsWorkspaceModalOpen(true);
@@ -206,10 +259,13 @@ export default function App() {
           isBleConnected={isBleConnected}
           bleDeviceName={bleDeviceName}
           onOpenLifecycle={handleOpenLifecycle}
+          theme={theme}
+          onToggleTheme={toggleTheme}
         />
 
         {/* Main View Container */}
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <main id="main-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+
           {activeTab === 'command' && (
             <CommandCenter
               vitalScore={vitalScore}
@@ -461,7 +517,27 @@ export default function App() {
         vitalScore={vitalScore}
       />
 
+      {/* Global Instant Search (Part 2 Item 3 - Cmd+K) */}
+      <GlobalSearchModal
+        isOpen={isGlobalSearchOpen}
+        onClose={() => setIsGlobalSearchOpen(false)}
+        onSelectTab={(tab) => {
+          setActiveTab(tab);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+      />
+
+      {/* Back to Top Floating Button (Part 2 Item 4) */}
+      <BackToTopButton />
+
+      {/* Floating Quick Support & AI Copilot Bubble (Part 2 Item 20) */}
+      <FloatingSupportBubble
+        onOpenAskData={() => setActiveTab('ask')}
+        onOpenHelpCenter={() => setActiveTab('help')}
+      />
+
     </div>
   );
 }
+
 

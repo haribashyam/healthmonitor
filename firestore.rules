@@ -94,6 +94,66 @@ service cloud.firestore {
           && incoming().userId == existing().userId;
         allow delete: if isOwner(userId) && isValidId(logId);
       }
+
+      // Medications & Supplements subcollection
+      match /supplements/{suppId} {
+        allow get: if isOwner(userId) && isValidId(suppId);
+        allow list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(suppId)
+          && incoming().userId == userId
+          && incoming().name is string;
+        allow update: if isOwner(userId) && isValidId(suppId)
+          && incoming().userId == existing().userId;
+        allow delete: if isOwner(userId) && isValidId(suppId);
+      }
+
+      // Health Experiments & N=1 Trials subcollection
+      match /experiments/{expId} {
+        allow get: if isOwner(userId) && isValidId(expId);
+        allow list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(expId)
+          && incoming().userId == userId
+          && incoming().title is string;
+        allow update: if isOwner(userId) && isValidId(expId)
+          && incoming().userId == existing().userId;
+        allow delete: if isOwner(userId) && isValidId(expId);
+      }
+
+      // Injury & Mobility Rehabilitation subcollection
+      match /injuries/{injuryId} {
+        allow get: if isOwner(userId) && isValidId(injuryId);
+        allow list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(injuryId)
+          && incoming().userId == userId
+          && incoming().joint is string;
+        allow update: if isOwner(userId) && isValidId(injuryId)
+          && incoming().userId == existing().userId;
+        allow delete: if isOwner(userId) && isValidId(injuryId);
+      }
+
+      // Emergency & Medical ID subcollection
+      match /emergencyCare/{recordId} {
+        allow get: if isOwner(userId) && isValidId(recordId);
+        allow list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(recordId)
+          && incoming().userId == userId;
+        allow update: if isOwner(userId) && isValidId(recordId)
+          && incoming().userId == existing().userId;
+        allow delete: if isOwner(userId) && isValidId(recordId);
+      }
+
+      // Strength Training & 1RM subcollection
+      match /strengthLogs/{logId} {
+        allow get: if isOwner(userId) && isValidId(logId);
+        allow list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(logId)
+          && incoming().userId == userId
+          && incoming().exerciseName is string;
+        allow update: if isOwner(userId) && isValidId(logId)
+          && incoming().userId == existing().userId;
+        allow delete: if isOwner(userId) && isValidId(logId);
+      }
     }
   }
 }
+
