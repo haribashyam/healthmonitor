@@ -1,35 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  Search,
-  Activity,
-  Heart,
-  Moon,
-  Utensils,
-  Dumbbell,
-  Pill,
-  Scale,
-  FlaskConical,
-  Sun,
-  ShieldCheck,
-  ShieldAlert,
-  Brain,
-  Cpu,
-  Users,
-  GitMerge,
-  Sparkles,
-  Zap,
-  Layers,
-  Sliders,
-  Calendar,
-  Award,
-  BookOpen,
-  User,
-  LifeBuoy,
-  FileText,
-  X,
-  ArrowRight,
-  Command
-} from 'lucide-react';
+import { Search, Activity, Heart, Moon, Utensils, Dumbbell, Pill, Scale, FlaskConical, Sun, ShieldCheck, ShieldAlert, Brain, Cpu, Users, GitMerge, Sparkles, Zap, Layers, FileSliders as Sliders, Calendar, Award, BookOpen, User, LifeBuoy, FileText, X, ArrowRight, Command } from 'lucide-react';
 
 interface GlobalSearchModalProps {
   isOpen: boolean;
@@ -57,27 +27,11 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const searchDatabase: SearchItem[] = [
-    { id: 'command', title: 'Command Center & Live Pulse', category: 'Core Dashboard', keywords: ['home', 'dashboard', 'live', 'heart rate', 'bpm', 'overview'], tabId: 'command', icon: Activity, description: 'Live biometric stream, quick vital alerts, and readiness status.' },
-    { id: 'strength', title: 'Strength Training & 1RM Calculator', category: 'Fitness & Muscle', keywords: ['squat', 'bench', 'deadlift', 'rpe', '1rm', 'hypertrophy', 'volume'], tabId: 'strength', icon: Dumbbell, description: 'Track progressive overload, calculate estimated 1RM, and log lifting sets.' },
-    { id: 'supplements', title: 'Medication & Supplement Matrix', category: 'Pharmacology', keywords: ['vitamins', 'magnesium', 'creatine', 'dosing', 'adherence', 'pills'], tabId: 'supplements', icon: Pill, description: 'Morning/bedtime dosing schedules, synergy flags, and refill reminders.' },
-    { id: 'metabolic', title: 'Body Composition & Interstitial CGM', category: 'Metabolism', keywords: ['glucose', 'dexa', 'visceral fat', 'cgm', 'hba1c', 'homa-ir', 'muscle'], tabId: 'metabolic', icon: Scale, description: 'Continuous blood sugar curve, % time-in-range, and DEXA body scans.' },
-    { id: 'experiments', title: 'N=1 Personal Health Experiments Lab', category: 'Research', keywords: ['trials', 'hypothesis', 'baseline', 'p-value', 'curfew', 'cold shower'], tabId: 'experiments', icon: FlaskConical, description: 'Design 14-day personal health trials and measure statistical significance.' },
-    { id: 'circadian', title: 'Circadian Entrainment & Environmental AQI', category: 'Environment', keywords: ['sunlight', 'air quality', 'aqi', 'pm2.5', 'uv', 'jetlag', 'sleep midpoint'], tabId: 'circadian', icon: Sun, description: 'Ambient air quality, morning light timers, and circadian consistency.' },
-    { id: 'injury', title: 'Injury Tracker & Joint Rehab Matrix', category: 'Recovery', keywords: ['pain', 'knee', 'shoulder', 'rehab', 'contraindications', 'mobility'], tabId: 'injury', icon: ShieldCheck, description: 'Anatomical injury tracking, return-to-sport phases, and safe exercise substitutes.' },
-    { id: 'family', title: 'Universal Medical ID & Caregiver Network', category: 'Emergency', keywords: ['emergency', 'blood type', 'allergies', 'doctor', 'caregiver', 'qr'], tabId: 'family', icon: ShieldAlert, description: 'Lockscreen-ready emergency ID, physician contacts, and multi-profile switching.' },
-    { id: 'focus', title: 'Cognitive Focus & Screen Latency Engine', category: 'Mental Wellness', keywords: ['pomodoro', 'deep focus', '20-20-20', 'screen time', 'blue light', 'fatigue'], tabId: 'focus', icon: Brain, description: 'Focus timer, eye break intervals, and screen-time sleep latency audit.' },
-    { id: 'ai-lab', title: 'Multi-LLM Consensus Lab', category: 'AI Intelligence', keywords: ['gemini', 'claude', 'gpt', 'comparison', 'audit', 'consensus'], tabId: 'ai-lab', icon: Cpu, description: 'Side-by-side prompt audits of Gemini 2.5, Claude 3.7, and GPT-4o.' },
-    { id: 'clubs', title: 'Athletic Clubs & Segment PRs', category: 'Community', keywords: ['social', 'segments', 'challenges', 'leaderboard', 'kudos', 'strava'], tabId: 'clubs', icon: Users, description: 'Join endurance challenges, celebrate segment PRs, and share achievements.' },
-    { id: 'data-quality', title: 'Universal Data Quality & Provenance', category: 'Security & Audit', keywords: ['conflicts', 'sampling', 'kalman', 'sensors', 'bluetooth', 'provenance'], tabId: 'data-quality', icon: GitMerge, description: 'Multi-device conflict resolution with Bayesian confidence weighting.' },
-    { id: 'vitals', title: 'Vitals & Lab Biomarkers', category: 'Clinical', keywords: ['blood pressure', 'cholesterol', 'ldl', 'crp', 'blood test', 'labcorp', 'quest'], tabId: 'vitals', icon: Heart, description: 'View comprehensive metabolic, lipid, and hormonal blood test biomarkers.' },
-    { id: 'activity', title: 'Activity & Cardio Analytics', category: 'Fitness', keywords: ['running', 'cycling', 'vo2 max', 'training load', 'trimp', 'zones', 'strava'], tabId: 'activity', icon: Activity, description: 'Deep dive into training volume, HR zone distribution, and fitness trends.' },
-    { id: 'sleep', title: 'Sleep Architecture & Recovery', category: 'Recovery', keywords: ['rem', 'deep sleep', 'hrv', 'recovery score', 'sleep debt', 'oura', 'whoop'], tabId: 'sleep', icon: Moon, description: 'Sleep stage breakdown, overnight HRV RMSSD, and autonomic nervous recovery.' },
-    { id: 'nutrition', title: 'Precision Nutrition & Fueling', category: 'Nutrition', keywords: ['calories', 'protein', 'macros', 'carbs', 'fats', 'fiber', 'hydration'], tabId: 'nutrition', icon: Utensils, description: 'Daily macronutrient balancing, micronutrient targets, and meal timing logs.' },
-    { id: 'plan', title: 'Adaptive AI Health Protocol', category: 'AI Intelligence', keywords: ['workout plan', 'shopping list', 'diet', 'coach', 'adaptive rules'], tabId: 'plan', icon: Sparkles, description: 'Personalized 7-day workout and nutrition split with grocery essentials.' },
-    { id: 'ask', title: 'Ask My Data (Natural Language)', category: 'AI Intelligence', keywords: ['search data', 'chat', 'copilot', 'query', 'trends', 'questions'], tabId: 'ask', icon: Zap, description: 'Query your entire unified telemetry history in plain English.' },
-    { id: 'sources', title: 'Universal Data Hub & Lab OCR', category: 'Integrations', keywords: ['apple health', 'garmin', 'oura', 'fitbit', 'upload', 'pdf', 'ocr'], tabId: 'sources', icon: Layers, description: 'Connect wearables and extract lab biomarkers from PDF / image reports.' },
-    { id: 'simulator', title: 'What-If Physiological Simulator', category: 'Predictive', keywords: ['simulate', 'future', 'prediction', 'vo2 max', 'weight loss', 'steps'], tabId: 'simulator', icon: Sliders, description: 'Predict changes in cardiovascular and metabolic metrics from lifestyle shifts.' },
-    { id: 'help', title: 'Help Center & Knowledge Base', category: 'Support', keywords: ['faq', 'support', 'contact', 'troubleshooting', 'sensors'], tabId: 'help', icon: LifeBuoy, description: 'Frequently asked questions, Bluetooth pairing guides, and support contact.' }
+    { id: 'dashboard', title: 'Dashboard & Live Pulse', category: 'Core', keywords: ['home', 'dashboard', 'live', 'heart rate', 'bpm', 'overview', 'vital score', 'readiness'], tabId: 'dashboard', icon: Activity, description: 'Live biometric stream, vital alerts, readiness status, and quick actions.' },
+    { id: 'health', title: 'Health Metrics & Labs', category: 'Health', keywords: ['vitals', 'labs', 'biomarkers', 'blood pressure', 'cholesterol', 'sleep', 'activity', 'nutrition', 'macros', 'glucose', 'hrv', 'rem', 'deep sleep', 'steps', 'calories', 'protein'], tabId: 'health', icon: Heart, description: 'Clinical biomarkers, sleep architecture, activity analytics, and nutrition tracking.' },
+    { id: 'coach', title: 'AI Coach & Adaptive Plan', category: 'AI', keywords: ['ask', 'plan', 'simulator', 'what-if', 'workout', 'grocery', 'adaptive', 'copilot', 'query', 'chat', 'predict', 'vo2 max'], tabId: 'coach', icon: Sparkles, description: 'Ask questions, view adaptive workout plan, and simulate lifestyle changes.' },
+    { id: 'data', title: 'Data Hub & Connected Sources', category: 'Data', keywords: ['sources', 'upload', 'lab report', 'ocr', 'apple health', 'garmin', 'oura', 'fitbit', 'bluetooth', 'stream', 'telemetry', 'connect', 'wearable'], tabId: 'data', icon: Layers, description: 'Connect wearables, upload lab reports, and monitor live telemetry streams.' },
+    { id: 'settings', title: 'Settings & Privacy', category: 'Account', keywords: ['settings', 'privacy', 'theme', 'dark', 'light', 'export', 'delete', 'cookies', 'account', 'data'], tabId: 'settings', icon: ShieldCheck, description: 'Manage theme, privacy, data export, cookie preferences, and account deletion.' },
   ];
 
   const filteredItems = query.trim()
