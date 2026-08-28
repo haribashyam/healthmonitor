@@ -23,6 +23,7 @@ import { TimelineView } from './components/TimelineView';
 import { CalendarView } from './components/CalendarView';
 import { AchievementsView } from './components/AchievementsView';
 import { HealthJournalView } from './components/HealthJournalView';
+import { GoogleMapsHealthPortalView } from './components/GoogleMapsHealthPortalView';
 import { CustomerLifecycleView, LifecycleViewType } from './components/production/CustomerLifecycleView';
 import { GoogleWorkspaceModal } from './components/GoogleWorkspaceModal';
 import { DataMapModal } from './components/DataMapModal';
@@ -30,6 +31,7 @@ import { Footer } from './components/Footer';
 import { LiveWorkoutModal } from './components/LiveWorkoutModal';
 import { WhatChangedModal } from './components/WhatChangedModal';
 import { DoctorReportModal } from './components/DoctorReportModal';
+import { SpecialDesksModal } from './components/SpecialDesksModal';
 import { GlobalSearchModal } from './components/production/GlobalSearchModal';
 import { BackToTopButton } from './components/production/BackToTopButton';
 import { initUTMTracking } from './utils/utmTracker';
@@ -45,11 +47,13 @@ import {
   initialHealthJournal
 } from './data/initialHealthData';
 import { WebBluetoothManager } from './utils/bluetooth';
+import { bluetoothManager } from './services/bluetoothService';
 import { Activity as ActivityType, HealthJournalEntry } from './types';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<string>('command');
   const [isGlobalSearchOpen, setIsGlobalSearchOpen] = useState(false);
+  const [isSpecialDesksOpen, setIsSpecialDesksOpen] = useState(false);
   const [askPrompt, setAskPrompt] = useState<string | undefined>(undefined);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -91,79 +95,104 @@ export default function App() {
   // Live Bluetooth simulation state
   const [liveBpm, setLiveBpm] = useState(72);
   const [isBleConnected, setIsBleConnected] = useState(false);
-  const [bleDeviceName] = useState('Apple Watch Ultra 2');
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [bleDeviceName, setBleDeviceName] = useState('Apple Watch Ultra 2');
 
   useEffect(() => { initUTMTracking(); }, []);
 
+  // Web Bluetooth service listener
   useEffect(() => {
-    const ble = WebBluetoothManager.getInstance();
-    const unsub = ble.onHeartRateData(d => setLiveBpm(d.heartRate));
-    ble.startSimulation('Apple Watch Ultra 2');
-    setIsBleConnected(true);
-    return () => { unsub(); ble.stopSimulation(); };
+    const unsubData = bluetoothManager.onData((reading) => {
+      if (reading.heartRate) {
+        setLiveBpm(reading.heartRate);
+      }
+    });
+
+    const unsubConn = bluetoothManager.onConnectionChange((state) => {
+      setIsBleConnected(state.connected);
+      if (state.deviceName) setBleDeviceName(state.deviceName);
+      setIsConnecting(!!state.isConnecting);
+    });
+
+    return () => {
+      unsubData();
+      unsubConn();
+    };
   }, []);
 
-  const handleSaveWorkout = (w: any) => {
-    const act: ActivityType = {
-      id: `act-${Date.now()}`,
-      title: w.title,
-      type: w.type,
-      durationMinutes: w.durationMinutes,
-      avgHeartRate: w.avgHeartRate,
-      maxHeartRate: w.maxHeartRate,
-      calories: w.calories,
-      trainingLoad: w.trainingLoad,
-      date: w.date,
-      time: w.time,
-      source: w.source,
-      heartRateZones: { zone1: 5, zone2: Math.max(1, w.durationMinutes - 10), zone3: 4, zone4: 1, zone5: 0 }
-    };
-    setActivities(prev => [act, ...prev]);
+  // Heartbeat pulse simulation if not connected to live sensor
+  useEffect(() => {
+    if (isBleConnected) return;
+
+    const interval = setInterval(() => {
+      setLiveBpm(prev => {
+        const delta = Math.floor(Math.random() * 5) - 2;
+        const next = prev + delta;
+        return Math.min(Math.max(next, 62), 86);
+      });
+    }, 2800);
+
+    return () => clearInterval(interval);
+  }, [isBleConnected]);
+
+  // Handle saved live workout
+  const handleSaveWorkout = (newAct: ActivityType) => {
+    setActivities(prev => [newAct, ...prev]);
+  };
+
+  const openLifecycleView = (view: LifecycleViewType) => {
+    setLifecycleInitialView(view);
+    setActiveTab('lifecycle');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const openAskWithPrompt = (prompt: string) => {
     setAskPrompt(prompt);
-    setActiveTab('ask');
-  };
-
-  const openLifecycleView = (view: string) => {
-    setLifecycleInitialView(view as LifecycleViewType);
-    setActiveTab('lifecycle');
+    setActiveTab('coach');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const currentHealthContext = {
-    vitalScore,
-    latestSleep: sleepRecords[0],
-    latestVitals: { restingHR: 59, hrvRMSSD: 64, bloodPressure: '116/74', vo2Max: 48.6 },
-    recentActivities: activities.slice(0, 5),
-    biomarkers: biomarkers.slice(0, 8),
-    nutrition: nutritionDays[0]
+    vitalScore: vitalScore.current,
+    restingHr: sleepRecords[0]?.restingHr || 59,
+    hrv: sleepRecords[0]?.hrvAvg || 64,
+    sleepDuration: sleepRecords[0] ? `${Math.floor(sleepRecords[0].totalMinutes / 60)}h ${sleepRecords[0].totalMinutes % 60}m` : '7h 42m',
+    recentActivity: activities[0]?.title || 'Interval Running',
+    criticalBiomarkers: biomarkers.filter(b => b.status === 'attention' || b.status === 'warning').map(b => `${b.name}: ${b.value} ${b.unit}`)
   };
 
   return (
-    <div className="min-h-screen bg-[#0e0e0e] text-[#F9F9F7] font-mono flex flex-col selection:bg-[#CC0000] selection:text-white">
-      
-      {/* 1. Live Streaming Biometric Ticker Bar */}
+    <div className={`min-h-screen flex flex-col transition-colors duration-200 ${
+      theme === 'dark' ? 'bg-[#0A0A0A] text-[#F9F9F7]' : 'bg-[#FAFAF7] text-[#111111]'
+    }`}>
+      {/* 1. Real-time Telemetry & Global Status Ticker */}
       <TickerBar
         liveBpm={liveBpm}
         isBleConnected={isBleConnected}
         bleDeviceName={bleDeviceName}
-        vitalScore={vitalScore.overall}
-        onOpenLiveWorkout={() => setIsLiveWorkoutOpen(true)}
-      />
-
-      {/* 2. Sleek Top Navigation Bar & Masthead */}
-      <Navbar
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        isConnecting={isConnecting}
         onOpenLiveWorkout={() => setIsLiveWorkoutOpen(true)}
         onOpenWhatChanged={() => setIsWhatChangedOpen(true)}
         onOpenDoctorReport={() => setIsDoctorReportOpen(true)}
-        onOpenDataMap={() => setIsDataMapOpen(true)}
+        onOpenWorkspace={() => setIsWorkspaceOpen(true)}
+        onOpenSearch={() => setIsGlobalSearchOpen(true)}
+        onNavigateTab={(t) => setActiveTab(t)}
+        onOpenLifecycle={openLifecycleView}
+      />
+
+      {/* 2. Primary Masthead & Newspaper Navigation */}
+      <Navbar
+        activeTab={activeTab}
+        setActiveTab={(t) => {
+          setActiveTab(t);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        onOpenLiveWorkout={() => setIsLiveWorkoutOpen(true)}
+        onOpenWhatChanged={() => setIsWhatChangedOpen(true)}
+        onOpenDoctorReport={() => setIsDoctorReportOpen(true)}
         onOpenWorkspace={() => setIsWorkspaceOpen(true)}
         onOpenGlobalSearch={() => setIsGlobalSearchOpen(true)}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+        onOpenSpecialDesks={() => setIsSpecialDesksOpen(true)}
         liveBpm={liveBpm}
         isBleConnected={isBleConnected}
         bleDeviceName={bleDeviceName}
@@ -182,6 +211,7 @@ export default function App() {
             liveBpm={liveBpm}
             isBleConnected={isBleConnected}
             bleDeviceName={bleDeviceName}
+            isConnecting={isConnecting}
             activities={activities}
             sleepRecords={sleepRecords}
             biomarkers={biomarkers}
@@ -193,6 +223,8 @@ export default function App() {
             onOpenAskWithPrompt={openAskWithPrompt}
             onNavigateTab={(t) => setActiveTab(t)}
             onOpenWorkspace={() => setIsWorkspaceOpen(true)}
+            onOpenSpecialDesks={() => setIsSpecialDesksOpen(true)}
+            theme={theme}
           />
         )}
 
@@ -231,6 +263,16 @@ export default function App() {
             setBiomarkers={setBiomarkers}
             labReports={labReports}
             setLabReports={setLabReports}
+          />
+        )}
+
+        {/* Google Maps Platform - Clinical Facilities & Workout GPS */}
+        {activeTab === 'maps' && (
+          <GoogleMapsHealthPortalView
+            theme={theme}
+            onOpenLiveWorkout={() => setIsLiveWorkoutOpen(true)}
+            onOpenDoctorReport={() => setIsDoctorReportOpen(true)}
+            onNavigateTab={(t) => setActiveTab(t)}
           />
         )}
 
@@ -333,6 +375,7 @@ export default function App() {
           setActiveTab(t);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
+        theme={theme}
       />
 
       {/* 5. Modals & Overlays */}
@@ -340,12 +383,14 @@ export default function App() {
         isOpen={isLiveWorkoutOpen}
         onClose={() => setIsLiveWorkoutOpen(false)}
         onSaveWorkout={handleSaveWorkout}
+        theme={theme}
       />
 
       <WhatChangedModal
         isOpen={isWhatChangedOpen}
         onClose={() => setIsWhatChangedOpen(false)}
         healthContext={currentHealthContext}
+        theme={theme}
       />
 
       <DoctorReportModal
@@ -358,6 +403,29 @@ export default function App() {
         vitalScore={vitalScore}
         sources={sources}
         labReports={labReports}
+      />
+
+      <SpecialDesksModal
+        isOpen={isSpecialDesksOpen}
+        onClose={() => setIsSpecialDesksOpen(false)}
+        onSelectTab={(t) => {
+          setActiveTab(t);
+          setIsSpecialDesksOpen(false);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        onOpenLiveWorkout={() => {
+          setIsSpecialDesksOpen(false);
+          setIsLiveWorkoutOpen(true);
+        }}
+        onOpenWorkspace={() => {
+          setIsSpecialDesksOpen(false);
+          setIsWorkspaceOpen(true);
+        }}
+        onOpenDoctorReport={() => {
+          setIsSpecialDesksOpen(false);
+          setIsDoctorReportOpen(true);
+        }}
+        theme={theme}
       />
 
       <GoogleWorkspaceModal
@@ -382,6 +450,7 @@ export default function App() {
           setActiveTab(t);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
+        theme={theme}
       />
 
       <BackToTopButton />

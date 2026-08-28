@@ -1,25 +1,90 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Activity, Flame, ShieldCheck, TrendingUp, Sun, Radio, Zap, Moon, Droplets, Thermometer, Wind } from 'lucide-react';
+import {
+  Heart,
+  Activity,
+  Flame,
+  ShieldCheck,
+  TrendingUp,
+  Sun,
+  Radio,
+  Zap,
+  Moon,
+  Droplets,
+  Thermometer,
+  Wind,
+  Bluetooth,
+  Loader2,
+  CheckCircle2,
+  Check
+} from 'lucide-react';
+import { bluetoothManager, BLEConnectionState } from '../services/bluetoothService';
 
 interface TickerBarProps {
   liveBpm: number;
   isBleConnected: boolean;
   bleDeviceName: string;
+  isConnecting?: boolean;
   vitalScore?: number;
   liveSteps?: number;
   onOpenLiveWorkout?: () => void;
+  onConnectBle?: () => void;
 }
 
 export const TickerBar: React.FC<TickerBarProps> = ({
   liveBpm,
-  isBleConnected,
-  bleDeviceName,
+  isBleConnected: initialBleConnected,
+  bleDeviceName: initialBleDeviceName,
+  isConnecting: initialIsConnecting = false,
   vitalScore = 84,
   liveSteps = 11284,
-  onOpenLiveWorkout
+  onOpenLiveWorkout,
+  onConnectBle
 }) => {
   const [steps, setSteps] = useState(liveSteps);
   const [currentBpm, setCurrentBpm] = useState(liveBpm || 68);
+  const [isBleConnected, setIsBleConnected] = useState(initialBleConnected);
+  const [isConnecting, setIsConnecting] = useState(initialIsConnecting);
+  const [bleDeviceName, setBleDeviceName] = useState(initialBleDeviceName);
+
+  // Sync with prop changes
+  useEffect(() => {
+    setIsBleConnected(initialBleConnected);
+  }, [initialBleConnected]);
+
+  useEffect(() => {
+    if (initialIsConnecting !== undefined) {
+      setIsConnecting(initialIsConnecting);
+    }
+  }, [initialIsConnecting]);
+
+  useEffect(() => {
+    if (initialBleDeviceName) {
+      setBleDeviceName(initialBleDeviceName);
+    }
+  }, [initialBleDeviceName]);
+
+  // Direct Bluetooth Manager subscription
+  useEffect(() => {
+    const unsub = bluetoothManager.onConnectionChange((state: BLEConnectionState) => {
+      setIsBleConnected(state.connected);
+      setBleDeviceName(state.deviceName);
+      setIsConnecting(!!state.isConnecting);
+    });
+
+    const handleGlobalState = (e: any) => {
+      if (e.detail) {
+        setIsBleConnected(e.detail.connected);
+        if (e.detail.deviceName) setBleDeviceName(e.detail.deviceName);
+        setIsConnecting(!!e.detail.isConnecting);
+      }
+    };
+
+    window.addEventListener('bluetoothStateChanged', handleGlobalState);
+    return () => {
+      unsub();
+      window.removeEventListener('bluetoothStateChanged', handleGlobalState);
+    };
+  }, []);
 
   // Live real-time step counter and subtle HR physiological oscillation
   useEffect(() => {
@@ -46,6 +111,30 @@ export const TickerBar: React.FC<TickerBarProps> = ({
   useEffect(() => {
     if (liveBpm) setCurrentBpm(liveBpm);
   }, [liveBpm]);
+
+  const handleBluetoothAction = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isConnecting) return;
+
+    if (onConnectBle) {
+      onConnectBle();
+      return;
+    }
+
+    if (isBleConnected) {
+      // Toggle or open workout
+      if (onOpenLiveWorkout) onOpenLiveWorkout();
+    } else {
+      setIsConnecting(true);
+      try {
+        await bluetoothManager.connectDevice('heart_rate');
+      } catch (err) {
+        // Handled in service logs
+      } finally {
+        setIsConnecting(false);
+      }
+    }
+  };
 
   const rawMetrics = [
     { label: 'HR', value: `${currentBpm} BPM`, isAlert: true },
@@ -98,12 +187,51 @@ export const TickerBar: React.FC<TickerBarProps> = ({
         </div>
       </div>
 
-      {/* Right subtle live status beacon */}
-      <div className="hidden lg:flex items-center gap-2 px-3 h-full bg-[#111111] border-l border-[#262626] text-[10px] text-[#A3A3A3] flex-shrink-0 z-20">
-        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-        <span className="font-mono uppercase">{isBleConnected ? bleDeviceName : 'CONTINUOUS SYNC'}</span>
-      </div>
+      {/* Right Bluetooth Button & Live Status Beacon */}
+      <button
+        type="button"
+        onClick={handleBluetoothAction}
+        disabled={isConnecting}
+        title={
+          isConnecting
+            ? 'Scanning & pairing with Web Bluetooth sensor...'
+            : isBleConnected
+            ? `Connected: ${bleDeviceName} (Click to open live stream)`
+            : 'Click to pair Web Bluetooth heart rate or pulse monitor'
+        }
+        className={`flex items-center gap-2 px-3.5 h-full border-l transition-all select-none text-[10px] font-mono font-bold uppercase tracking-wider flex-shrink-0 z-20 ${
+          isConnecting
+            ? 'bg-amber-950/40 text-amber-300 border-amber-600/40 cursor-wait'
+            : isBleConnected
+            ? 'bg-[#151515] text-emerald-400 border-[#262626] hover:bg-[#1f1f1f] cursor-pointer'
+            : 'bg-[#181818] text-[#A3A3A3] border-[#262626] hover:text-white hover:bg-[#242424] cursor-pointer'
+        }`}
+      >
+        {isConnecting ? (
+          <>
+            <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400" />
+            <span className="text-amber-300 font-bold animate-pulse">CONNECTING...</span>
+          </>
+        ) : isBleConnected ? (
+          <>
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+            </span>
+            <Check className="w-3.5 h-3.5 text-emerald-400 stroke-[2.5]" />
+            <span className="text-white font-bold truncate max-w-[140px] sm:max-w-[200px]">
+              {bleDeviceName || 'BLE ACTIVE'}
+            </span>
+          </>
+        ) : (
+          <>
+            <Bluetooth className="w-3.5 h-3.5 text-zinc-400" />
+            <span className="text-zinc-300">PAIR BLUETOOTH</span>
+          </>
+        )}
+      </button>
 
     </div>
   );
 };
+

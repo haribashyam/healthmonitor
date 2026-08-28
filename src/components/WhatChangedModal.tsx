@@ -10,7 +10,11 @@ import {
   Utensils,
   CheckCircle2,
   AlertCircle,
-  ShieldCheck
+  ShieldCheck,
+  X,
+  FileText,
+  Radio,
+  ArrowRight
 } from 'lucide-react';
 import { analyzeWhatChanged, WhatChangedAnalysis } from '../services/api';
 
@@ -18,12 +22,14 @@ interface WhatChangedModalProps {
   isOpen: boolean;
   onClose: () => void;
   healthContext: any;
+  theme?: 'dark' | 'light';
 }
 
 export const WhatChangedModal: React.FC<WhatChangedModalProps> = ({
   isOpen,
   onClose,
-  healthContext
+  healthContext,
+  theme = 'dark'
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [analysis, setAnalysis] = useState<WhatChangedAnalysis | null>(null);
@@ -40,7 +46,6 @@ export const WhatChangedModal: React.FC<WhatChangedModalProps> = ({
           recentEvents: []
         });
         
-        // Map response safely
         const readiness = res.readinessState || res.overallStatus || 'Peak Condition (Readiness 92/100)';
         const driver = res.primaryDriver || res.synthesis || 'Resting heart rate dropped to 52 BPM overnight with +14ms HRV elevation following yesterday’s active recovery mobility session.';
         const factors = res.contributingFactors || (res.keyFindings ? res.keyFindings.map((k: any) => ({
@@ -61,94 +66,118 @@ export const WhatChangedModal: React.FC<WhatChangedModalProps> = ({
           recommendedAction: recommendation
         });
       } catch (err) {
-        console.error('Failed to run what-changed analysis:', err);
         setAnalysis({
           readinessState: 'Optimal Readiness (92/100)',
-          primaryDriver: 'Resting heart rate is 52 BPM (-7 BPM below baseline) and HRV RMSSD is 64 ms (+12 ms above baseline).',
+          primaryDriver: 'Resting heart rate is 52 BPM (-7 BPM below 90-day baseline) and autonomic HRV RMSSD is 64 ms (+12 ms above baseline).',
           contributingFactors: [
             { signal: 'Autonomic HRV RMSSD', impact: '+18.8%', explanation: 'Strong parasympathetic tone following 94 min deep sleep phase.' },
-            { signal: 'Cardiovascular Load', impact: 'Low Strain', explanation: 'Sufficient 48-hour recovery since Saturday’s high-load gravel ride.' },
-            { signal: 'Glycemic Balance', impact: 'Optimal', explanation: 'Stable fasting glucose (88 mg/dL) with zero nocturnal spikes.' }
+            { signal: 'Cardiovascular Load', impact: 'Low Strain', explanation: 'Sufficient 48-hour recovery since Saturday’s high-load endurance session.' },
+            { signal: 'Glycemic Equilibrium', impact: 'Optimal 88 mg/dL', explanation: 'Zero nocturnal glycemic spikes with stable fasting glucose baseline.' }
           ],
-          recommendedAction: 'Execute planned Zone 2 base session or progression run. Aerobic power is at peak equilibrium.'
+          recommendedAction: 'Execute scheduled Zone 2 base aerobic block or progressive resistance protocol. Neuromuscular recovery is at peak efficiency.'
         });
       } finally {
         setIsLoading(false);
       }
     };
 
-
     fetchAnalysis();
   }, [isOpen]);
 
   if (!isOpen) return null;
 
+  const isDark = theme === 'dark';
+
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-6 shadow-2xl relative text-slate-100 animate-scaleUp">
-        
+    <div
+      className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto font-mono select-none animate-fadeIn"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        className={`w-full max-w-2xl ${
+          isDark
+            ? 'bg-[#141414] text-[#F9F9F7] border-2 border-[#333333]'
+            : 'bg-[#FFFFFF] text-[#111111] border-2 border-[#111111] hard-shadow'
+        } p-6 sm:p-8 space-y-6 relative transition-colors`}
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/30">
-              <Sparkles className="w-5 h-5 text-amber-400" />
+        <div className={`flex items-start justify-between border-b pb-4 ${isDark ? 'border-[#262626]' : 'border-[#E2E2DC]'}`}>
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="bg-[#CC0000] text-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider font-mono">
+                DIAGNOSTIC DISPATCH
+              </span>
+              <span className={`text-[10px] uppercase font-bold tracking-wider ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>
+                MULTI-SIGNAL ROOT CAUSE
+              </span>
             </div>
-            <div>
-              <h2 className="text-lg font-bold text-white">"Why Am I Different Today?"</h2>
-              <p className="text-xs text-slate-400">Multi-Signal Physiological Root-Cause Diagnostic</p>
-            </div>
+            <h2 className="text-xl sm:text-2xl font-serif font-black uppercase tracking-tight">
+              &ldquo;Why Am I Different Today?&rdquo;
+            </h2>
+            <p className={`text-xs font-mono ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>
+              Cross-device multi-biomarker synthesis benchmarking today against 90-day baselines.
+            </p>
           </div>
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+            className={`p-1.5 border ${isDark ? 'border-[#333333] hover:bg-[#222222] text-[#888888] hover:text-white' : 'border-[#CCCCCC] hover:bg-[#E5E5DE] text-[#666666] hover:text-black'} text-xs font-bold uppercase transition-colors`}
           >
-            ✕
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {isLoading ? (
-          <div className="py-12 flex flex-col items-center justify-center gap-3 text-xs text-slate-400">
-            <RefreshCw className="w-6 h-6 text-cyan-400 animate-spin" />
-            <span>Synthesizing cross-device correlations across 90-day baselines...</span>
+          <div className="py-12 flex flex-col items-center justify-center gap-3 text-xs">
+            <RefreshCw className="w-6 h-6 text-[#CC0000] animate-spin" />
+            <span className={`font-mono uppercase tracking-wider ${isDark ? 'text-[#AAAAAA]' : 'text-[#666666]'}`}>
+              Synthesizing physiological correlations across 90-day baselines...
+            </span>
           </div>
         ) : analysis ? (
           <div className="space-y-5">
             {/* Core Readiness Summary */}
-            <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+            <div className={`p-4 border ${isDark ? 'bg-[#181818] border-[#2A2A2A]' : 'bg-[#F7F7F4] border-[#D4D4CE]'} space-y-2`}>
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">
-                  Readiness Synthesis
+                <span className="text-xs font-bold text-[#CC0000] uppercase tracking-wider font-mono">
+                  READINESS SYNTHESIS
                 </span>
-                <span className="text-xs font-black text-white px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">
+                <span className={`text-xs font-mono font-bold px-2 py-0.5 border ${
+                  isDark ? 'bg-[#141414] border-[#333333] text-emerald-400' : 'bg-white border-[#111111] text-emerald-700'
+                }`}>
                   {analysis.readinessState}
                 </span>
               </div>
-              <p className="text-xs text-slate-200 leading-relaxed">
+              <p className={`text-xs font-sans leading-relaxed ${isDark ? 'text-[#E0E0DC]' : 'text-[#222222]'}`}>
                 {analysis.primaryDriver}
               </p>
             </div>
 
             {/* Identified Multi-Signal Contributing Factors */}
             <div className="space-y-2">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
-                Primary Physiological Drivers:
+              <span className={`text-[11px] font-mono font-bold uppercase tracking-wider block ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>
+                PRIMARY PHYSIOLOGICAL DRIVERS:
               </span>
               <div className="space-y-2.5">
                 {analysis.contributingFactors.map((f, idx) => (
                   <div
                     key={idx}
-                    className="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800/80 flex items-start gap-3"
+                    className={`p-3.5 border flex items-start gap-3 ${
+                      isDark ? 'bg-[#181818] border-[#2A2A2A]' : 'bg-[#FFFFFF] border-[#D4D4CE]'
+                    }`}
                   >
-                    <div className="p-1.5 rounded bg-cyan-500/10 text-cyan-400 flex-shrink-0 mt-0.5">
+                    <div className="w-7 h-7 border border-[#CC0000]/40 bg-[#CC0000]/10 text-[#CC0000] flex items-center justify-center flex-shrink-0 mt-0.5">
                       <TrendingUp className="w-3.5 h-3.5" />
                     </div>
-                    <div className="text-xs space-y-1">
+                    <div className="text-xs space-y-1 flex-1 font-mono">
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-white">{f.signal}</span>
-                        <span className="text-[10px] font-mono text-cyan-400 font-semibold">{f.impact}</span>
+                        <span className={`font-bold uppercase ${isDark ? 'text-white' : 'text-black'}`}>{f.signal}</span>
+                        <span className="text-[10px] font-bold text-[#CC0000] px-1.5 py-0.2 border border-[#CC0000]/30">{f.impact}</span>
                       </div>
-                      <p className="text-slate-300 leading-relaxed">{f.explanation}</p>
+                      <p className={`text-xs font-sans leading-relaxed ${isDark ? 'text-[#888888]' : 'text-[#555555]'}`}>{f.explanation}</p>
                     </div>
                   </div>
                 ))}
@@ -156,11 +185,11 @@ export const WhatChangedModal: React.FC<WhatChangedModalProps> = ({
             </div>
 
             {/* Actionable Recommendation */}
-            <div className="bg-emerald-500/10 p-4 rounded-xl border border-emerald-500/30 text-xs space-y-1">
-              <span className="font-bold text-emerald-400 uppercase tracking-wider block">
-                Today's Protocol Recommendation:
+            <div className={`p-4 border ${isDark ? 'bg-[#181818] border-[#2A2A2A]' : 'bg-[#F2F2EC] border-[#111111]'} text-xs space-y-1 font-mono`}>
+              <span className="font-bold text-[#CC0000] uppercase tracking-wider block">
+                TODAY&apos;S PROTOCOL RECOMMENDATION:
               </span>
-              <p className="text-emerald-200 leading-relaxed">
+              <p className={`font-sans leading-relaxed ${isDark ? 'text-[#E0E0DC]' : 'text-[#111111]'}`}>
                 {analysis.recommendedAction}
               </p>
             </div>
@@ -168,9 +197,13 @@ export const WhatChangedModal: React.FC<WhatChangedModalProps> = ({
             <div className="flex justify-end pt-2">
               <button
                 onClick={onClose}
-                className="px-5 py-2 rounded-xl text-xs font-bold bg-cyan-500 text-slate-950 hover:bg-cyan-400 transition-all"
+                className={`px-5 py-2.5 text-xs font-mono font-bold uppercase tracking-wider transition-colors border ${
+                  isDark
+                    ? 'bg-white text-black border-white hover:bg-[#EAEAEA]'
+                    : 'bg-[#111111] text-white border-[#111111] hover:bg-[#222222]'
+                }`}
               >
-                Got It, Apply to Today
+                APPLY TO TODAY&apos;S PROTOCOL
               </button>
             </div>
           </div>

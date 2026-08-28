@@ -18,7 +18,8 @@ import {
   Award,
   BookOpen,
   Sun,
-  Moon
+  Moon,
+  Maximize2
 } from 'lucide-react';
 import { auth, FirebaseUserProfile, signOutUser } from '../services/firebaseAuth';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -32,6 +33,7 @@ interface NavbarProps {
   onOpenDataMap: () => void;
   onOpenWorkspace?: (tab?: 'gmail' | 'sheets' | 'picker' | 'firebase') => void;
   onOpenGlobalSearch?: () => void;
+  onOpenSpecialDesks?: () => void;
   searchQuery: string;
   setSearchQuery: (q: string) => void;
   liveBpm: number;
@@ -50,6 +52,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenDoctorReport,
   onOpenWorkspace,
   onOpenGlobalSearch,
+  onOpenSpecialDesks,
   searchQuery,
   setSearchQuery,
   liveBpm,
@@ -90,12 +93,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   const primaryTabs = [
     { id: 'command', label: 'FRONT PAGE' },
     { id: 'vitals', label: 'HEALTH' },
+    { id: 'maps', label: 'MAPS & GPS' },
     { id: 'coach', label: 'AI COACH' },
     { id: 'sources', label: 'DATA HUB' },
     { id: 'settings', label: 'SETTINGS' },
   ];
 
   const secondaryDesks = [
+    { id: 'maps', label: 'MAPS & CLINICAL GPS' },
     { id: 'clinician', label: 'CLINICIAN EHR' },
     { id: 'strength', label: 'STRENGTH & 1RM' },
     { id: 'metabolic', label: 'METABOLIC & DEXA' },
@@ -103,7 +108,10 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'circadian', label: 'CIRCADIAN & AQI' },
     { id: 'experiments', label: 'EXPERIMENTS LAB' },
     { id: 'twin', label: 'DIGITAL RADAR' },
+    { id: 'focus', label: 'COGNITIVE WELLNESS' },
+    { id: 'injury', label: 'INJURY & REHAB' },
     { id: 'journal', label: 'HEALTH JOURNAL' },
+    { id: 'timeline', label: 'LONGITUDINAL TIMELINE' },
   ];
 
   const isDark = theme === 'dark';
@@ -166,12 +174,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               {isDark ? (
                 <>
                   <Sun className="w-3.5 h-3.5 text-amber-400" />
-                  <span>LIGHT</span>
+                  <span>LIGHT MODE</span>
                 </>
               ) : (
                 <>
                   <Moon className="w-3.5 h-3.5 text-cyan-300" />
-                  <span>DARK</span>
+                  <span>DARK MODE</span>
                 </>
               )}
             </button>
@@ -243,32 +251,58 @@ export const Navbar: React.FC<NavbarProps> = ({
             })}
           </nav>
 
-          {/* Quick Desks Dropdown on Right */}
-          <div className="relative">
+          {/* Quick Desks Dropdown + Enlarge Button */}
+          <div className="relative flex items-center gap-1">
             <button
-              onClick={() => setShowMoreDesks(!showMoreDesks)}
-              className={`px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wider ${isDark ? 'text-[#A3A3A3] hover:text-white border-[#333333]' : 'text-[#666666] hover:text-[#111111] border-[#CCCCCC]'} border flex items-center gap-1`}
+              onClick={() => {
+                if (onOpenSpecialDesks) onOpenSpecialDesks();
+                else setShowMoreDesks(!showMoreDesks);
+              }}
+              className={`px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wider ${
+                isDark
+                  ? 'bg-[#181818] text-white border-[#333333] hover:border-white'
+                  : 'bg-[#F2F2EC] text-[#111111] border-[#CCCCCC] hover:border-black'
+              } border flex items-center gap-1.5 transition-colors`}
+              title="Open Enlarged Special Desks Directory"
             >
+              <Maximize2 className="w-3.5 h-3.5 text-[#CC0000]" />
               <span>SPECIAL DESKS</span>
-              <ChevronDown className="w-3.5 h-3.5" />
+              <ChevronDown className="w-3.5 h-3.5 ml-0.5" />
             </button>
 
             {showMoreDesks && (
-              <div className={`absolute right-0 mt-1 w-56 ${isDark ? 'bg-[#161616] border-[#333333]' : 'bg-[#FFFFFF] border-[#D4D4CE]'} border z-50 py-1 hard-shadow font-mono text-xs`}>
-                {secondaryDesks.map(d => (
-                  <button
-                    key={d.id}
-                    onClick={() => {
-                      setActiveTab(d.id);
-                      setShowMoreDesks(false);
-                    }}
-                    className={`w-full text-left px-3 py-2 ${isDark ? 'hover:bg-[#242424]' : 'hover:bg-[#F2F2EC]'} transition-colors flex items-center justify-between ${
-                      activeTab === d.id ? 'text-[#CC0000] font-bold' : isDark ? 'text-[#CCCCCC]' : 'text-[#333333]'
-                    }`}
-                  >
-                    <span>{d.label}</span>
-                  </button>
-                ))}
+              <div className={`absolute right-0 top-full mt-1 w-64 ${isDark ? 'bg-[#161616] border-[#333333]' : 'bg-[#FFFFFF] border-[#D4D4CE]'} border z-50 py-1 hard-shadow font-mono text-xs`}>
+                <div className={`px-3 py-2 border-b ${isDark ? 'border-[#262626] bg-[#0E0E0E]' : 'border-[#E2E2DC] bg-[#F7F7F4]'} flex items-center justify-between`}>
+                  <span className="text-[10px] font-bold text-[#CC0000] uppercase">INTELLIGENCE DESKS</span>
+                  {onOpenSpecialDesks && (
+                    <button
+                      onClick={() => {
+                        setShowMoreDesks(false);
+                        onOpenSpecialDesks();
+                      }}
+                      className="text-[10px] font-bold underline hover:text-[#CC0000]"
+                    >
+                      ENLARGE DIRECTORY ⛶
+                    </button>
+                  )}
+                </div>
+
+                <div className="max-h-72 overflow-y-auto">
+                  {secondaryDesks.map(d => (
+                    <button
+                      key={d.id}
+                      onClick={() => {
+                        setActiveTab(d.id);
+                        setShowMoreDesks(false);
+                      }}
+                      className={`w-full text-left px-3 py-2 ${isDark ? 'hover:bg-[#242424]' : 'hover:bg-[#F2F2EC]'} transition-colors flex items-center justify-between ${
+                        activeTab === d.id ? 'text-[#CC0000] font-bold bg-[#CC0000]/10' : isDark ? 'text-[#CCCCCC]' : 'text-[#333333]'
+                      }`}
+                    >
+                      <span>{d.label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
           </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Award,
   Flame,
@@ -7,93 +7,165 @@ import {
   ShieldCheck,
   TrendingUp,
   Target,
-  Sparkles
+  Sparkles,
+  Plus,
+  Clock
 } from 'lucide-react';
+import { healthStorage, UserVitalsLog } from '../utils/storage';
 
 export const AchievementsView: React.FC = () => {
+  const [vitals, setVitals] = useState<UserVitalsLog[]>([]);
+  const [labCount, setLabCount] = useState<number>(0);
+  const [sourcesCount, setSourcesCount] = useState<number>(0);
+
+  useEffect(() => {
+    setVitals(healthStorage.getVitals());
+    setLabCount(healthStorage.getLabReports().length);
+    setSourcesCount(healthStorage.getDataSources().filter(s => s.connected).length);
+
+    const handleUpdate = () => {
+      setVitals(healthStorage.getVitals());
+      setLabCount(healthStorage.getLabReports().length);
+      setSourcesCount(healthStorage.getDataSources().filter(s => s.connected).length);
+    };
+
+    window.addEventListener('vitalsUpdated', handleUpdate);
+    window.addEventListener('dataPurged', handleUpdate);
+
+    return () => {
+      window.removeEventListener('vitalsUpdated', handleUpdate);
+      window.removeEventListener('dataPurged', handleUpdate);
+    };
+  }, []);
+
+  const totalVitalsLogged = vitals.length;
+  const bpLogged = vitals.filter(v => v.type === 'blood_pressure').length;
+  const hrLogged = vitals.filter(v => v.type === 'heart_rate').length;
+  const glucoseLogged = vitals.filter(v => v.type === 'glucose').length;
+
   const achievements = [
-    { title: 'Zone 2 Endurance Master', desc: 'Accumulated 120+ minutes in Zone 2 aerobic base in a single week.', tier: 'Gold', progress: '100%', date: 'Unlocked Aug 20' },
-    { title: 'Autonomic Stabilizer', desc: 'Maintained 7 consecutive days with sleep score > 85 and HRV > 60ms.', tier: 'Diamond', progress: '100%', date: 'Unlocked Aug 22' },
-    { title: '10,000 Step Daily Streak', desc: '28 consecutive days hitting or exceeding verified 10,000 steps.', tier: 'Platinum', progress: '28/30 Days', date: 'Active' },
-    { title: 'Lab Record Fusion', desc: 'Ingested comprehensive metabolic & lipid panel with zero gaps.', tier: 'Silver', progress: '100%', date: 'Unlocked Aug 15' },
-    { title: 'Hydration Consistency', desc: 'Logged 3.0L+ daily water intake across 14 training days.', tier: 'Bronze', progress: '100%', date: 'Unlocked Aug 10' }
+    {
+      id: 'ach-first-vital',
+      title: 'First Live Biometric Log',
+      desc: 'Recorded at least 1 verified biometric reading via Web Bluetooth or manual entry.',
+      tier: 'Bronze',
+      unlocked: totalVitalsLogged >= 1,
+      progress: `${Math.min(totalVitalsLogged, 1)}/1 Reading`,
+      date: totalVitalsLogged >= 1 ? 'Unlocked' : 'In Progress'
+    },
+    {
+      id: 'ach-cardio-cadence',
+      title: 'Cardiovascular Surveillance',
+      desc: 'Logged 3+ blood pressure or heart rate data points.',
+      tier: 'Silver',
+      unlocked: (bpLogged + hrLogged) >= 3,
+      progress: `${Math.min(bpLogged + hrLogged, 3)}/3 Readings`,
+      date: (bpLogged + hrLogged) >= 3 ? 'Unlocked' : 'In Progress'
+    },
+    {
+      id: 'ach-clinical-ocr',
+      title: 'Certified Pathology Fusion',
+      desc: 'Uploaded and structured a certified clinical pathology lab report via AI OCR.',
+      tier: 'Gold',
+      unlocked: labCount >= 1,
+      progress: `${Math.min(labCount, 1)}/1 Lab Reports`,
+      date: labCount >= 1 ? 'Unlocked' : 'Upload Lab in Data Hub'
+    },
+    {
+      id: 'ach-multi-node',
+      title: 'Multi-Node Synchronization',
+      desc: 'Connected 2+ active data feeds or Web Bluetooth sensors.',
+      tier: 'Platinum',
+      unlocked: sourcesCount >= 2,
+      progress: `${Math.min(sourcesCount, 2)}/2 Sources`,
+      date: sourcesCount >= 2 ? 'Unlocked' : 'Connect in Data Hub'
+    },
+    {
+      id: 'ach-metabolic-mastery',
+      title: 'Glycemic Target Mastery',
+      desc: 'Logged fasting blood glucose readings across multiple sessions.',
+      tier: 'Diamond',
+      unlocked: glucoseLogged >= 2,
+      progress: `${Math.min(glucoseLogged, 2)}/2 Glucose Readings`,
+      date: glucoseLogged >= 2 ? 'Unlocked' : 'In Progress'
+    }
   ];
 
-  const weeklyChallenges = [
-    { title: 'Aerobic Mitochondria Push', goal: '180 mins Zone 2', current: '145 mins', pct: 80, reward: '+50 XP & Badge' },
-    { title: 'Circadian Regularity', goal: 'Sleep before 11:15 PM 5x', current: '4/5 nights', pct: 80, reward: 'Circadian Badge' },
-    { title: 'Protein Threshold', goal: '160g+ daily for 7 days', current: '6/7 days', pct: 85, reward: 'Nutrition Mastery' }
-  ];
+  const unlockedCount = achievements.filter(a => a.unlocked).length;
 
   return (
-    <div className="space-y-6 animate-fadeIn">
+    <div className="space-y-6 animate-fadeIn font-mono">
       
       {/* Header */}
-      <div className="bg-slate-900 rounded-2xl p-6 border border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-md">
+      <div className="bg-[#141414] p-6 lg:p-8 border border-[#262626] flex flex-col md:flex-row items-start md:items-center justify-between gap-6 hard-shadow">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <Award className="w-5 h-5 text-amber-400" />
-            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">Achievements & Consistency Streaks</h1>
+            <span className="bg-[#CC0000] text-white text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider">
+              AUTHENTIC MILESTONES
+            </span>
+            <h1 className="text-xl sm:text-2xl font-serif font-black text-white tracking-tight uppercase">
+              BIOMETRIC ACHIEVEMENTS & COMPLIANCE
+            </h1>
           </div>
-          <p className="text-xs text-slate-300">
-            Privacy-safe milestone tracking reinforcing long-term biological adaptations without toxic vanity metrics.
+          <p className="text-xs text-[#888888] font-sans">
+            Real milestone progression calculated dynamically from your logged vitals, connected hardware, and lab reports.
           </p>
         </div>
 
-        <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center gap-4 text-xs">
+        <div className="bg-[#1C1C1C] p-4 border border-[#2D2D2D] flex items-center gap-4 text-xs">
           <div>
-            <span className="text-slate-400 block uppercase font-bold text-[10px]">Active Streak</span>
-            <span className="text-xl font-black text-amber-400 flex items-center gap-1">
-              <Flame className="w-4 h-4" /> 28 Days
+            <span className="text-[#888888] block uppercase font-bold text-[10px]">UNLOCKED BADGES</span>
+            <span className="text-2xl font-black text-white flex items-center gap-1 font-mono">
+              <Award className="w-5 h-5 text-amber-400" /> {unlockedCount} / {achievements.length}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Weekly Challenges */}
-      <div className="bg-slate-900 rounded-2xl p-6 border border-slate-800 space-y-4 shadow-md">
-        <h3 className="text-base font-bold text-white flex items-center gap-2">
-          <Target className="w-4 h-4 text-cyan-400" /> Active Weekly Challenges
-        </h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {weeklyChallenges.map((ch, idx) => (
-            <div key={idx} className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2.5">
-              <div className="flex items-start justify-between">
-                <span className="text-xs font-bold text-white">{ch.title}</span>
-                <span className="text-[10px] text-cyan-400 font-mono">{ch.current}</span>
-              </div>
-              <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                <div className="bg-cyan-500 h-full rounded-full" style={{ width: `${ch.pct}%` }} />
-              </div>
-              <div className="flex justify-between text-[10px] text-slate-400 pt-1">
-                <span>Goal: {ch.goal}</span>
-                <span className="text-emerald-400 font-semibold">{ch.reward}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Unlocked Badges Grid */}
+      {/* Progress Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {achievements.map((ach, idx) => (
-          <div key={idx} className="bg-slate-900 rounded-xl p-5 border border-slate-800 space-y-2 shadow-sm">
-            <div className="flex items-start justify-between">
-              <div className="p-2 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                <Award className="w-5 h-5" />
+        {achievements.map((ach) => (
+          <div
+            key={ach.id}
+            className={`p-5 border flex flex-col justify-between transition-colors hard-shadow-sm ${
+              ach.unlocked
+                ? 'bg-[#151515] border-[#383838]'
+                : 'bg-[#101010] border-[#222222] opacity-75'
+            }`}
+          >
+            <div className="space-y-3">
+              <div className="flex items-start justify-between">
+                <div className={`p-2 border ${
+                  ach.unlocked
+                    ? 'bg-amber-500/10 text-amber-400 border-amber-500/30'
+                    : 'bg-zinc-900 text-zinc-600 border-zinc-800'
+                }`}>
+                  <Award className="w-5 h-5" />
+                </div>
+                <span className={`text-[10px] font-bold px-2 py-0.5 uppercase border ${
+                  ach.unlocked
+                    ? 'bg-amber-500/10 text-amber-300 border-amber-500/30'
+                    : 'bg-zinc-900 text-zinc-500 border-zinc-800'
+                }`}>
+                  {ach.tier}
+                </span>
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-950 text-amber-300 border border-amber-500/30 uppercase">
-                {ach.tier}
-              </span>
+
+              <div>
+                <h4 className="text-sm font-serif font-bold text-white leading-tight">
+                  {ach.title}
+                </h4>
+                <p className="text-xs text-[#888888] mt-1 font-sans leading-relaxed">
+                  {ach.desc}
+                </p>
+              </div>
             </div>
 
-            <h4 className="text-sm font-bold text-white pt-1">{ach.title}</h4>
-            <p className="text-xs text-slate-300 leading-relaxed">{ach.desc}</p>
-
-            <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
-              <span>{ach.date}</span>
-              <span className="text-emerald-400 font-bold">{ach.progress}</span>
+            <div className="pt-3 mt-4 border-t border-[#262626] flex items-center justify-between text-[11px]">
+              <span className={ach.unlocked ? 'text-emerald-400 font-bold' : 'text-zinc-500'}>
+                {ach.date}
+              </span>
+              <span className="text-white font-bold">{ach.progress}</span>
             </div>
           </div>
         ))}

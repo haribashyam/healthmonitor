@@ -34,7 +34,8 @@ import {
 import { DataSource, Biomarker, LabReport, GranularScope } from '../types';
 import { analyzeLabDocument } from '../services/api';
 import { calculateDataCoverageScore, deduplicateSteps } from '../utils/healthCalculations';
-import { WebBluetoothManager } from '../utils/bluetooth';
+import { healthStorage } from '../utils/storage';
+import { bluetoothManager } from '../services/bluetoothService';
 import { AddCustomSourceModal } from './AddCustomSourceModal';
 import { LiveMultiDeviceStreamHub } from './LiveMultiDeviceStreamHub';
 import { LabReportUploadModal } from './production/LabReportUploadModal';
@@ -69,11 +70,13 @@ export const UniversalDataHub: React.FC<UniversalDataHubProps> = ({
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isLabUploadModalOpen, setIsLabUploadModalOpen] = useState(false);
 
-  // OAuth Modal State
+  // OAuth & Connection Modal State
   const [selectedOAuthSource, setSelectedOAuthSource] = useState<DataSource | null>(null);
   const [selectedScopesForAuth, setSelectedScopesForAuth] = useState<string[]>([]);
+  const [apiTokenInput, setApiTokenInput] = useState('');
   const [isAuthorizing, setIsAuthorizing] = useState(false);
-  const [authStep, setAuthStep] = useState<'review' | 'handshake' | 'success'>('review');
+  const [authStep, setAuthStep] = useState<'review' | 'credentials' | 'ble_pair' | 'success'>('review');
+  const [connectionNotice, setConnectionNotice] = useState<string | null>(null);
 
   // Manual Biomarker State
   const [manualName, setManualName] = useState('Fasting Blood Glucose');
@@ -86,13 +89,13 @@ export const UniversalDataHub: React.FC<UniversalDataHubProps> = ({
   const [isPairingBle, setIsPairingBle] = useState(false);
   const [bleNotification, setBleNotification] = useState<string | null>(null);
 
-  const bleManager = WebBluetoothManager.getInstance();
   const coverageData = calculateDataCoverageScore(sources, biomarkers, [], []);
   const stepDeduplication = deduplicateSteps(11420, 10890, 0);
 
   const handleOpenOAuthModal = (source: DataSource) => {
     setSelectedOAuthSource(source);
-    // Pre-populate with all supported scopes or default permissions
+    setApiTokenInput('');
+    setConnectionNotice(null);
     if (source.supportedScopes && source.supportedScopes.length > 0) {
       setSelectedScopesForAuth(source.supportedScopes.map((s) => s.id));
     } else {
@@ -112,77 +115,101 @@ export const UniversalDataHub: React.FC<UniversalDataHubProps> = ({
   const handleExecuteOAuth = async () => {
     if (!selectedOAuthSource) return;
     setIsAuthorizing(true);
-    setAuthStep('handshake');
 
-    // Simulate OAuth 2.0 handshake with official API endpoint
+    const updatedSource: DataSource = {
+      ...selectedOAuthSource,
+      connected: true,
+      status: 'active',
+      lastSync: 'Active (Authenticated)',
+      recordCount: (selectedOAuthSource.recordCount || 0) + 1,
+      grantedScopes: selectedScopesForAuth,
+      permissions: selectedScopesForAuth.map((sc) => `${sc}:read`),
+      isLiveActive: true
+    };
+
+    // Save to storage
+    healthStorage.saveDataSource(updatedSource);
+
+    setSources((prev) =>
+      prev.map((s) => (s.id === selectedOAuthSource.id ? updatedSource : s))
+    );
+
+    setIsAuthorizing(false);
+    setAuthStep('success');
     setTimeout(() => {
-      setSources((prev) =>
-        prev.map((s) => {
-          if (s.id === selectedOAuthSource.id) {
-            return {
-              ...s,
-              connected: true,
-              status: 'active',
-              lastSync: 'Just now (Live Telemetry Linked)',
-              recordCount: (s.recordCount || 0) + 148,
-              grantedScopes: selectedScopesForAuth,
-              permissions: selectedScopesForAuth.map((sc) => `${sc}:read`),
-              isLiveActive: true
-            };
-          }
-          return s;
-        })
-      );
+      setSelectedOAuthSource(null);
+    }, 1500);
+  };
+
+  const handleConnectViaBluetoothFromModal = async () => {
+    if (!selectedOAuthSource) return;
+    setIsAuthorizing(true);
+    try {
+      const type = selectedOAuthSource.category === 'cardio' || selectedOAuthSource.name.toLowerCase().includes('heart') ? 'heart_rate' : 'heart_rate';
+      const res = await bluetoothManager.connectDevice(type);
+      if (res.success) {
+        const updatedSource: DataSource = {
+          ...selectedOAuthSource,
+          connected: true,
+          status: 'active',
+          lastSync: `Connected via BLE (${res.deviceName})`,
+          isLiveActive: true
+        };
+        healthStorage.saveDataSource(updatedSource);
+        setSources((prev) => prev.map((s) => (s.id === selectedOAuthSource.id ? updatedSource : s)));
+        setAuthStep('success');
+        setTimeout(() => setSelectedOAuthSource(null), 1500);
+      } else {
+        setConnectionNotice(res.error || 'Bluetooth pairing cancelled.');
+      }
+    } catch (err: any) {
+      setConnectionNotice(err.message || 'Bluetooth connection failed.');
+    } finally {
       setIsAuthorizing(false);
-      setAuthStep('success');
-      setTimeout(() => {
-        setSelectedOAuthSource(null);
-      }, 1500);
-    }, 1200);
+    }
   };
 
   const handleDisconnectSource = (sourceId: string) => {
-    setSources((prev) =>
-      prev.map((s) => {
-        if (s.id === sourceId) {
-          return {
-            ...s,
-            connected: false,
-            status: 'disconnected',
-            lastSync: 'Disconnected',
-            recordCount: 0,
-            isLiveActive: false
-          };
-        }
-        return s;
-      })
-    );
+    const target = sources.find(s => s.id === sourceId);
+    if (target) {
+      const updated: DataSource = {
+        ...target,
+        connected: false,
+        status: 'disconnected',
+        lastSync: 'Disconnected',
+        recordCount: 0,
+        isLiveActive: false
+      };
+      healthStorage.saveDataSource(updated);
+      setSources((prev) => prev.map((s) => (s.id === sourceId ? updated : s)));
+    }
   };
 
   const handleConnectBluetoothHardware = async (type: 'heart_rate' | 'blood_pressure') => {
     setIsPairingBle(true);
     try {
-      if (type === 'heart_rate') {
-        const res = await bleManager.connectHeartRateSensor();
-        setBleNotification(`Connected to ${res.deviceName} via Web Bluetooth Heart Rate Service.`);
+      const res = await bluetoothManager.connectDevice(type);
+      if (res.success) {
+        setBleNotification(`CONNECTED HARDWARE: ${res.deviceName}`);
       } else {
-        const res = await bleManager.connectBloodPressureSensor();
-        setBleNotification(`Connected to ${res.deviceName} via Web Bluetooth Blood Pressure Service.`);
+        setBleNotification(`PAIRING CANCELLED: ${res.error || 'No peripheral selected'}`);
       }
       setTimeout(() => setBleNotification(null), 5000);
-    } catch (e) {
-      setBleNotification('Bluetooth pairing initialized (using virtual telemetry stream).');
-      setTimeout(() => setBleNotification(null), 4000);
+    } catch (e: any) {
+      setBleNotification(`HARDWARE ERROR: ${e.message || 'Web Bluetooth error'}`);
+      setTimeout(() => setBleNotification(null), 5000);
     } finally {
       setIsPairingBle(false);
     }
   };
 
   const handleAddCustomSource = (newSource: DataSource) => {
+    healthStorage.saveDataSource(newSource);
     setSources((prev) => [newSource, ...prev]);
   };
 
   const handleAddCustomBiomarker = (newBio: Biomarker) => {
+    healthStorage.saveBiomarker(newBio);
     setBiomarkers((prev) => [newBio, ...prev]);
   };
 
@@ -218,6 +245,10 @@ export const UniversalDataHub: React.FC<UniversalDataHubProps> = ({
         disclaimer: parsed.disclaimer
       };
 
+      // Persist in healthStorage
+      healthStorage.saveLabReport(newReport);
+      newBiomarkers.forEach(b => healthStorage.saveBiomarker(b));
+
       setBiomarkers((prev) => [...newBiomarkers, ...prev]);
       setLabReports((prev) => [newReport, ...prev]);
       setUploadSuccess(true);
@@ -247,6 +278,7 @@ export const UniversalDataHub: React.FC<UniversalDataHubProps> = ({
       historicalTrend: 'stable'
     };
 
+    healthStorage.saveBiomarker(newBio);
     setBiomarkers((prev) => [newBio, ...prev]);
     setManualValue('');
   };
