@@ -157,23 +157,33 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab, theme = 'dark' })
           {/* Col 5: Legal Charter & Standards */}
           <div className="space-y-3 text-xs">
             <span className="font-bold text-xs uppercase tracking-wider block border-b border-[var(--border-edge)] pb-1 text-[var(--text-main)]">
-              TRUST &amp; CHARTER
+              COMMERCIAL &amp; TRUST
             </span>
             <ul className="space-y-2 text-[var(--text-muted)]">
               <li>
-                <button onClick={() => onNavigateTab('legal')} className="flex items-center gap-1 hover:text-[var(--text-main)]">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#CC0000]" /> HIPAA &amp; GDPR CHARTER
+                <button onClick={() => onNavigateTab('pricing')} className="hover:text-[var(--text-main)]">
+                  PRICING &amp; MEMBERSHIP
+                </button>
+              </li>
+              <li>
+                <button onClick={() => onNavigateTab('about')} className="hover:text-[var(--text-main)]">
+                  EDITORIAL CHARTER &amp; ABOUT
+                </button>
+              </li>
+              <li>
+                <button onClick={() => onNavigateTab('security')} className="flex items-center gap-1 hover:text-[var(--text-main)]">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#CC0000]" /> HIPAA &amp; TRUST CENTER
+                </button>
+              </li>
+              <li>
+                <button onClick={() => onNavigateTab('contact')} className="hover:text-[var(--text-main)]">
+                  CONTACT CONCIERGE DESK
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigateTab('legal')} className="flex items-center gap-1 hover:text-[var(--text-main)]">
-                  <Lock className="w-3.5 h-3.5" /> ZERO DATA-SALE PLEDGE
+                  <Lock className="w-3.5 h-3.5" /> TERMS &amp; PRIVACY POLICY
                 </button>
-              </li>
-              <li>
-                <span className="text-[10px] block pt-2 text-[var(--text-dim)]">
-                  ISSN 2831-904X • VOL. 1 NO. 01
-                </span>
               </li>
             </ul>
           </div>

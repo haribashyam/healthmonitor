@@ -19,7 +19,9 @@ import {
   BookOpen,
   Sun,
   Moon,
-  Maximize2
+  Maximize2,
+  LogIn,
+  UserPlus
 } from 'lucide-react';
 import { auth, FirebaseUserProfile, signOutUser } from '../services/firebaseAuth';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -30,12 +32,13 @@ interface NavbarProps {
   onOpenLiveWorkout: () => void;
   onOpenWhatChanged: () => void;
   onOpenDoctorReport: () => void;
-  onOpenDataMap: () => void;
+  onOpenDataMap?: () => void;
   onOpenWorkspace?: (tab?: 'gmail' | 'sheets' | 'picker' | 'firebase') => void;
   onOpenGlobalSearch?: () => void;
   onOpenSpecialDesks?: () => void;
-  searchQuery: string;
-  setSearchQuery: (q: string) => void;
+  onOpenAuthModal?: (mode: 'login' | 'register' | 'profile' | 'forgot') => void;
+  searchQuery?: string;
+  setSearchQuery?: (q: string) => void;
   liveBpm: number;
   isBleConnected: boolean;
   bleDeviceName: string;
@@ -53,6 +56,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenWorkspace,
   onOpenGlobalSearch,
   onOpenSpecialDesks,
+  onOpenAuthModal,
   searchQuery,
   setSearchQuery,
   liveBpm,
@@ -78,7 +82,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         setFirebaseUser({
           uid: u.uid,
           email: u.email,
-          displayName: u.displayName || 'Dr. Vance',
+          displayName: u.displayName || 'VitalSync Athlete',
           photoURL: u.photoURL,
           emailVerified: u.emailVerified,
           role: 'user'
@@ -92,14 +96,21 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const primaryTabs = [
     { id: 'command', label: 'FRONT PAGE' },
-    { id: 'vitals', label: 'HEALTH' },
-    { id: 'maps', label: 'MAPS & GPS' },
-    { id: 'coach', label: 'AI COACH' },
+    { id: 'vitals', label: 'HEALTH & VITALS' },
+    { id: 'coach', label: 'AI COPILOT' },
+    { id: 'pricing', label: 'PRICING & PLANS' },
+    { id: 'about', label: 'ABOUT' },
+    { id: 'security', label: 'SECURITY & HIPAA' },
+    { id: 'contact', label: 'CONTACT' },
     { id: 'sources', label: 'DATA HUB' },
     { id: 'settings', label: 'SETTINGS' },
   ];
 
   const secondaryDesks = [
+    { id: 'pricing', label: 'PRICING & PLANS' },
+    { id: 'about', label: 'EDITORIAL CHARTER & ABOUT' },
+    { id: 'security', label: 'SECURITY & TRUST CENTER' },
+    { id: 'contact', label: 'CONTACT & CONCIERGE' },
     { id: 'maps', label: 'MAPS & CLINICAL GPS' },
     { id: 'clinician', label: 'CLINICIAN EHR' },
     { id: 'strength', label: 'STRENGTH & 1RM' },
@@ -112,6 +123,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'injury', label: 'INJURY & REHAB' },
     { id: 'journal', label: 'HEALTH JOURNAL' },
     { id: 'timeline', label: 'LONGITUDINAL TIMELINE' },
+    { id: 'legal', label: 'LEGAL & PRIVACY CHARTER' }
   ];
 
   const isDark = theme === 'dark';
@@ -152,7 +164,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </span>
           </div>
 
-          {/* Right: Search, Theme Toggle & Action Pills */}
+          {/* Right: Search, Theme Toggle, Auth Buttons & Action Pills */}
           <div className="flex flex-wrap items-center justify-center lg:justify-end gap-2 text-xs font-mono w-full lg:w-auto">
             
             {/* Search Button */}
@@ -196,15 +208,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="font-bold text-[11px] text-[#CC0000]">{liveBpm || 145} BPM</span>
             </button>
 
-            {/* What Changed Button */}
-            <button
-              onClick={onOpenWhatChanged}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--bg-card-alt)] hover:bg-[var(--bg-card-contrast)] text-[var(--text-main)] border border-[var(--border-edge)] transition-colors font-bold uppercase text-[11px] tracking-wider"
-            >
-              <Sparkles className="w-3 h-3 text-[#CC0000]" />
-              <span>WHAT CHANGED?</span>
-            </button>
-
             {/* Doctor Export Button */}
             <button
               onClick={onOpenDoctorReport}
@@ -213,6 +216,46 @@ export const Navbar: React.FC<NavbarProps> = ({
               <Plus className="w-3 h-3 text-[#CC0000]" />
               <span>DOCTOR EXPORT</span>
             </button>
+
+            {/* COMMERCIAL AUTHENTICATION BUTTONS */}
+            {firebaseUser ? (
+              <button
+                onClick={() => {
+                  if (onOpenAuthModal) onOpenAuthModal('profile');
+                  else if (onOpenLifecycle) onOpenLifecycle('account-settings');
+                }}
+                className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition-colors font-bold uppercase text-[11px]"
+              >
+                <div className="w-4 h-4 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-[9px] font-bold">
+                  {firebaseUser.displayName?.charAt(0) || 'A'}
+                </div>
+                <span>ACCOUNT</span>
+              </button>
+            ) : (
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => {
+                    if (onOpenAuthModal) onOpenAuthModal('login');
+                    else if (onOpenLifecycle) onOpenLifecycle('login');
+                  }}
+                  className="flex items-center gap-1 px-3 py-1.5 bg-[var(--bg-card-alt)] hover:bg-[var(--bg-card-contrast)] text-[var(--text-main)] border border-[var(--border-edge)] transition-colors font-bold uppercase text-[11px] tracking-wider"
+                >
+                  <LogIn className="w-3 h-3" />
+                  <span>SIGN IN</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    if (onOpenAuthModal) onOpenAuthModal('register');
+                    else if (onOpenLifecycle) onOpenLifecycle('register');
+                  }}
+                  className="flex items-center gap-1 px-3 py-1.5 bg-[#CC0000] hover:bg-[#CC0000]/90 text-white transition-colors font-bold uppercase text-[11px] tracking-wider"
+                >
+                  <UserPlus className="w-3 h-3" />
+                  <span>GET STARTED</span>
+                </button>
+              </div>
+            )}
 
           </div>
 
@@ -229,13 +272,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 (tab.id === 'vitals' && (activeTab === 'health' || activeTab === 'vitals' || activeTab === 'metabolic' || activeTab === 'circadian')) ||
                 (tab.id === 'coach' && (activeTab === 'coach' || activeTab === 'ask' || activeTab === 'experiments')) ||
                 (tab.id === 'sources' && (activeTab === 'sources' || activeTab === 'clinician' || activeTab === 'strength')) ||
-                (tab.id === 'settings' && (activeTab === 'settings' || activeTab === 'lifecycle' || activeTab === 'legal' || activeTab === 'help'));
+                (tab.id === 'settings' && (activeTab === 'settings' || activeTab === 'lifecycle' || activeTab === 'help'));
 
               return (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider transition-colors border ${
+                  className={`px-3.5 py-2 font-mono text-xs font-bold uppercase tracking-wider transition-colors border whitespace-nowrap ${
                     isActive
                       ? 'bg-[var(--text-main)] text-[var(--bg-canvas)] border-[var(--text-main)] font-black'
                       : 'bg-transparent text-[var(--text-muted)] border-transparent hover:text-[var(--text-main)] hover:border-[var(--border-edge)]'
@@ -248,13 +291,13 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Quick Desks Dropdown + Enlarge Button */}
-          <div className="relative flex items-center gap-1">
+          <div className="relative flex items-center gap-1 flex-shrink-0">
             <button
               onClick={() => {
                 if (onOpenSpecialDesks) onOpenSpecialDesks();
                 else setShowMoreDesks(!showMoreDesks);
               }}
-              className="px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wider bg-[var(--bg-card-alt)] text-[var(--text-main)] border border-[var(--border-edge)] hover:border-[var(--text-main)] flex items-center gap-1.5 transition-colors"
+              className="px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wider bg-[var(--bg-card-alt)] text-[var(--text-main)] border border-[var(--border-edge)] hover:border-[var(--text-main)] flex items-center gap-1.5 transition-colors whitespace-nowrap"
               title="Open Enlarged Special Desks Directory"
             >
               <Maximize2 className="w-3.5 h-3.5 text-[#CC0000]" />
@@ -305,3 +348,4 @@ export const Navbar: React.FC<NavbarProps> = ({
     </header>
   );
 };
+

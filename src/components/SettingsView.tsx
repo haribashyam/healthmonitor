@@ -50,14 +50,17 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   };
 
   return (
-    <div className="space-y-6 font-mono max-w-5xl mx-auto">
+    <div
+      style={{ background: 'linear-gradient(180deg, #D4D8DC 0%, #7D8288 45%, #23272A 100%)' }}
+      className="p-4 sm:p-8 rounded-3xl border border-white/30 shadow-2xl space-y-6 font-mono max-w-5xl mx-auto shadow-black/80 text-slate-900"
+    >
       
       {/* 1. Header Masthead */}
-      <div className="bg-[#141414] text-[#F9F9F7] border border-[#262626] p-6 lg:p-8 hard-shadow">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#262626] pb-4">
+      <div className="bg-slate-950 text-[#F9F9F7] border border-white/20 rounded-2xl p-6 lg:p-8 shadow-xl">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="bg-[#CC0000] text-white text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider">
+              <span className="bg-[#CC0000] text-white text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider rounded">
                 SYSTEM CONFIGURATION
               </span>
               <span className="text-xs text-[#888888] uppercase tracking-wider">
@@ -65,14 +68,15 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               </span>
             </div>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-black tracking-tight text-white uppercase">
-              System Settings & Privacy Registry
+              System Settings &amp; Privacy Registry
             </h1>
-            <p className="text-xs text-[#A3A3A3] mt-1 max-w-2xl font-mono">
+            <p className="text-xs text-slate-400 mt-1 max-w-2xl font-mono">
               Control interface rendering modes, cryptographic audit logs, GDPR/HIPAA portability archives, and local hardware storage.
             </p>
           </div>
         </div>
       </div>
+
 
       {/* 2. Appearance & Mode Selection */}
       <div className="bg-[#141414] border border-[#262626] p-6 hard-shadow space-y-4">

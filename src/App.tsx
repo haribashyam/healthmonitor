@@ -25,6 +25,12 @@ import { AchievementsView } from './components/AchievementsView';
 import { HealthJournalView } from './components/HealthJournalView';
 import { GoogleMapsHealthPortalView } from './components/GoogleMapsHealthPortalView';
 import { CustomerLifecycleView, LifecycleViewType } from './components/production/CustomerLifecycleView';
+import { PricingView } from './components/PricingView';
+import { AboutView } from './components/AboutView';
+import { SecurityTrustCenterView } from './components/SecurityTrustCenterView';
+import { ContactConciergeView } from './components/ContactConciergeView';
+import { LegalComplianceView } from './components/LegalComplianceView';
+import { AuthModal } from './components/AuthModal';
 import { GoogleWorkspaceModal } from './components/GoogleWorkspaceModal';
 import { DataMapModal } from './components/DataMapModal';
 import { Footer } from './components/Footer';
@@ -79,7 +85,14 @@ export default function App() {
   const [isDoctorReportOpen, setIsDoctorReportOpen] = useState(false);
   const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(false);
   const [isDataMapOpen, setIsDataMapOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'register' | 'profile' | 'forgot'>('login');
   const [lifecycleInitialView, setLifecycleInitialView] = useState<LifecycleViewType>('account-settings');
+
+  const handleOpenAuthModal = (mode: 'login' | 'register' | 'profile' | 'forgot' = 'login') => {
+    setAuthModalMode(mode);
+    setIsAuthModalOpen(true);
+  };
 
   // Health data state
   const [vitalScore] = useState(initialVitalScore);
@@ -191,6 +204,7 @@ export default function App() {
         onOpenWorkspace={() => setIsWorkspaceOpen(true)}
         onOpenGlobalSearch={() => setIsGlobalSearchOpen(true)}
         onOpenSpecialDesks={() => setIsSpecialDesksOpen(true)}
+        onOpenAuthModal={handleOpenAuthModal}
         liveBpm={liveBpm}
         isBleConnected={isBleConnected}
         bleDeviceName={bleDeviceName}
@@ -223,6 +237,39 @@ export default function App() {
             onOpenWorkspace={() => setIsWorkspaceOpen(true)}
             onOpenSpecialDesks={() => setIsSpecialDesksOpen(true)}
             theme={theme}
+          />
+        )}
+
+        {/* Commercial Pages */}
+        {activeTab === 'pricing' && (
+          <PricingView
+            onOpenAuth={handleOpenAuthModal}
+            onNavigateTab={setActiveTab}
+          />
+        )}
+
+        {activeTab === 'about' && (
+          <AboutView
+            onNavigateTab={setActiveTab}
+            onOpenDoctorReport={() => setIsDoctorReportOpen(true)}
+          />
+        )}
+
+        {activeTab === 'security' && (
+          <SecurityTrustCenterView
+            onNavigateTab={setActiveTab}
+          />
+        )}
+
+        {activeTab === 'contact' && (
+          <ContactConciergeView
+            onNavigateTab={setActiveTab}
+          />
+        )}
+
+        {activeTab === 'legal' && (
+          <LegalComplianceView
+            onNavigateTab={setActiveTab}
           />
         )}
 
@@ -445,6 +492,17 @@ export default function App() {
         isOpen={isGlobalSearchOpen}
         onClose={() => setIsGlobalSearchOpen(false)}
         onSelectTab={(t) => {
+          setActiveTab(t);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        theme={theme}
+      />
+
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        initialMode={authModalMode}
+        onNavigateTab={(t) => {
           setActiveTab(t);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
