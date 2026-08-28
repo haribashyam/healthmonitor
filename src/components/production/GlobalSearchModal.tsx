@@ -332,29 +332,25 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
       aria-labelledby="global-search-title"
     >
       <div
-        className={`w-full max-w-3xl ${
-          isDark
-            ? 'bg-[#141414] text-[#F9F9F7] border-2 border-[#333333]'
-            : 'bg-[#FFFFFF] text-[#111111] border-2 border-[#111111] hard-shadow'
-        } overflow-hidden transition-colors`}
+        className="w-full max-w-3xl bg-[var(--bg-card)] text-[var(--text-main)] border-2 border-[var(--border-edge)] overflow-hidden transition-colors"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Masthead Header Bar */}
-        <div className={`px-4 sm:px-6 py-3 border-b ${isDark ? 'border-[#2A2A2A] bg-[#0E0E0E]' : 'border-[#E5E5DE] bg-[#F7F7F4]'} flex items-center justify-between`}>
+        <div className="px-4 sm:px-6 py-3 border-b border-[var(--border-edge)] bg-[var(--bg-card-alt)] flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="bg-[#CC0000] text-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider font-mono">
               ARCHIVE INDEX
             </span>
-            <h2 id="global-search-title" className="text-sm font-serif font-black uppercase tracking-tight">
+            <h2 id="global-search-title" className="text-sm font-serif font-black uppercase tracking-tight text-[var(--text-main)]">
               Vitasync Universal Health Chronicle Archive
             </h2>
           </div>
 
           <div className="flex items-center gap-2 text-[10px] font-mono">
-            <span className={isDark ? 'text-[#888888]' : 'text-[#666666]'}>PRESS ESC TO CLOSE</span>
+            <span className="text-[var(--text-muted)]">PRESS ESC TO CLOSE</span>
             <button
               onClick={onClose}
-              className={`p-1 ${isDark ? 'hover:bg-[#222222] text-[#888888] hover:text-white' : 'hover:bg-[#E5E5DE] text-[#666666] hover:text-black'} transition-colors`}
+              className="p-1 hover:bg-[var(--bg-card-contrast)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors"
               aria-label="Close search archive"
             >
               <X className="w-4 h-4" />
@@ -363,8 +359,8 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
         </div>
 
         {/* Search Input Bar */}
-        <div className={`flex items-center px-4 sm:px-6 py-3.5 border-b ${isDark ? 'border-[#262626] bg-[#181818]' : 'border-[#D4D4CE] bg-[#FFFFFF]'} gap-3`}>
-          <Search className={`w-4 h-4 ${isDark ? 'text-[#AAAAAA]' : 'text-[#555555]'} flex-shrink-0`} />
+        <div className="flex items-center px-4 sm:px-6 py-3.5 border-b border-[var(--border-edge)] bg-[var(--bg-card)] gap-3">
+          <Search className="w-4 h-4 text-[var(--text-muted)] flex-shrink-0" />
           <input
             ref={inputRef}
             type="text"
@@ -374,24 +370,24 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
               setSelectedIndex(0);
             }}
             placeholder="Search intelligence desks, biomarkers, labs, meds, DEXA, GPS (e.g. 'VO2', '1RM', 'glucose', 'DEXA')..."
-            className={`w-full bg-transparent text-sm ${isDark ? 'text-white placeholder-[#666666]' : 'text-[#111111] placeholder-[#888888]'} font-mono focus:outline-none tracking-tight`}
+            className="w-full bg-transparent text-sm text-[var(--text-main)] placeholder-[var(--text-dim)] font-mono focus:outline-none tracking-tight"
           />
           {query && (
             <button
               onClick={() => setQuery('')}
-              className={`text-xs ${isDark ? 'text-[#888888] hover:text-white' : 'text-[#777777] hover:text-black'} px-1.5 py-0.5 border ${isDark ? 'border-[#333333]' : 'border-[#CCCCCC]'}`}
+              className="text-xs text-[var(--text-muted)] hover:text-[var(--text-main)] px-1.5 py-0.5 border border-[var(--border-edge)]"
             >
               CLEAR
             </button>
           )}
-          <div className={`hidden sm:flex items-center gap-1 text-[10px] ${isDark ? 'bg-[#111111] text-[#888888] border-[#333333]' : 'bg-[#F0F0EB] text-[#555555] border-[#CCCCCC]'} px-2 py-1 border font-bold uppercase`}>
+          <div className="hidden sm:flex items-center gap-1 text-[10px] bg-[var(--bg-card-alt)] text-[var(--text-muted)] border-[var(--border-edge)] px-2 py-1 border font-bold uppercase">
             <span>ENTER ↵</span>
           </div>
         </div>
 
         {/* Category Filter Pills */}
-        <div className={`px-4 sm:px-6 py-2 border-b ${isDark ? 'border-[#222222] bg-[#111111]' : 'border-[#EAEAEA] bg-[#FAFAF8]'} flex items-center gap-1.5 overflow-x-auto no-scrollbar text-[10px] font-mono font-bold uppercase`}>
-          <span className={`${isDark ? 'text-[#777777]' : 'text-[#888888]'} mr-1 flex-shrink-0`}>SECTION:</span>
+        <div className="px-4 sm:px-6 py-2 border-b border-[var(--border-edge)] bg-[var(--bg-card-alt)] flex items-center gap-1.5 overflow-x-auto no-scrollbar text-[10px] font-mono font-bold uppercase">
+          <span className="text-[var(--text-muted)] mr-1 flex-shrink-0">SECTION:</span>
           {categories.map((cat) => (
             <button
               key={cat}
@@ -401,12 +397,8 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
               }}
               className={`px-2 py-1 border transition-colors whitespace-nowrap flex-shrink-0 ${
                 selectedCategory === cat
-                  ? isDark
-                    ? 'bg-white text-black border-white'
-                    : 'bg-[#111111] text-white border-[#111111]'
-                  : isDark
-                    ? 'bg-[#181818] text-[#888888] border-[#2A2A2A] hover:text-white hover:border-[#444444]'
-                    : 'bg-[#F2F2EC] text-[#666666] border-[#DCDCD5] hover:text-black hover:border-[#999999]'
+                  ? 'bg-[var(--text-main)] text-[var(--bg-canvas)] border-[var(--text-main)] font-black'
+                  : 'bg-[var(--bg-card)] text-[var(--text-muted)] border-[var(--border-edge)] hover:text-[var(--text-main)] hover:border-[var(--text-muted)]'
               }`}
             >
               {cat}
@@ -415,14 +407,14 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
         </div>
 
         {/* Results List */}
-        <div className={`max-h-[55vh] overflow-y-auto divide-y ${isDark ? 'divide-[#222222] bg-[#141414]' : 'divide-[#EAEAE5] bg-[#FFFFFF]'}`}>
+        <div className="max-h-[55vh] overflow-y-auto divide-y divide-[var(--border-edge)] bg-[var(--bg-card)]">
           {filteredItems.length === 0 ? (
             <div className="p-10 text-center space-y-2">
-              <Search className={`w-8 h-8 mx-auto ${isDark ? 'text-[#444444]' : 'text-[#AAAAAA]'}`} />
-              <p className={`text-sm font-bold uppercase ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>
+              <Search className="w-8 h-8 mx-auto text-[var(--text-dim)]" />
+              <p className="text-sm font-bold uppercase text-[var(--text-muted)]">
                 No intelligence desks or metrics matching &ldquo;{query}&rdquo;
               </p>
-              <p className={`text-xs ${isDark ? 'text-[#666666]' : 'text-[#888888]'}`}>
+              <p className="text-xs text-[var(--text-dim)]">
                 Try querying &ldquo;VO2 Max&rdquo;, &ldquo;DEXA&rdquo;, &ldquo;1RM&rdquo;, &ldquo;Glucose&rdquo;, &ldquo;Clinician&rdquo;, or &ldquo;Maps GPS&rdquo;.
               </p>
             </div>
@@ -440,10 +432,8 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                   onMouseEnter={() => setSelectedIndex(idx)}
                   className={`flex items-start sm:items-center justify-between p-3 sm:p-4 cursor-pointer transition-colors border-l-4 ${
                     isSelected
-                      ? isDark
-                        ? 'bg-[#222222] border-l-[#CC0000]'
-                        : 'bg-[#F2F2EB] border-l-[#CC0000]'
-                      : 'border-l-transparent hover:bg-[#1A1A1A] dark:hover:bg-[#1A1A1A] hover:bg-zinc-50'
+                      ? 'bg-[var(--bg-card-contrast)] border-l-[#CC0000]'
+                      : 'border-l-transparent hover:bg-[var(--bg-card-contrast)]/50'
                   }`}
                 >
                   <div className="flex items-start sm:items-center gap-3.5 min-w-0 flex-1">
@@ -451,9 +441,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                       className={`w-8 h-8 border flex items-center justify-center flex-shrink-0 ${
                         isSelected
                           ? 'bg-[#CC0000] text-white border-[#CC0000]'
-                          : isDark
-                            ? 'bg-[#1C1C1C] text-[#AAAAAA] border-[#333333]'
-                            : 'bg-[#EAEAE4] text-[#333333] border-[#CCCCCC]'
+                          : 'bg-[var(--bg-card-alt)] text-[var(--text-muted)] border-[var(--border-edge)]'
                       }`}
                     >
                       <Icon className="w-4 h-4" />
@@ -464,34 +452,28 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                         <span
                           className={`text-xs font-bold uppercase tracking-tight font-mono ${
                             isSelected
-                              ? isDark ? 'text-white' : 'text-black'
-                              : isDark ? 'text-[#E0E0DC]' : 'text-[#222222]'
+                              ? 'text-[var(--text-main)]'
+                              : 'text-[var(--text-main)]/90'
                           }`}
                         >
                           {item.title}
                         </span>
 
                         <span
-                          className={`text-[9px] px-1.5 py-0.2 border font-mono font-semibold uppercase ${
-                            isDark
-                              ? 'bg-[#181818] text-[#888888] border-[#333333]'
-                              : 'bg-[#F4F4EE] text-[#666666] border-[#D0D0CA]'
-                          }`}
+                          className="text-[9px] px-1.5 py-0.2 border font-mono font-semibold uppercase bg-[var(--bg-card-alt)] text-[var(--text-muted)] border-[var(--border-edge)]"
                         >
                           {item.category}
                         </span>
 
                         {item.badge && (
-                          <span className="text-[9px] px-1 py-0.2 bg-[#CC0000]/20 text-[#CC0000] border border-[#CC0000]/40 font-mono font-bold uppercase">
+                          <span className="text-[9px] px-1 py-0.2 bg-[#CC0000]/15 text-[#CC0000] border border-[#CC0000]/40 font-mono font-bold uppercase">
                             {item.badge}
                           </span>
                         )}
                       </div>
 
                       <p
-                        className={`text-xs leading-relaxed truncate sm:whitespace-normal font-sans ${
-                          isDark ? 'text-[#888888]' : 'text-[#666666]'
-                        }`}
+                        className="text-xs leading-relaxed truncate sm:whitespace-normal font-sans text-[var(--text-muted)]"
                       >
                         {item.description}
                       </p>
@@ -503,7 +485,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                       className={`w-4 h-4 transition-transform ${
                         isSelected
                           ? 'text-[#CC0000] translate-x-1'
-                          : isDark ? 'text-[#444444]' : 'text-[#BBBBBB]'
+                          : 'text-[var(--text-dim)]'
                       }`}
                     />
                   </div>
@@ -514,15 +496,15 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
         </div>
 
         {/* Footer Navigation Hints */}
-        <div className={`px-4 sm:px-6 py-2.5 border-t ${isDark ? 'border-[#2A2A2A] bg-[#0E0E0E] text-[#777777]' : 'border-[#E5E5DE] bg-[#F7F7F4] text-[#666666]'} flex flex-wrap items-center justify-between text-[10px] font-mono gap-2`}>
+        <div className="px-4 sm:px-6 py-2.5 border-t border-[var(--border-edge)] bg-[var(--bg-card-alt)] text-[var(--text-muted)] flex flex-wrap items-center justify-between text-[10px] font-mono gap-2">
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1">
-              <kbd className={`px-1 border ${isDark ? 'border-[#333333] bg-[#181818]' : 'border-[#CCCCCC] bg-[#FFFFFF]'}`}>↑</kbd>
-              <kbd className={`px-1 border ${isDark ? 'border-[#333333] bg-[#181818]' : 'border-[#CCCCCC] bg-[#FFFFFF]'}`}>↓</kbd>
+              <kbd className="px-1 border border-[var(--border-edge)] bg-[var(--bg-card)]">↑</kbd>
+              <kbd className="px-1 border border-[var(--border-edge)] bg-[var(--bg-card)]">↓</kbd>
               <span>NAVIGATE</span>
             </span>
             <span className="flex items-center gap-1">
-              <kbd className={`px-1.5 border ${isDark ? 'border-[#333333] bg-[#181818]' : 'border-[#CCCCCC] bg-[#FFFFFF]'}`}>ENTER</kbd>
+              <kbd className="px-1.5 border border-[var(--border-edge)] bg-[var(--bg-card)]">ENTER</kbd>
               <span>LAUNCH DESK</span>
             </span>
           </div>

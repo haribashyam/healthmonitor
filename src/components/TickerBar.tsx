@@ -157,12 +157,12 @@ export const TickerBar: React.FC<TickerBarProps> = ({
   const tickerItems = [...rawMetrics, ...rawMetrics, ...rawMetrics];
 
   return (
-    <div className="bg-[#111111] text-[#F9F9F7] border-b border-[#262626] text-xs h-9 flex items-center sticky top-0 z-50 overflow-hidden font-mono select-none">
+    <div className="bg-[var(--bg-canvas)] text-[var(--text-main)] border-b border-[var(--border-edge)] text-xs h-9 flex items-center sticky top-0 z-50 overflow-hidden font-mono select-none transition-colors">
       
       {/* Left: Solid Red LIVE WIRE Badge */}
       <div
         onClick={onOpenLiveWorkout}
-        className="bg-[#CC0000] text-white px-3 h-full flex items-center gap-1.5 font-bold uppercase tracking-wider text-[11px] flex-shrink-0 z-20 cursor-pointer hover:bg-[#b30000] transition-colors border-r border-[#111111]"
+        className="bg-[#CC0000] text-white px-3 h-full flex items-center gap-1.5 font-bold uppercase tracking-wider text-[11px] flex-shrink-0 z-20 cursor-pointer hover:bg-[#b30000] transition-colors border-r border-[var(--border-edge)]"
       >
         <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
         <span className="whitespace-nowrap">● LIVE WIRE</span>
@@ -174,12 +174,12 @@ export const TickerBar: React.FC<TickerBarProps> = ({
           {tickerItems.map((item, index) => (
             <div
               key={index}
-              className="flex items-center gap-1.5 text-xs text-[#E5E5E5] flex-shrink-0 tracking-wide font-mono"
+              className="flex items-center gap-1.5 text-xs text-[var(--text-main)] flex-shrink-0 tracking-wide font-mono"
             >
-              <span className="text-[#A3A3A3] font-medium uppercase text-[11px]">
+              <span className="text-[var(--text-muted)] font-medium uppercase text-[11px]">
                 {item.label}
               </span>
-              <span className={`font-bold ${item.isAlert ? 'text-[#CC0000]' : 'text-white'}`}>
+              <span className={`font-bold ${item.isAlert ? 'text-[#CC0000]' : 'text-[var(--text-main)]'}`}>
                 {item.value}
               </span>
             </div>
@@ -199,12 +199,12 @@ export const TickerBar: React.FC<TickerBarProps> = ({
             ? `Connected: ${bleDeviceName} (Click to open live stream)`
             : 'Click to pair Web Bluetooth heart rate or pulse monitor'
         }
-        className={`flex items-center gap-2 px-3.5 h-full border-l transition-all select-none text-[10px] font-mono font-bold uppercase tracking-wider flex-shrink-0 z-20 ${
+        className={`flex items-center gap-2 px-3.5 h-full border-l border-[var(--border-edge)] transition-all select-none text-[10px] font-mono font-bold uppercase tracking-wider flex-shrink-0 z-20 ${
           isConnecting
             ? 'bg-amber-950/40 text-amber-300 border-amber-600/40 cursor-wait'
             : isBleConnected
-            ? 'bg-[#151515] text-emerald-400 border-[#262626] hover:bg-[#1f1f1f] cursor-pointer'
-            : 'bg-[#181818] text-[#A3A3A3] border-[#262626] hover:text-white hover:bg-[#242424] cursor-pointer'
+            ? 'bg-[var(--bg-card)] text-emerald-400 hover:bg-[var(--bg-card-contrast)] cursor-pointer'
+            : 'bg-[var(--bg-card-alt)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-card-contrast)] cursor-pointer'
         }`}
       >
         {isConnecting ? (
@@ -219,14 +219,14 @@ export const TickerBar: React.FC<TickerBarProps> = ({
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
             </span>
             <Check className="w-3.5 h-3.5 text-emerald-400 stroke-[2.5]" />
-            <span className="text-white font-bold truncate max-w-[140px] sm:max-w-[200px]">
+            <span className="text-[var(--text-main)] font-bold truncate max-w-[140px] sm:max-w-[200px]">
               {bleDeviceName || 'BLE ACTIVE'}
             </span>
           </>
         ) : (
           <>
-            <Bluetooth className="w-3.5 h-3.5 text-zinc-400" />
-            <span className="text-zinc-300">PAIR BLUETOOTH</span>
+            <Bluetooth className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+            <span className="text-[var(--text-muted)]">PAIR BLUETOOTH</span>
           </>
         )}
       </button>

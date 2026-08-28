@@ -20,23 +20,17 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab, theme = 'dark' })
   };
 
   return (
-    <footer className={`border-t font-mono select-none mt-16 transition-colors ${
-      isDark
-        ? 'bg-[#111111] border-[#262626] text-[#F9F9F7]'
-        : 'bg-[#FFFFFF] border-[#111111] text-[#111111]'
-    }`}>
+    <footer className="border-t border-[var(--border-edge)] font-mono select-none mt-16 transition-colors bg-[var(--bg-card)] text-[var(--text-main)]">
       
       {/* 1. Colophon Top Ornament & Wire Notice */}
-      <div className={`py-3 px-4 sm:px-8 border-b ${
-        isDark ? 'border-[#262626] bg-[#141414]' : 'border-[#111111] bg-[#F2F2EC]'
-      }`}>
+      <div className="py-3 px-4 sm:px-8 border-b border-[var(--border-edge)] bg-[var(--bg-canvas)]">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
           <div className="flex items-center gap-3">
-            <span className="font-serif font-black text-base tracking-tight uppercase">
+            <span className="font-serif font-black text-base tracking-tight uppercase text-[var(--text-main)]">
               THE VITALSYNC GAZETTE
             </span>
-            <span className={isDark ? 'text-[#555555]' : 'text-[#888888]'}>|</span>
-            <span className={`text-xs ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>
+            <span className="text-[var(--text-dim)]">|</span>
+            <span className="text-xs text-[var(--text-muted)]">
               ESTABLISHED MMXXVI • NEW YORK &amp; CYBERSPACE
             </span>
           </div>
@@ -50,30 +44,24 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab, theme = 'dark' })
 
       {/* 2. Main Multi-Column Layout */}
       <div className="max-w-7xl mx-auto px-4 sm:px-8 py-10">
-        <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 border-b ${
-          isDark ? 'border-[#262626]' : 'border-[#D4D4CE]'
-        } pb-10`}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 border-b border-[var(--border-edge)] pb-10">
           
           {/* Col 1 & 2: Masthead Mission & Subscription */}
-          <div className={`lg:col-span-2 space-y-4 lg:pr-6 ${
-            isDark ? 'lg:border-r border-[#262626]' : 'lg:border-r border-[#D4D4CE]'
-          }`}>
-            <h3 className="font-serif font-black text-xl uppercase tracking-tight">
+          <div className="lg:col-span-2 space-y-4 lg:pr-6 lg:border-r border-[var(--border-edge)]">
+            <h3 className="font-serif font-black text-xl uppercase tracking-tight text-[var(--text-main)]">
               A PUBLICATION OF BIOMETRIC RECORD
             </h3>
-            <p className={`text-xs leading-relaxed ${isDark ? 'text-[#AAAAAA]' : 'text-[#555555]'}`}>
+            <p className="text-xs leading-relaxed text-[var(--text-muted)]">
               VitalSync is committed to delivering uncompromised physiological truth through continuous optical, electrical, and clinical lab telemetry.
             </p>
 
             {/* Newsletter Dispatch Subscription */}
             <div className="pt-2">
-              <span className="text-[11px] font-bold uppercase tracking-widest block mb-2">
+              <span className="text-[11px] font-bold uppercase tracking-widest block mb-2 text-[var(--text-main)]">
                 SUBSCRIBE TO THE DAILY MORNING DISPATCH
               </span>
               {subscribed ? (
-                <div className={`p-3 border text-xs font-bold text-[#CC0000] ${
-                  isDark ? 'border-[#333333] bg-[#181818]' : 'border-[#CCCCCC] bg-[#F2F2EC]'
-                }`}>
+                <div className="p-3 border border-[var(--border-edge)] bg-[var(--bg-card-alt)] text-xs font-bold text-[#CC0000]">
                   ✓ SUBSCRIPTION CONFIRMED. MORNING TELEMETRY WILL ARRIVE AT 06:00 EST.
                 </div>
               ) : (
@@ -84,19 +72,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab, theme = 'dark' })
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="ENTER EMAIL FOR MORNING DISPATCH..."
-                    className={`flex-1 border-b px-3 py-2 text-xs focus:outline-none ${
-                      isDark
-                        ? 'border-[#444444] bg-transparent focus:bg-[#181818] placeholder:text-[#666666] text-white'
-                        : 'border-[#111111] bg-transparent focus:bg-[#F2F2EC] placeholder:text-[#888888] text-black'
-                    }`}
+                    className="flex-1 border-b border-[var(--border-edge)] px-3 py-2 text-xs bg-transparent focus:bg-[var(--bg-card-contrast)] placeholder:text-[var(--text-dim)] text-[var(--text-main)] focus:outline-none"
                   />
                   <button
                     type="submit"
-                    className={`px-4 py-2 text-xs font-bold uppercase tracking-wider flex items-center gap-1 transition-colors ${
-                      isDark
-                        ? 'bg-white text-[#111111] hover:bg-[#EAEAEA]'
-                        : 'bg-[#111111] text-white hover:bg-[#222222]'
-                    }`}
+                    className="px-4 py-2 text-xs font-bold uppercase tracking-wider flex items-center gap-1 transition-colors bg-[var(--text-main)] text-[var(--bg-canvas)] hover:opacity-90"
                   >
                     <span>JOIN</span>
                     <ArrowRight className="w-3 h-3" />
@@ -108,34 +88,32 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab, theme = 'dark' })
 
           {/* Col 3: Sections & Desks */}
           <div className="space-y-3 text-xs">
-            <span className={`font-bold text-xs uppercase tracking-wider block border-b pb-1 ${
-              isDark ? 'border-[#262626]' : 'border-[#D4D4CE]'
-            }`}>
+            <span className="font-bold text-xs uppercase tracking-wider block border-b border-[var(--border-edge)] pb-1 text-[var(--text-main)]">
               EDITORIAL DESKS
             </span>
-            <ul className={`space-y-2 ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>
+            <ul className="space-y-2 text-[var(--text-muted)]">
               <li>
-                <button onClick={() => onNavigateTab('command')} className={isDark ? 'hover:text-white' : 'hover:text-black'}>
+                <button onClick={() => onNavigateTab('command')} className="hover:text-[var(--text-main)]">
                   FRONT PAGE LEAD
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigateTab('vitals')} className={isDark ? 'hover:text-white' : 'hover:text-black'}>
+                <button onClick={() => onNavigateTab('vitals')} className="hover:text-[var(--text-main)]">
                   HEALTH &amp; VITALS WIRE
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigateTab('coach')} className={isDark ? 'hover:text-white' : 'hover:text-black'}>
+                <button onClick={() => onNavigateTab('coach')} className="hover:text-[var(--text-main)]">
                   AI HEALTH COPILOT
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigateTab('sources')} className={isDark ? 'hover:text-white' : 'hover:text-black'}>
+                <button onClick={() => onNavigateTab('sources')} className="hover:text-[var(--text-main)]">
                   DATA HUB &amp; LAB OCR
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigateTab('strength')} className={isDark ? 'hover:text-white' : 'hover:text-black'}>
+                <button onClick={() => onNavigateTab('strength')} className="hover:text-[var(--text-main)]">
                   STRENGTH &amp; 1RM ARCHIVE
                 </button>
               </li>
@@ -144,34 +122,32 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab, theme = 'dark' })
 
           {/* Col 4: Specialized Portals */}
           <div className="space-y-3 text-xs">
-            <span className={`font-bold text-xs uppercase tracking-wider block border-b pb-1 ${
-              isDark ? 'border-[#262626]' : 'border-[#D4D4CE]'
-            }`}>
+            <span className="font-bold text-xs uppercase tracking-wider block border-b border-[var(--border-edge)] pb-1 text-[var(--text-main)]">
               SPECIAL EDITIONS
             </span>
-            <ul className={`space-y-2 ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>
+            <ul className="space-y-2 text-[var(--text-muted)]">
               <li>
-                <button onClick={() => onNavigateTab('supplements')} className={isDark ? 'hover:text-white' : 'hover:text-black'}>
+                <button onClick={() => onNavigateTab('supplements')} className="hover:text-[var(--text-main)]">
                   MEDICATION MATRIX
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigateTab('metabolic')} className={isDark ? 'hover:text-white' : 'hover:text-black'}>
+                <button onClick={() => onNavigateTab('metabolic')} className="hover:text-[var(--text-main)]">
                   BODY &amp; METABOLIC DEXA
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigateTab('experiments')} className={isDark ? 'hover:text-white' : 'hover:text-black'}>
+                <button onClick={() => onNavigateTab('experiments')} className="hover:text-[var(--text-main)]">
                   EXPERIMENTS LAB
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigateTab('circadian')} className={isDark ? 'hover:text-white' : 'hover:text-black'}>
+                <button onClick={() => onNavigateTab('circadian')} className="hover:text-[var(--text-main)]">
                   CIRCADIAN &amp; AQI DESK
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigateTab('twin')} className={isDark ? 'hover:text-white' : 'hover:text-black'}>
+                <button onClick={() => onNavigateTab('twin')} className="hover:text-[var(--text-main)]">
                   DIGITAL RADAR TWIN
                 </button>
               </li>
@@ -180,24 +156,22 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab, theme = 'dark' })
 
           {/* Col 5: Legal Charter & Standards */}
           <div className="space-y-3 text-xs">
-            <span className={`font-bold text-xs uppercase tracking-wider block border-b pb-1 ${
-              isDark ? 'border-[#262626]' : 'border-[#D4D4CE]'
-            }`}>
+            <span className="font-bold text-xs uppercase tracking-wider block border-b border-[var(--border-edge)] pb-1 text-[var(--text-main)]">
               TRUST &amp; CHARTER
             </span>
-            <ul className={`space-y-2 ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>
+            <ul className="space-y-2 text-[var(--text-muted)]">
               <li>
-                <button onClick={() => onNavigateTab('legal')} className={`flex items-center gap-1 ${isDark ? 'hover:text-white' : 'hover:text-black'}`}>
+                <button onClick={() => onNavigateTab('legal')} className="flex items-center gap-1 hover:text-[var(--text-main)]">
                   <ShieldCheck className="w-3.5 h-3.5 text-[#CC0000]" /> HIPAA &amp; GDPR CHARTER
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigateTab('legal')} className={`flex items-center gap-1 ${isDark ? 'hover:text-white' : 'hover:text-black'}`}>
+                <button onClick={() => onNavigateTab('legal')} className="flex items-center gap-1 hover:text-[var(--text-main)]">
                   <Lock className="w-3.5 h-3.5" /> ZERO DATA-SALE PLEDGE
                 </button>
               </li>
               <li>
-                <span className={`text-[10px] block pt-2 ${isDark ? 'text-[#666666]' : 'text-[#888888]'}`}>
+                <span className="text-[10px] block pt-2 text-[var(--text-dim)]">
                   ISSN 2831-904X • VOL. 1 NO. 01
                 </span>
               </li>
@@ -207,14 +181,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab, theme = 'dark' })
         </div>
 
         {/* 3. Colophon Bottom Imprint */}
-        <div className={`pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs ${
-          isDark ? 'text-[#777777]' : 'text-[#666666]'
-        } text-center md:text-left`}>
+        <div className="pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[var(--text-muted)] text-center md:text-left">
           <p className="text-[11px] leading-relaxed max-w-2xl">
-            <strong className={`font-bold uppercase ${isDark ? 'text-[#AAAAAA]' : 'text-[#333333]'}`}>EDITORIAL NOTICE:</strong> VitalSync is a personal health intelligence platform and telemetric recording device.
+            <strong className="font-bold uppercase text-[var(--text-main)]">EDITORIAL NOTICE:</strong> VitalSync is a personal health intelligence platform and telemetric recording device.
           </p>
 
-          <div className={`text-[10px] uppercase font-bold ${isDark ? 'text-[#AAAAAA]' : 'text-[#333333]'}`}>
+          <div className="text-[10px] uppercase font-bold text-[var(--text-main)]">
             &copy; {new Date().getFullYear()} THE VITALSYNC GAZETTE. ALL RIGHTS RESERVED.
           </div>
         </div>

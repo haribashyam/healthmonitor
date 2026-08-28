@@ -162,9 +162,7 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col transition-colors duration-200 ${
-      theme === 'dark' ? 'bg-[#0A0A0A] text-[#F9F9F7]' : 'bg-[#FAFAF7] text-[#111111]'
-    }`}>
+    <div className="min-h-screen flex flex-col bg-[var(--bg-canvas)] text-[var(--text-main)] transition-colors duration-200">
       {/* 1. Real-time Telemetry & Global Status Ticker */}
       <TickerBar
         liveBpm={liveBpm}

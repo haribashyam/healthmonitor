@@ -117,25 +117,25 @@ export const Navbar: React.FC<NavbarProps> = ({
   const isDark = theme === 'dark';
 
   return (
-    <header className={`${isDark ? 'bg-[#111111] text-[#F9F9F7] border-[#262626]' : 'bg-[#FFFFFF] text-[#111111] border-[#D4D4CE]'} border-b select-none transition-colors`}>
+    <header className="bg-[var(--bg-card)] text-[var(--text-main)] border-b border-[var(--border-edge)] select-none transition-colors">
       
       {/* 1. Sub-Header Newspaper Volume Bar */}
-      <div className={`border-b ${isDark ? 'border-[#262626] bg-[#0d0d0d] text-[#A3A3A3]' : 'border-[#E2E2DC] bg-[#F8F8F5] text-[#666666]'} text-[11px] font-mono py-1 px-4 sm:px-8`}>
+      <div className="border-b border-[var(--border-edge)] bg-[var(--bg-canvas)] text-[var(--text-muted)] text-[11px] font-mono py-1 px-4 sm:px-8">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <span className={`font-bold tracking-wider ${isDark ? 'text-[#CCCCCC]' : 'text-[#222222]'}`}>VOL. 1 - NO. 01</span>
+          <span className="font-bold tracking-wider text-[var(--text-main)]">VOL. 1 - NO. 01</span>
           <span className="tracking-widest uppercase text-center hidden sm:inline font-medium">
             PERSONAL HEALTH INTELLIGENCE • PRINTED DAILY
           </span>
-          <span className={`font-bold tracking-wider ${isDark ? 'text-[#CCCCCC]' : 'text-[#222222]'}`}>NEW YORK EDITION</span>
+          <span className="font-bold tracking-wider text-[var(--text-main)]">NEW YORK EDITION</span>
         </div>
       </div>
 
       {/* 2. Main Masthead */}
-      <div className={`max-w-7xl mx-auto px-4 sm:px-8 py-4 border-b ${isDark ? 'border-[#262626]' : 'border-[#E2E2DC]'}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-4 border-b border-[var(--border-edge)]">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
           
           {/* Left: Date Display */}
-          <div className={`text-xs font-mono font-medium tracking-wider ${isDark ? 'text-[#A3A3A3]' : 'text-[#666666]'} w-full lg:w-auto text-center lg:text-left`}>
+          <div className="text-xs font-mono font-medium tracking-wider text-[var(--text-muted)] w-full lg:w-auto text-center lg:text-left">
             {currentDateFormatted}
           </div>
 
@@ -144,10 +144,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => setActiveTab('command')}
             className="cursor-pointer text-center flex items-baseline justify-center gap-2 group"
           >
-            <h1 className={`text-3xl sm:text-4xl lg:text-5xl font-serif font-black tracking-tight ${isDark ? 'text-white group-hover:text-[#F0F0ED]' : 'text-[#111111] group-hover:text-[#333333]'} uppercase transition-colors`}>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-black tracking-tight text-[var(--text-main)] uppercase transition-colors">
               VitalSync
             </h1>
-            <span className={`text-xs font-serif italic ${isDark ? 'text-[#A3A3A3]' : 'text-[#777777]'} tracking-normal lowercase`}>
+            <span className="text-xs font-serif italic text-[var(--text-muted)] tracking-normal lowercase">
               est. 2026
             </span>
           </div>
@@ -158,18 +158,18 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Search Button */}
             <button
               onClick={onOpenGlobalSearch}
-              className={`flex items-center gap-2 px-3 py-1.5 ${isDark ? 'bg-[#1C1C1C] hover:bg-[#282828] text-[#A3A3A3] hover:text-white border-[#333333]' : 'bg-[#F2F2EC] hover:bg-[#E8E8E0] text-[#555555] hover:text-[#111111] border-[#D4D4CE]'} border transition-colors`}
+              className="flex items-center gap-2 px-3 py-1.5 bg-[var(--bg-card-alt)] hover:bg-[var(--bg-card-contrast)] text-[var(--text-muted)] hover:text-[var(--text-main)] border border-[var(--border-edge)] transition-colors"
             >
               <Search className="w-3.5 h-3.5" />
               <span className="text-[11px] uppercase tracking-wider font-bold">SEARCH ARCHIVE</span>
-              <kbd className={`text-[10px] ${isDark ? 'bg-[#111111] border-[#444444] text-[#888888]' : 'bg-[#E5E5DE] border-[#C8C8BE] text-[#555555]'} px-1 border`}>⌘K</kbd>
+              <kbd className="text-[10px] bg-[var(--bg-card)] border border-[var(--border-edge)] text-[var(--text-muted)] px-1">⌘K</kbd>
             </button>
 
             {/* Light / Dark Mode Toggle */}
             <button
               onClick={onToggleTheme}
               title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-              className={`flex items-center gap-1.5 px-3 py-1.5 ${isDark ? 'bg-[#1C1C1C] hover:bg-[#282828] text-[#F9F9F7] border-[#333333]' : 'bg-[#111111] hover:bg-[#222222] text-[#FFFFFF] border-[#111111]'} border transition-colors font-bold uppercase text-[11px] tracking-wider`}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--text-main)] hover:opacity-90 text-[var(--bg-canvas)] border border-[var(--text-main)] transition-colors font-bold uppercase text-[11px] tracking-wider"
             >
               {isDark ? (
                 <>
@@ -187,7 +187,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Live HR Pill */}
             <button
               onClick={onOpenLiveWorkout}
-              className={`flex items-center gap-1.5 px-3 py-1.5 ${isDark ? 'bg-[#1C1C1C] hover:bg-[#282828] text-white border-[#333333]' : 'bg-[#F2F2EC] hover:bg-[#E8E8E0] text-[#111111] border-[#D4D4CE]'} border transition-colors`}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--bg-card-alt)] hover:bg-[var(--bg-card-contrast)] text-[var(--text-main)] border border-[var(--border-edge)] transition-colors"
             >
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#CC0000] opacity-75"></span>
@@ -199,7 +199,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* What Changed Button */}
             <button
               onClick={onOpenWhatChanged}
-              className={`flex items-center gap-1.5 px-3 py-1.5 ${isDark ? 'bg-[#1C1C1C] hover:bg-[#282828] text-white border-[#333333]' : 'bg-[#F2F2EC] hover:bg-[#E8E8E0] text-[#111111] border-[#D4D4CE]'} border transition-colors font-bold uppercase text-[11px] tracking-wider`}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--bg-card-alt)] hover:bg-[var(--bg-card-contrast)] text-[var(--text-main)] border border-[var(--border-edge)] transition-colors font-bold uppercase text-[11px] tracking-wider"
             >
               <Sparkles className="w-3 h-3 text-[#CC0000]" />
               <span>WHAT CHANGED?</span>
@@ -208,7 +208,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Doctor Export Button */}
             <button
               onClick={onOpenDoctorReport}
-              className={`flex items-center gap-1.5 px-3 py-1.5 ${isDark ? 'bg-[#1C1C1C] hover:bg-[#282828] text-white border-[#333333]' : 'bg-[#F2F2EC] hover:bg-[#E8E8E0] text-[#111111] border-[#D4D4CE]'} border transition-colors font-bold uppercase text-[11px] tracking-wider`}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--bg-card-alt)] hover:bg-[var(--bg-card-contrast)] text-[var(--text-main)] border border-[var(--border-edge)] transition-colors font-bold uppercase text-[11px] tracking-wider"
             >
               <Plus className="w-3 h-3 text-[#CC0000]" />
               <span>DOCTOR EXPORT</span>
@@ -237,12 +237,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onClick={() => setActiveTab(tab.id)}
                   className={`px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider transition-colors border ${
                     isActive
-                      ? isDark
-                        ? 'bg-white text-[#111111] border-white'
-                        : 'bg-[#111111] text-white border-[#111111]'
-                      : isDark
-                        ? 'bg-transparent text-[#A3A3A3] border-transparent hover:text-white hover:border-[#333333]'
-                        : 'bg-transparent text-[#666666] border-transparent hover:text-[#111111] hover:border-[#CCCCCC]'
+                      ? 'bg-[var(--text-main)] text-[var(--bg-canvas)] border-[var(--text-main)] font-black'
+                      : 'bg-transparent text-[var(--text-muted)] border-transparent hover:text-[var(--text-main)] hover:border-[var(--border-edge)]'
                   }`}
                 >
                   {tab.label}
@@ -258,11 +254,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 if (onOpenSpecialDesks) onOpenSpecialDesks();
                 else setShowMoreDesks(!showMoreDesks);
               }}
-              className={`px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wider ${
-                isDark
-                  ? 'bg-[#181818] text-white border-[#333333] hover:border-white'
-                  : 'bg-[#F2F2EC] text-[#111111] border-[#CCCCCC] hover:border-black'
-              } border flex items-center gap-1.5 transition-colors`}
+              className="px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wider bg-[var(--bg-card-alt)] text-[var(--text-main)] border border-[var(--border-edge)] hover:border-[var(--text-main)] flex items-center gap-1.5 transition-colors"
               title="Open Enlarged Special Desks Directory"
             >
               <Maximize2 className="w-3.5 h-3.5 text-[#CC0000]" />
@@ -271,8 +263,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             {showMoreDesks && (
-              <div className={`absolute right-0 top-full mt-1 w-64 ${isDark ? 'bg-[#161616] border-[#333333]' : 'bg-[#FFFFFF] border-[#D4D4CE]'} border z-50 py-1 hard-shadow font-mono text-xs`}>
-                <div className={`px-3 py-2 border-b ${isDark ? 'border-[#262626] bg-[#0E0E0E]' : 'border-[#E2E2DC] bg-[#F7F7F4]'} flex items-center justify-between`}>
+              <div className="absolute right-0 top-full mt-1 w-64 bg-[var(--bg-card)] border border-[var(--border-edge)] z-50 py-1 hard-shadow font-mono text-xs">
+                <div className="px-3 py-2 border-b border-[var(--border-edge)] bg-[var(--bg-card-alt)] flex items-center justify-between">
                   <span className="text-[10px] font-bold text-[#CC0000] uppercase">INTELLIGENCE DESKS</span>
                   {onOpenSpecialDesks && (
                     <button
@@ -280,7 +272,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         setShowMoreDesks(false);
                         onOpenSpecialDesks();
                       }}
-                      className="text-[10px] font-bold underline hover:text-[#CC0000]"
+                      className="text-[10px] font-bold underline text-[var(--text-main)] hover:text-[#CC0000]"
                     >
                       ENLARGE DIRECTORY ⛶
                     </button>
@@ -295,8 +287,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                         setActiveTab(d.id);
                         setShowMoreDesks(false);
                       }}
-                      className={`w-full text-left px-3 py-2 ${isDark ? 'hover:bg-[#242424]' : 'hover:bg-[#F2F2EC]'} transition-colors flex items-center justify-between ${
-                        activeTab === d.id ? 'text-[#CC0000] font-bold bg-[#CC0000]/10' : isDark ? 'text-[#CCCCCC]' : 'text-[#333333]'
+                      className={`w-full text-left px-3 py-2 hover:bg-[var(--bg-card-contrast)] transition-colors flex items-center justify-between ${
+                        activeTab === d.id ? 'text-[#CC0000] font-bold bg-[#CC0000]/10' : 'text-[var(--text-main)]'
                       }`}
                     >
                       <span>{d.label}</span>

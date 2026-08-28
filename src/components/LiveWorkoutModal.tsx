@@ -166,33 +166,29 @@ export const LiveWorkoutModal: React.FC<LiveWorkoutModalProps> = ({
       aria-modal="true"
     >
       <div
-        className={`w-full max-w-4xl ${
-          isDark
-            ? 'bg-[#141414] text-[#F9F9F7] border-2 border-[#333333]'
-            : 'bg-[#FFFFFF] text-[#111111] border-2 border-[#111111] hard-shadow'
-        } p-5 sm:p-8 space-y-6 relative transition-colors`}
+        className="w-full max-w-4xl bg-[var(--bg-card)] text-[var(--text-main)] border-2 border-[var(--border-edge)] p-5 sm:p-8 space-y-6 relative transition-colors"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header Bar */}
-        <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4 ${isDark ? 'border-[#262626]' : 'border-[#E2E2DC]'}`}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--border-edge)] pb-4">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 border border-[#CC0000] bg-[#CC0000] text-white flex items-center justify-center flex-shrink-0">
               <Radio className="w-4 h-4 animate-pulse" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-serif font-black uppercase tracking-tight">
+                <h2 className="text-lg font-serif font-black uppercase tracking-tight text-[var(--text-main)]">
                   Live Workout Command HUD
                 </h2>
                 <span className={`text-[10px] font-bold px-2 py-0.5 uppercase border ${
                   isBLEConnected
                     ? 'border-[#CC0000] bg-[#CC0000]/15 text-[#CC0000]'
-                    : isDark ? 'border-[#333333] bg-[#181818] text-[#888888]' : 'border-[#CCCCCC] bg-[#F2F2EC] text-[#666666]'
+                    : 'border-[var(--border-edge)] bg-[var(--bg-card-alt)] text-[var(--text-muted)]'
                 }`}>
                   {isBLEConnected ? (isDemoMode ? '● SIMULATED BLE' : '● LIVE BLE GATT') : '○ MANUAL SENSOR'}
                 </span>
               </div>
-              <p className={`text-xs font-sans ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>
+              <p className="text-xs font-sans text-[var(--text-muted)]">
                 Continuous Web Bluetooth R-R Intervals &amp; Heart Rate Zone Telemetry
               </p>
             </div>
@@ -213,9 +209,7 @@ export const LiveWorkoutModal: React.FC<LiveWorkoutModalProps> = ({
               <button
                 type="button"
                 onClick={() => bluetoothManager.disconnect()}
-                className={`px-3 py-1.5 text-xs font-bold uppercase border ${
-                  isDark ? 'bg-[#181818] text-red-400 border-red-500/30 hover:bg-[#222222]' : 'bg-[#F2F2EC] text-red-600 border-red-300 hover:bg-[#EAEAE4]'
-                }`}
+                className="px-3 py-1.5 text-xs font-bold uppercase border bg-[var(--bg-card-alt)] text-[#CC0000] border-red-500/30 hover:bg-[var(--bg-card-contrast)]"
               >
                 Disconnect
               </button>
@@ -223,7 +217,7 @@ export const LiveWorkoutModal: React.FC<LiveWorkoutModalProps> = ({
 
             <button
               onClick={onClose}
-              className={`p-1.5 border ${isDark ? 'border-[#333333] hover:bg-[#222222] text-[#888888] hover:text-white' : 'border-[#CCCCCC] hover:bg-[#E5E5DE] text-[#666666] hover:text-black'} text-xs font-bold uppercase`}
+              className="p-1.5 border border-[var(--border-edge)] hover:bg-[var(--bg-card-contrast)] text-[var(--text-muted)] hover:text-[var(--text-main)] text-xs font-bold uppercase"
             >
               <X className="w-4 h-4" />
             </button>
@@ -242,9 +236,7 @@ export const LiveWorkoutModal: React.FC<LiveWorkoutModalProps> = ({
             <button
               type="button"
               onClick={handleStartDemoStream}
-              className={`px-2 py-0.5 text-[11px] font-mono whitespace-nowrap border font-bold uppercase ${
-                isDark ? 'bg-[#181818] border-[#333333] text-amber-400 hover:bg-[#222222]' : 'bg-white border-[#CCCCCC] text-amber-700 hover:bg-[#F2F2EC]'
-              }`}
+              className="px-2 py-0.5 text-[11px] font-mono whitespace-nowrap border font-bold uppercase bg-[var(--bg-card)] border-[var(--border-edge)] text-amber-500 hover:bg-[var(--bg-card-contrast)]"
             >
               Use Live Demo Stream
             </button>
@@ -254,19 +246,17 @@ export const LiveWorkoutModal: React.FC<LiveWorkoutModalProps> = ({
         {!workoutFinished ? (
           <div className="space-y-5">
             {/* Workout Selector & BLE Stream Source */}
-            <div className={`flex flex-wrap items-center justify-between gap-3 p-3 border ${
-              isDark ? 'bg-[#181818] border-[#2A2A2A]' : 'bg-[#F9F9F6] border-[#D4D4CE]'
-            }`}>
+            <div className="flex flex-wrap items-center justify-between gap-3 p-3 border bg-[var(--bg-card-alt)] border-[var(--border-edge)]">
               <div className="flex items-center gap-1.5 flex-wrap">
-                <span className={`text-xs font-bold uppercase mr-1 ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>Activity:</span>
+                <span className="text-xs font-bold uppercase mr-1 text-[var(--text-muted)]">Activity:</span>
                 {(['Zone 2 Base', 'Run', 'Ride', 'HIIT', 'Strength'] as const).map((type) => (
                   <button
                     key={type}
                     onClick={() => setWorkoutType(type)}
                     className={`px-2.5 py-1 text-xs font-bold uppercase transition-all border ${
                       workoutType === type
-                        ? isDark ? 'bg-white text-black border-white' : 'bg-[#111111] text-white border-[#111111]'
-                        : isDark ? 'bg-[#141414] text-[#888888] border-[#2A2A2A] hover:text-white' : 'bg-[#FFFFFF] text-[#666666] border-[#D0D0C8] hover:text-black'
+                        ? 'bg-[var(--text-main)] text-[var(--bg-canvas)] border-[var(--text-main)]'
+                        : 'bg-[var(--bg-card)] text-[var(--text-muted)] border-[var(--border-edge)] hover:text-[var(--text-main)]'
                     }`}
                   >
                     {type}
@@ -274,33 +264,31 @@ export const LiveWorkoutModal: React.FC<LiveWorkoutModalProps> = ({
                 ))}
               </div>
 
-              <div className={`flex items-center gap-2 text-xs ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>
+              <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
                 <span className={`w-2 h-2 ${isBLEConnected ? 'bg-[#CC0000] animate-ping' : 'bg-zinc-500'}`} />
-                <span>Stream: <strong className={isDark ? 'text-white' : 'text-black'}>{deviceName}</strong></span>
+                <span>Stream: <strong className="text-[var(--text-main)]">{deviceName}</strong></span>
               </div>
             </div>
 
             {/* HERO TELEMETRY: Giant Live Heart Rate & Zone Display */}
-            <div className={`grid grid-cols-1 md:grid-cols-3 gap-6 items-center p-6 sm:p-8 border relative ${
-              isDark ? 'bg-[#181818] border-[#2A2A2A]' : 'bg-[#FFFFFF] border-[#D4D4CE] hard-shadow-sm'
-            }`}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center p-6 sm:p-8 border relative bg-[var(--bg-card-alt)] border-[var(--border-edge)]">
               {/* Col 1: Big Live Heart Rate */}
               <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-1">
-                <span className={`text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>
+                <span className="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 text-[var(--text-muted)]">
                   <Heart className="w-4 h-4 text-[#CC0000] animate-bounce" /> Live Heart Rate
                 </span>
                 <div className="flex items-baseline gap-2">
                   <span className="text-6xl sm:text-7xl font-serif font-black tracking-tighter text-[#CC0000]">
                     {currentBpm > 0 ? currentBpm : '--'}
                   </span>
-                  <span className={`text-sm font-bold ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>BPM</span>
+                  <span className="text-sm font-bold text-[var(--text-muted)]">BPM</span>
                 </div>
                 {currentBpm > 0 ? (
                   <div className={`mt-2 inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold border ${zoneInfo.color} font-mono`}>
                     {zoneInfo.zone} ({zoneInfo.targetText})
                   </div>
                 ) : (
-                  <div className={`mt-2 text-xs font-sans ${isDark ? 'text-[#666666]' : 'text-[#888888]'}`}>
+                  <div className="mt-2 text-xs font-sans text-[var(--text-dim)]">
                     Pair BLE sensor or press start
                   </div>
                 )}
@@ -308,15 +296,13 @@ export const LiveWorkoutModal: React.FC<LiveWorkoutModalProps> = ({
 
               {/* Col 2: Live Animated Cardiac Waveform & Zone Distribution */}
               <div className="space-y-3">
-                <div className={`flex items-center justify-between text-xs font-bold uppercase ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>
+                <div className="flex items-center justify-between text-xs font-bold uppercase text-[var(--text-muted)]">
                   <span>Target Zone Range</span>
                   <span className="text-[#CC0000] font-mono font-bold">128 - 142 BPM</span>
                 </div>
 
                 {/* 5-Zone Gauge */}
-                <div className={`grid grid-cols-5 gap-1 h-3 p-0.5 border ${
-                  isDark ? 'bg-[#111111] border-[#2A2A2A]' : 'bg-[#EAEAE4] border-[#CCCCCC]'
-                }`}>
+                <div className="grid grid-cols-5 gap-1 h-3 p-0.5 border bg-[var(--bg-card)] border-[var(--border-edge)]">
                   <div className={`transition-all ${currentBpm > 0 && currentBpm < 115 ? 'bg-blue-500' : 'bg-blue-900/30'}`} title="Zone 1" />
                   <div className={`transition-all ${currentBpm >= 115 && currentBpm <= 135 ? 'bg-emerald-500' : 'bg-emerald-900/30'}`} title="Zone 2" />
                   <div className={`transition-all ${currentBpm > 135 && currentBpm <= 152 ? 'bg-amber-500' : 'bg-amber-900/30'}`} title="Zone 3" />
@@ -325,9 +311,7 @@ export const LiveWorkoutModal: React.FC<LiveWorkoutModalProps> = ({
                 </div>
 
                 {/* ECG Pulsation Bars */}
-                <div className={`h-10 flex items-end gap-1 p-2 border ${
-                  isDark ? 'bg-[#111111] border-[#2A2A2A]' : 'bg-[#F7F7F4] border-[#D4D4CE]'
-                }`}>
+                <div className="h-10 flex items-end gap-1 p-2 border bg-[var(--bg-card)] border-[var(--border-edge)]">
                   {[25, 45, 20, 95, 30, 70, 40, 85, 60, 30, 90, 50, 75, 35, 65, 80, 45, 90, 30, 60].map((h, i) => (
                     <div
                       key={i}
@@ -340,41 +324,39 @@ export const LiveWorkoutModal: React.FC<LiveWorkoutModalProps> = ({
 
               {/* Col 3: Secondary Metrics Grid */}
               <div className="grid grid-cols-2 gap-2 text-center font-mono">
-                <div className={`p-3 border ${isDark ? 'bg-[#141414] border-[#2A2A2A]' : 'bg-[#F7F7F4] border-[#D4D4CE]'}`}>
-                  <span className={`text-[10px] font-bold uppercase block ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>DURATION</span>
-                  <span className={`text-xl font-serif font-black ${isDark ? 'text-white' : 'text-black'}`}>{formatTime(secondsElapsed)}</span>
+                <div className="p-3 border bg-[var(--bg-card)] border-[var(--border-edge)]">
+                  <span className="text-[10px] font-bold uppercase block text-[var(--text-muted)]">DURATION</span>
+                  <span className="text-xl font-serif font-black text-[var(--text-main)]">{formatTime(secondsElapsed)}</span>
                 </div>
-                <div className={`p-3 border ${isDark ? 'bg-[#141414] border-[#2A2A2A]' : 'bg-[#F7F7F4] border-[#D4D4CE]'}`}>
-                  <span className={`text-[10px] font-bold uppercase block ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>CALORIES</span>
+                <div className="p-3 border bg-[var(--bg-card)] border-[var(--border-edge)]">
+                  <span className="text-[10px] font-bold uppercase block text-[var(--text-muted)]">CALORIES</span>
                   <span className="text-xl font-serif font-black text-[#CC0000]">{caloriesBurned}</span>
                 </div>
-                <div className={`p-3 border ${isDark ? 'bg-[#141414] border-[#2A2A2A]' : 'bg-[#F7F7F4] border-[#D4D4CE]'}`}>
-                  <span className={`text-[10px] font-bold uppercase block ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>PEAK HR</span>
-                  <span className={`text-lg font-bold ${isDark ? 'text-white' : 'text-black'}`}>{maxBpm > 0 ? `${maxBpm}` : '--'}</span>
+                <div className="p-3 border bg-[var(--bg-card)] border-[var(--border-edge)]">
+                  <span className="text-[10px] font-bold uppercase block text-[var(--text-muted)]">PEAK HR</span>
+                  <span className="text-lg font-bold text-[var(--text-main)]">{maxBpm > 0 ? `${maxBpm}` : '--'}</span>
                 </div>
-                <div className={`p-3 border ${isDark ? 'bg-[#141414] border-[#2A2A2A]' : 'bg-[#F7F7F4] border-[#D4D4CE]'}`}>
-                  <span className={`text-[10px] font-bold uppercase block ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>LOAD</span>
+                <div className="p-3 border bg-[var(--bg-card)] border-[var(--border-edge)]">
+                  <span className="text-[10px] font-bold uppercase block text-[var(--text-muted)]">LOAD</span>
                   <span className="text-lg font-bold text-[#CC0000]">{trainingLoad}</span>
                 </div>
               </div>
             </div>
 
             {/* Real-Time Biofeedback Guidance */}
-            <div className={`p-4 border flex items-start gap-3 ${
-              isDark ? 'bg-[#181818] border-[#2A2A2A]' : 'bg-[#F9F9F6] border-[#D4D4CE]'
-            }`}>
+            <div className="p-4 border flex items-start gap-3 bg-[var(--bg-card-alt)] border-[var(--border-edge)]">
               <Sparkles className="w-4 h-4 text-[#CC0000] flex-shrink-0 mt-0.5" />
               <div className="text-xs space-y-1 flex-1 font-mono">
                 <div className="flex items-center justify-between">
-                  <span className={`font-bold uppercase tracking-wider ${isDark ? 'text-white' : 'text-black'}`}>Bio-Adaptive Realtime Telemetry</span>
+                  <span className="font-bold uppercase tracking-wider text-[var(--text-main)]">Bio-Adaptive Realtime Telemetry</span>
                   <button
                     onClick={() => setSoundEnabled(!soundEnabled)}
-                    className={isDark ? 'text-[#888888] hover:text-white' : 'text-[#666666] hover:text-black'}
+                    className="text-[var(--text-muted)] hover:text-[var(--text-main)]"
                   >
                     {soundEnabled ? <Volume2 className="w-3.5 h-3.5 text-[#CC0000]" /> : <VolumeX className="w-3.5 h-3.5" />}
                   </button>
                 </div>
-                <p className={`font-sans leading-relaxed ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>{coachingTip}</p>
+                <p className="font-sans leading-relaxed text-[var(--text-muted)]">{coachingTip}</p>
               </div>
             </div>
 
@@ -392,7 +374,7 @@ export const LiveWorkoutModal: React.FC<LiveWorkoutModalProps> = ({
                 <button
                   id="pause-workout-btn"
                   onClick={() => setIsActive(false)}
-                  className="px-8 py-3 font-mono font-bold text-xs bg-black text-white hover:bg-zinc-800 border border-white flex items-center gap-2 transition-all uppercase tracking-wider"
+                  className="px-8 py-3 font-mono font-bold text-xs bg-[var(--bg-card-contrast)] text-[var(--text-main)] hover:bg-[var(--text-main)] hover:text-[var(--bg-canvas)] border border-[var(--border-edge)] flex items-center gap-2 transition-all uppercase tracking-wider"
                 >
                   <Pause className="w-3.5 h-3.5 fill-current" /> PAUSE SESSION
                 </button>
@@ -402,9 +384,7 @@ export const LiveWorkoutModal: React.FC<LiveWorkoutModalProps> = ({
                 <button
                   id="finish-workout-btn"
                   onClick={handleFinish}
-                  className={`px-6 py-3 font-mono font-bold text-xs border transition-all uppercase tracking-wider flex items-center gap-2 ${
-                    isDark ? 'bg-white text-black border-white hover:bg-[#EAEAEA]' : 'bg-[#111111] text-white border-[#111111] hover:bg-[#222222]'
-                  }`}
+                  className="px-6 py-3 font-mono font-bold text-xs border border-[var(--border-edge)] transition-all uppercase tracking-wider flex items-center gap-2 bg-[var(--text-main)] text-[var(--bg-canvas)] hover:opacity-90"
                 >
                   <CheckCircle2 className="w-3.5 h-3.5" /> FINISH &amp; LOG SESSION
                 </button>
@@ -419,27 +399,27 @@ export const LiveWorkoutModal: React.FC<LiveWorkoutModalProps> = ({
             </div>
 
             <div className="space-y-1">
-              <h3 className="text-2xl font-serif font-black uppercase tracking-tight">Session Completed &amp; Verified</h3>
-              <p className={`text-xs font-mono ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>
+              <h3 className="text-2xl font-serif font-black uppercase tracking-tight text-[var(--text-main)]">Session Completed &amp; Verified</h3>
+              <p className="text-xs font-mono text-[var(--text-muted)]">
                 Biometric telemetry successfully integrated into unified health chronicle.
               </p>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-xl mx-auto text-center font-mono">
-              <div className={`p-3.5 border ${isDark ? 'bg-[#181818] border-[#2A2A2A]' : 'bg-[#F7F7F4] border-[#D4D4CE]'}`}>
-                <span className={`text-xs uppercase block ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>Duration</span>
-                <span className={`text-xl font-bold ${isDark ? 'text-white' : 'text-black'}`}>{formatTime(secondsElapsed)}</span>
+              <div className="p-3.5 border bg-[var(--bg-card-alt)] border-[var(--border-edge)]">
+                <span className="text-xs uppercase block text-[var(--text-muted)]">Duration</span>
+                <span className="text-xl font-bold text-[var(--text-main)]">{formatTime(secondsElapsed)}</span>
               </div>
-              <div className={`p-3.5 border ${isDark ? 'bg-[#181818] border-[#2A2A2A]' : 'bg-[#F7F7F4] border-[#D4D4CE]'}`}>
-                <span className={`text-xs uppercase block ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>Calories</span>
+              <div className="p-3.5 border bg-[var(--bg-card-alt)] border-[var(--border-edge)]">
+                <span className="text-xs uppercase block text-[var(--text-muted)]">Calories</span>
                 <span className="text-xl font-bold text-[#CC0000]">{caloriesBurned}</span>
               </div>
-              <div className={`p-3.5 border ${isDark ? 'bg-[#181818] border-[#2A2A2A]' : 'bg-[#F7F7F4] border-[#D4D4CE]'}`}>
-                <span className={`text-xs uppercase block ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>Avg HR</span>
+              <div className="p-3.5 border bg-[var(--bg-card-alt)] border-[var(--border-edge)]">
+                <span className="text-xs uppercase block text-[var(--text-muted)]">Avg HR</span>
                 <span className="text-xl font-bold text-[#CC0000]">{currentBpm || 135} BPM</span>
               </div>
-              <div className={`p-3.5 border ${isDark ? 'bg-[#181818] border-[#2A2A2A]' : 'bg-[#F7F7F4] border-[#D4D4CE]'}`}>
-                <span className={`text-xs uppercase block ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>Load</span>
+              <div className="p-3.5 border bg-[var(--bg-card-alt)] border-[var(--border-edge)]">
+                <span className="text-xs uppercase block text-[var(--text-muted)]">Load</span>
                 <span className="text-xl font-bold text-[#CC0000]">+{trainingLoad}</span>
               </div>
             </div>

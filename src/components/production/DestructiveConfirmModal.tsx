@@ -32,45 +32,45 @@ export const DestructiveConfirmModal: React.FC<DestructiveConfirmModalProps> = (
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn"
+      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn font-mono"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-labelledby="confirm-modal-title"
     >
       <div
-        className="w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-6 shadow-2xl space-y-4 animate-scaleUp text-slate-100"
+        className="w-full max-w-md bg-[var(--bg-card)] border-2 border-[var(--border-edge)] p-6 space-y-4 text-[var(--text-main)] transition-colors shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start gap-3">
-          <div className="p-2.5 rounded-xl bg-rose-500/15 text-rose-400 border border-rose-500/30 flex-shrink-0">
+          <div className="p-2.5 bg-rose-500/15 text-rose-500 border border-rose-500/30 flex-shrink-0">
             <AlertTriangle className="w-6 h-6" />
           </div>
           <div className="flex-1">
-            <h3 id="confirm-modal-title" className="text-base font-bold text-white">
+            <h3 id="confirm-modal-title" className="text-base font-serif font-black uppercase tracking-tight text-[var(--text-main)]">
               {title}
             </h3>
-            <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+            <p className="text-xs text-[var(--text-muted)] mt-1 font-sans leading-relaxed">
               {description}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white p-1"
+            className="text-[var(--text-muted)] hover:text-[var(--text-main)] p-1 transition-colors"
             aria-label="Close dialog"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-[11px] text-slate-400">
-          <span className="font-semibold text-rose-300">Warning:</span> This action is irreversible and will permanently wipe corresponding local encryption keys and cached biometric streams.
+        <div className="p-3 bg-[var(--bg-card-alt)] border border-[var(--border-subtle)] text-[11px] text-[var(--text-muted)] font-mono">
+          <span className="font-bold text-rose-500 uppercase">Warning:</span> This action is irreversible and will permanently wipe corresponding local encryption keys and cached biometric streams.
         </div>
 
         <div className="flex items-center justify-end gap-3 pt-2">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-all"
+            className="px-4 py-2 border border-[var(--border-edge)] bg-[var(--bg-card-alt)] hover:bg-[var(--bg-card-contrast)] text-[var(--text-main)] text-xs font-bold uppercase transition-all"
           >
             {cancelLabel}
           </button>
@@ -80,7 +80,7 @@ export const DestructiveConfirmModal: React.FC<DestructiveConfirmModalProps> = (
               onConfirm();
               onClose();
             }}
-            className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-all shadow-lg shadow-rose-600/20"
+            className="px-4 py-2 bg-[#CC0000] hover:bg-red-700 text-white text-xs font-bold uppercase transition-all border border-[#CC0000]"
           >
             {confirmLabel}
           </button>

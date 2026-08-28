@@ -204,27 +204,27 @@ export const HistoricalDataImportModal: React.FC<HistoricalDataImportModalProps>
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto animate-fadeIn">
-      <div className="relative w-full max-w-3xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden my-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto animate-fadeIn font-mono">
+      <div className="relative w-full max-w-3xl bg-[var(--bg-card)] border-2 border-[var(--border-edge)] text-[var(--text-main)] shadow-2xl overflow-hidden my-8 transition-colors">
         
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-800 bg-slate-900/80">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-[var(--border-edge)] bg-[var(--bg-card-alt)]">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
+            <div className="p-2.5 bg-[#CC0000] text-white border border-[#CC0000] flex-shrink-0">
               <UploadCloud className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                Import Historical Health & Device Archives
+              <h2 className="text-lg font-serif font-black uppercase tracking-tight text-[var(--text-main)] flex items-center gap-2">
+                Import Historical Health &amp; Device Archives
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-[var(--text-muted)] font-sans">
                 Bring in your past data from years of Apple Health, Garmin, Oura, Dexcom, or lab PDF reports.
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
+            className="p-2 text-[var(--text-muted)] hover:text-[var(--text-main)] border border-[var(--border-edge)] bg-[var(--bg-card)] hover:bg-[var(--bg-card-contrast)] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -235,7 +235,7 @@ export const HistoricalDataImportModal: React.FC<HistoricalDataImportModalProps>
 
           {/* Supported Sources Selector */}
           <div className="space-y-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">
               Select Your Historical Archive Format:
             </h3>
 
@@ -244,21 +244,21 @@ export const HistoricalDataImportModal: React.FC<HistoricalDataImportModalProps>
                 <div
                   key={format.id}
                   onClick={() => setSelectedFormat(format.id)}
-                  className={`p-3.5 rounded-xl border cursor-pointer transition-all flex items-start gap-3 ${
+                  className={`p-3.5 border cursor-pointer transition-all flex items-start gap-3 ${
                     selectedFormat === format.id
-                      ? 'bg-slate-800/90 border-cyan-500 text-white shadow-md shadow-cyan-500/10'
-                      : 'bg-slate-950/40 border-slate-800/80 text-slate-300 hover:border-slate-700'
+                      ? 'bg-[var(--bg-card-contrast)] border-[var(--border-edge)] border-l-4 border-l-[#CC0000] text-[var(--text-main)]'
+                      : 'bg-[var(--bg-card-alt)] border-[var(--border-subtle)] text-[var(--text-muted)] hover:border-[var(--border-edge)] hover:text-[var(--text-main)]'
                   }`}
                 >
                   <span className="text-2xl">{format.icon}</span>
-                  <div className="space-y-1 flex-1 min-w-0">
+                  <div className="space-y-1 flex-1 min-w-0 font-mono">
                     <div className="flex items-center justify-between gap-1">
-                      <span className="text-xs font-bold truncate">{format.name}</span>
-                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 whitespace-nowrap">
+                      <span className="text-xs font-bold truncate text-[var(--text-main)]">{format.name}</span>
+                      <span className="text-[9px] px-1.5 py-0.2 bg-[#CC0000]/15 text-[#CC0000] border border-[#CC0000]/30 font-bold uppercase whitespace-nowrap">
                         {format.badge}
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-400 leading-snug">{format.desc}</p>
+                    <p className="text-[11px] text-[var(--text-muted)] font-sans leading-snug">{format.desc}</p>
                   </div>
                 </div>
               ))}
@@ -275,7 +275,7 @@ export const HistoricalDataImportModal: React.FC<HistoricalDataImportModalProps>
               }
             }}
             onClick={() => fileInputRef.current?.click()}
-            className="p-6 rounded-xl border-2 border-dashed border-slate-700/80 hover:border-cyan-500/60 bg-slate-950/40 transition-all text-center space-y-3 cursor-pointer"
+            className="p-6 border-2 border-dashed border-[var(--border-edge)] hover:border-[#CC0000] bg-[var(--bg-card-alt)] transition-all text-center space-y-3 cursor-pointer"
           >
             <input
               ref={fileInputRef}
@@ -289,18 +289,18 @@ export const HistoricalDataImportModal: React.FC<HistoricalDataImportModalProps>
               className="hidden"
             />
 
-            <div className="w-12 h-12 mx-auto rounded-full bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
+            <div className="w-12 h-12 mx-auto bg-[#CC0000]/10 text-[#CC0000] border border-[#CC0000]/30 flex items-center justify-center">
               <UploadCloud className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-white">
-                Drag & drop your <span className="text-cyan-400 font-mono">{selectedFormat}</span> export or <span className="text-cyan-400 underline">browse</span>
+              <p className="text-sm font-bold text-[var(--text-main)]">
+                Drag &amp; drop your <span className="text-[#CC0000] font-mono">{selectedFormat}</span> export or <span className="text-[#CC0000] underline">browse</span>
               </p>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-[var(--text-muted)] mt-0.5 font-sans">
                 Server-side validated: Magic bytes verified, max 250MB per archive
               </p>
               {uploadedFileName && (
-                <p className="text-xs text-emerald-400 font-mono mt-1">
+                <p className="text-xs text-emerald-500 font-mono mt-1 font-bold">
                   Selected: {uploadedFileName}
                 </p>
               )}
@@ -310,12 +310,12 @@ export const HistoricalDataImportModal: React.FC<HistoricalDataImportModalProps>
                 id="start-historical-parse-btn"
                 onClick={() => handleSimulateUpload(selectedFormat)}
                 disabled={isProcessing}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-md shadow-cyan-500/20 transition-all disabled:opacity-50"
+                className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase bg-[#CC0000] hover:bg-red-700 text-white border border-[#CC0000] transition-all disabled:opacity-50"
               >
                 {isProcessing ? (
                   <>
                     <RefreshCw className="w-4 h-4 animate-spin" />
-                    Validating & Parsing...
+                    Validating &amp; Parsing...
                   </>
                 ) : (
                   <>
@@ -328,47 +328,47 @@ export const HistoricalDataImportModal: React.FC<HistoricalDataImportModalProps>
           </div>
 
           {validationError && (
-            <div className="p-3.5 rounded-xl bg-rose-950/40 border border-rose-500/50 text-rose-300 text-xs font-medium flex items-center gap-2 animate-fadeIn">
-              <AlertCircle className="w-4 h-4 text-rose-400 flex-shrink-0" />
+            <div className="p-3.5 bg-rose-950/20 border border-rose-500/50 text-rose-500 text-xs font-medium flex items-center gap-2 animate-fadeIn font-mono">
+              <AlertCircle className="w-4 h-4 text-rose-500 flex-shrink-0" />
               <span>Validation Rejected: {validationError}</span>
             </div>
           )}
 
           {/* Import Reconciliation Preview */}
           {importedPreview && (
-            <div className="p-4 rounded-xl bg-slate-950/80 border border-cyan-500/40 space-y-3 animate-fadeIn">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+            <div className="p-4 bg-[var(--bg-card-alt)] border border-[var(--border-edge)] space-y-3 animate-fadeIn font-mono">
+              <div className="flex items-center justify-between border-b border-[var(--border-subtle)] pb-2">
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  <span className="text-xs font-bold text-white">{importedPreview.sourceName}</span>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                  <span className="text-xs font-bold text-[var(--text-main)]">{importedPreview.sourceName}</span>
                 </div>
-                <span className="text-xs font-bold text-emerald-400">
+                <span className="text-xs font-bold text-emerald-500">
                   {importedPreview.totalRecords.toLocaleString()} Records Detected
                 </span>
               </div>
 
-              <p className="text-xs text-slate-300 flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-cyan-400" />
-                Coverage: <strong className="text-white">{importedPreview.dateSpan}</strong>
+              <p className="text-xs text-[var(--text-muted)] flex items-center gap-1.5 font-sans">
+                <Calendar className="w-3.5 h-3.5 text-[#CC0000]" />
+                Coverage: <strong className="text-[var(--text-main)]">{importedPreview.dateSpan}</strong>
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                 {importedPreview.metricsExtracted.map((metric, i) => (
-                  <div key={i} className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
-                    <span className="text-slate-300">{metric.name}</span>
-                    <span className="font-mono text-cyan-400 font-semibold">{metric.count.toLocaleString()}</span>
+                  <div key={i} className="p-2 bg-[var(--bg-card)] border border-[var(--border-subtle)] flex items-center justify-between">
+                    <span className="text-[var(--text-muted)] font-sans">{metric.name}</span>
+                    <span className="font-mono text-[#CC0000] font-bold">{metric.count.toLocaleString()}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="pt-2 flex items-center justify-between">
-                <p className="text-[11px] text-slate-400">
+              <div className="pt-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                <p className="text-[11px] text-[var(--text-muted)] font-sans">
                   All metrics will be chronologically mapped to your unified baseline and vital score algorithms.
                 </p>
                 <button
                   id="confirm-merge-btn"
                   onClick={handleConfirmMerge}
-                  className="px-4 py-1.5 rounded-lg text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-md shadow-emerald-500/20 transition-all flex items-center gap-1.5"
+                  className="px-4 py-1.5 text-xs font-bold uppercase bg-emerald-600 hover:bg-emerald-700 text-white border border-emerald-600 transition-all flex items-center gap-1.5 self-end sm:self-auto"
                 >
                   <Database className="w-3.5 h-3.5" />
                   Merge Into Master Timeline
@@ -378,7 +378,7 @@ export const HistoricalDataImportModal: React.FC<HistoricalDataImportModalProps>
           )}
 
           {successMessage && (
-            <div className="p-3.5 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-xs font-medium flex items-center gap-2 animate-fadeIn">
+            <div className="p-3.5 bg-emerald-500/15 border border-emerald-500/40 text-emerald-500 text-xs font-medium flex items-center gap-2 animate-fadeIn font-mono">
               <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
               {successMessage}
             </div>
@@ -387,11 +387,11 @@ export const HistoricalDataImportModal: React.FC<HistoricalDataImportModalProps>
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-6 py-4 border-t border-slate-800 bg-slate-900/90 text-xs text-slate-400">
+        <div className="flex items-center justify-between px-6 py-4 border-t border-[var(--border-edge)] bg-[var(--bg-card-alt)] text-xs text-[var(--text-muted)] font-mono">
           <span>Client-side parsing with zero server log retention • ISO 27001 Certified</span>
           <button
             onClick={onClose}
-            className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-white transition-all"
+            className="px-3.5 py-1.5 text-xs font-bold uppercase bg-[var(--bg-card)] hover:bg-[var(--bg-card-contrast)] text-[var(--text-main)] border border-[var(--border-edge)] transition-all"
           >
             Close
           </button>
