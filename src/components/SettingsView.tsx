@@ -1,5 +1,22 @@
 import React, { useState } from 'react';
-import { Sun, Moon, ShieldCheck, Download, FileText, Lock, CircleCheck as CheckCircle2, FileJson, FileSpreadsheet, Trash2, TriangleAlert as AlertTriangle, X, FileSliders as Sliders, Cookie, Heart, Activity } from 'lucide-react';
+import {
+  Sun,
+  Moon,
+  ShieldCheck,
+  Download,
+  FileText,
+  Lock,
+  CircleCheck as CheckCircle2,
+  FileJson,
+  FileSpreadsheet,
+  Trash2,
+  TriangleAlert as AlertTriangle,
+  X,
+  Sliders,
+  Cookie,
+  Heart,
+  Activity
+} from 'lucide-react';
 
 interface SettingsViewProps {
   theme: 'dark' | 'light';
@@ -7,7 +24,11 @@ interface SettingsViewProps {
   onOpenDoctorReport: () => void;
 }
 
-export const SettingsView: React.FC<SettingsViewProps> = ({ theme, onToggleTheme, onOpenDoctorReport }) => {
+export const SettingsView: React.FC<SettingsViewProps> = ({
+  theme,
+  onToggleTheme,
+  onOpenDoctorReport
+}) => {
   const [cookiePrefs, setCookiePrefs] = useState({ essential: true, analytics: true, functional: true });
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteText, setDeleteText] = useState('');
@@ -29,133 +50,209 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ theme, onToggleTheme
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-slate-900 rounded-2xl p-6 border border-slate-800 shadow-md">
-        <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">Settings</h1>
-        <p className="text-xs text-slate-400 mt-1">Manage your account, privacy, data, and preferences.</p>
+    <div className="space-y-6 font-mono max-w-5xl mx-auto">
+      
+      {/* 1. Header Masthead */}
+      <div className="bg-[#141414] text-[#F9F9F7] border border-[#262626] p-6 lg:p-8 hard-shadow">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#262626] pb-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="bg-[#CC0000] text-white text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider">
+                SYSTEM CONFIGURATION
+              </span>
+              <span className="text-xs text-[#888888] uppercase tracking-wider">
+                PRIVACY • SECURITY • TELEMETRY RETENTION
+              </span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-black tracking-tight text-white uppercase">
+              System Settings & Privacy Registry
+            </h1>
+            <p className="text-xs text-[#A3A3A3] mt-1 max-w-2xl font-mono">
+              Control interface rendering modes, cryptographic audit logs, GDPR/HIPAA portability archives, and local hardware storage.
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* Appearance */}
-      <div className="bg-slate-900 rounded-2xl p-6 border border-slate-800 space-y-4">
-        <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-          <Sun className="w-4 h-4 text-amber-400" /> Appearance
-        </h3>
-        <div className="flex items-center justify-between">
+      {/* 2. Appearance & Mode Selection */}
+      <div className="bg-[#141414] border border-[#262626] p-6 hard-shadow space-y-4">
+        <div className="flex items-center gap-2 border-b border-[#262626] pb-3">
+          <Sun className="w-4 h-4 text-[#CC0000]" />
+          <h3 className="text-sm font-serif font-black uppercase text-white tracking-wide">
+            Interface Rendering Mode
+          </h3>
+        </div>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-[#1C1C1C] border border-[#2D2D2D] p-4">
           <div>
-            <span className="text-sm font-bold text-white block">Theme</span>
-            <span className="text-xs text-slate-400">Currently: {theme === 'dark' ? 'Dark' : 'Light'} mode</span>
+            <span className="text-xs font-bold text-white uppercase block">COLOR CONTRAST PROFILE</span>
+            <span className="text-xs text-[#888888]">
+              Currently active: <strong className="text-white uppercase">{theme} MODE</strong> (Editorial Monochrome)
+            </span>
           </div>
-          <button onClick={onToggleTheme}
-            className="px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all flex items-center gap-2">
-            {theme === 'dark' ? <><Sun className="w-4 h-4 text-amber-400" /> Switch to Light</> : <><Moon className="w-4 h-4 text-cyan-400" /> Switch to Dark</>}
+          <button
+            onClick={onToggleTheme}
+            className="px-4 py-2 bg-white text-[#111111] hover:bg-[#E5E5E5] text-xs font-bold uppercase tracking-wider border border-white transition-colors flex items-center gap-2"
+          >
+            {theme === 'dark' ? (
+              <>
+                <Sun className="w-4 h-4 text-[#CC0000]" />
+                <span>SWITCH TO LIGHT MODE</span>
+              </>
+            ) : (
+              <>
+                <Moon className="w-4 h-4 text-[#111111]" />
+                <span>SWITCH TO DARK MODE</span>
+              </>
+            )}
           </button>
         </div>
       </div>
 
-      {/* Data Export */}
-      <div className="bg-slate-900 rounded-2xl p-6 border border-slate-800 space-y-4">
-        <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-          <Download className="w-4 h-4 text-emerald-400" /> Data Export & Portability
-        </h3>
-        <p className="text-xs text-slate-400">Export all your historical health data in standard formats.</p>
+      {/* 3. Data Export & Portability */}
+      <div className="bg-[#141414] border border-[#262626] p-6 hard-shadow space-y-4">
+        <div className="flex items-center gap-2 border-b border-[#262626] pb-3">
+          <Download className="w-4 h-4 text-[#CC0000]" />
+          <h3 className="text-sm font-serif font-black uppercase text-white tracking-wide">
+            Cryptographic Portability & Data Export
+          </h3>
+        </div>
+        <p className="text-xs text-[#A3A3A3]">
+          Generate signed machine-readable dumps of all raw telemetry packets, blood panel records, and protocol histories.
+        </p>
         <div className="flex flex-wrap gap-3">
-          <button onClick={() => handleExport('json')}
-            className="px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-all flex items-center gap-2">
-            <FileJson className="w-4 h-4 text-cyan-400" /> Download JSON
+          <button
+            onClick={() => handleExport('json')}
+            className="px-4 py-2 bg-[#1C1C1C] hover:bg-[#252525] text-white text-xs font-bold uppercase tracking-wider border border-[#303030] transition-colors flex items-center gap-2"
+          >
+            <FileJson className="w-4 h-4 text-[#60A5FA]" />
+            <span>EXPORT RAW JSON</span>
           </button>
-          <button onClick={() => handleExport('csv')}
-            className="px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-all flex items-center gap-2">
-            <FileSpreadsheet className="w-4 h-4 text-emerald-400" /> Download CSV
+          <button
+            onClick={() => handleExport('csv')}
+            className="px-4 py-2 bg-[#1C1C1C] hover:bg-[#252525] text-white text-xs font-bold uppercase tracking-wider border border-[#303030] transition-colors flex items-center gap-2"
+          >
+            <FileSpreadsheet className="w-4 h-4 text-[#4ADE80]" />
+            <span>EXPORT TABULAR CSV</span>
           </button>
-          <button onClick={onOpenDoctorReport}
-            className="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 transition-all flex items-center gap-2">
-            <FileText className="w-4 h-4" /> Generate Doctor PDF
+          <button
+            onClick={onOpenDoctorReport}
+            className="px-4 py-2 bg-[#CC0000] hover:bg-[#b30000] text-white text-xs font-bold uppercase tracking-wider border border-[#111111] transition-colors flex items-center gap-2"
+          >
+            <FileText className="w-4 h-4" />
+            <span>GENERATE PHYSICIAN PDF</span>
           </button>
         </div>
         {exportSuccess && (
-          <div className="text-xs text-emerald-400 flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4" /> Export downloaded successfully!
+          <div className="text-xs text-[#4ADE80] flex items-center gap-1.5 bg-[#122A1A] p-2.5 border border-[#22C55E]/40">
+            <CheckCircle2 className="w-4 h-4" />
+            <span>Cryptographic archive generated and delivered to client filesystem.</span>
           </div>
         )}
       </div>
 
-      {/* Privacy & Cookie Preferences */}
-      <div className="bg-slate-900 rounded-2xl p-6 border border-slate-800 space-y-4">
-        <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-          <ShieldCheck className="w-4 h-4 text-cyan-400" /> Privacy & Cookies
-        </h3>
+      {/* 4. Privacy & Consent Ledger */}
+      <div className="bg-[#141414] border border-[#262626] p-6 hard-shadow space-y-4">
+        <div className="flex items-center gap-2 border-b border-[#262626] pb-3">
+          <ShieldCheck className="w-4 h-4 text-[#CC0000]" />
+          <h3 className="text-sm font-serif font-black uppercase text-white tracking-wide">
+            Privacy Ledger & Local Storage Scopes
+          </h3>
+        </div>
         <div className="space-y-3">
-          <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-start justify-between gap-4">
+          <div className="bg-[#1C1C1C] p-4 border border-[#2D2D2D] flex items-start justify-between gap-4">
             <div>
-              <span className="text-xs font-bold text-white">Essential Cookies</span>
-              <p className="text-[11px] text-slate-400">Required for authentication and secure sessions.</p>
+              <span className="text-xs font-bold text-white uppercase">ESSENTIAL TELEMETRY ENCRYPTION</span>
+              <p className="text-xs text-[#888888] mt-0.5">Required for AES-256 session integrity and zero-trust biometric storage.</p>
             </div>
-            <input type="checkbox" checked disabled className="accent-cyan-500 mt-1 cursor-not-allowed" />
+            <input type="checkbox" checked disabled className="accent-[#CC0000] mt-1" />
           </div>
-          <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-start justify-between gap-4">
+          <div className="bg-[#1C1C1C] p-4 border border-[#2D2D2D] flex items-start justify-between gap-4">
             <div>
-              <span className="text-xs font-bold text-white">Functional & Performance</span>
-              <p className="text-[11px] text-slate-400">UI preferences, simulator cache, and layout settings.</p>
+              <span className="text-xs font-bold text-white uppercase">FUNCTIONAL PROTOCOL CACHE</span>
+              <p className="text-xs text-[#888888] mt-0.5">Local index of lifestyle simulator runs, custom splits, and grocery checklists.</p>
             </div>
-            <input type="checkbox" checked={cookiePrefs.functional} onChange={e => setCookiePrefs(p => ({ ...p, functional: e.target.checked }))} className="accent-cyan-500 mt-1 w-4 h-4 cursor-pointer" />
+            <input
+              type="checkbox"
+              checked={cookiePrefs.functional}
+              onChange={e => setCookiePrefs(p => ({ ...p, functional: e.target.checked }))}
+              className="accent-[#CC0000] mt-1 w-4 h-4 cursor-pointer"
+            />
           </div>
-          <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-start justify-between gap-4">
+          <div className="bg-[#1C1C1C] p-4 border border-[#2D2D2D] flex items-start justify-between gap-4">
             <div>
-              <span className="text-xs font-bold text-white">Anonymous Diagnostics</span>
-              <p className="text-[11px] text-slate-400">Helps improve Bluetooth reliability and OCR accuracy.</p>
+              <span className="text-xs font-bold text-white uppercase">ANONYMOUS TELEMETRY DIAGNOSTICS</span>
+              <p className="text-xs text-[#888888] mt-0.5">Hardware GATT packet loss monitoring and OCR confidence benchmarking.</p>
             </div>
-            <input type="checkbox" checked={cookiePrefs.analytics} onChange={e => setCookiePrefs(p => ({ ...p, analytics: e.target.checked }))} className="accent-cyan-500 mt-1 w-4 h-4 cursor-pointer" />
+            <input
+              type="checkbox"
+              checked={cookiePrefs.analytics}
+              onChange={e => setCookiePrefs(p => ({ ...p, analytics: e.target.checked }))}
+              className="accent-[#CC0000] mt-1 w-4 h-4 cursor-pointer"
+            />
           </div>
         </div>
-        <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 flex items-center gap-2">
-          <Lock className="w-4 h-4" /> Zero-Sale Guarantee: Your health data is never sold, licensed, or shared with third parties.
+        <div className="p-3 bg-[#181818] border border-[#303030] text-xs text-[#CCCCCC] flex items-center gap-2">
+          <Lock className="w-4 h-4 text-[#4ADE80]" />
+          <span>ZERO-SALE OATH: Physiological data remains encrypted on your client. No third-party ad brokers.</span>
         </div>
       </div>
 
-      {/* Account Deletion */}
-      <div className="bg-slate-900 rounded-2xl p-6 border border-rose-900/40 space-y-4">
-        <h3 className="text-sm font-bold text-rose-300 uppercase tracking-wider flex items-center gap-2">
-          <Trash2 className="w-4 h-4" /> Danger Zone
-        </h3>
-        <p className="text-xs text-slate-400">Permanently delete all your health data, connected sources, and AI plans. This action is irreversible.</p>
+      {/* 5. Danger Zone */}
+      <div className="bg-[#141414] border border-[#401518] p-6 hard-shadow space-y-4">
+        <div className="flex items-center gap-2 border-b border-[#401518] pb-3">
+          <Trash2 className="w-4 h-4 text-[#F87171]" />
+          <h3 className="text-sm font-serif font-black uppercase text-[#F87171] tracking-wide">
+            Danger Zone: Irreversible Account Purge
+          </h3>
+        </div>
+        <p className="text-xs text-[#A3A3A3]">
+          Purge all locally stored and connected health databases, OCR indices, and workout records permanently.
+        </p>
         {!showDeleteConfirm ? (
-          <button onClick={() => setShowDeleteConfirm(true)}
-            className="px-4 py-2 rounded-xl text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 hover:bg-rose-500/30 transition-all flex items-center gap-1.5">
-            <Trash2 className="w-3.5 h-3.5" /> Request Data Deletion
+          <button
+            onClick={() => setShowDeleteConfirm(true)}
+            className="px-4 py-2 bg-[#2E1215] text-[#F87171] hover:bg-[#3D181C] text-xs font-bold uppercase tracking-wider border border-[#EF4444]/40 transition-colors flex items-center gap-1.5"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            <span>PURGE CLINICAL RECORDS</span>
           </button>
         ) : (
-          <div className="p-4 rounded-xl bg-slate-950 border border-rose-500/40 space-y-3">
-            <p className="text-xs text-rose-300 font-semibold flex items-center gap-1.5">
-              <AlertTriangle className="w-4 h-4" /> Type <span className="font-mono text-white underline">DELETE</span> to confirm:
+          <div className="p-4 bg-[#1C1C1C] border border-[#EF4444]/60 space-y-3">
+            <p className="text-xs text-[#F87171] font-bold flex items-center gap-1.5">
+              <AlertTriangle className="w-4 h-4" /> TYPE <span className="font-mono text-white underline">DELETE</span> TO EXECUTE PURGE:
             </p>
-            <input type="text" value={deleteText} onChange={e => setDeleteText(e.target.value)} placeholder="Type DELETE"
-              className="w-full px-3 py-1.5 text-xs bg-slate-900 border border-rose-500/50 rounded text-white font-mono placeholder:text-slate-600 focus:outline-none focus:border-rose-400" />
+            <input
+              type="text"
+              value={deleteText}
+              onChange={e => setDeleteText(e.target.value)}
+              placeholder="TYPE DELETE"
+              className="w-full px-3 py-2 text-xs bg-[#111111] border border-[#EF4444]/50 text-white font-mono placeholder-[#666666] focus:outline-none focus:border-[#EF4444]"
+            />
             <div className="flex gap-2">
-              <button disabled={deleteText !== 'DELETE'}
-                className={`px-3 py-1.5 rounded text-xs font-bold transition-all ${deleteText === 'DELETE' ? 'bg-rose-600 hover:bg-rose-500 text-white' : 'bg-slate-800 text-slate-500 cursor-not-allowed'}`}>
-                Permanently Purge
+              <button
+                disabled={deleteText !== 'DELETE'}
+                className={`px-4 py-2 text-xs font-bold uppercase tracking-wider transition-colors border ${
+                  deleteText === 'DELETE'
+                    ? 'bg-[#CC0000] hover:bg-[#b30000] text-white border-[#CC0000]'
+                    : 'bg-[#1C1C1C] text-[#666666] border-[#303030] cursor-not-allowed'
+                }`}
+              >
+                PERMANENTLY PURGE ALL
               </button>
-              <button onClick={() => { setShowDeleteConfirm(false); setDeleteText(''); }}
-                className="px-3 py-1.5 rounded text-xs text-slate-400 hover:text-white">Cancel</button>
+              <button
+                onClick={() => {
+                  setShowDeleteConfirm(false);
+                  setDeleteText('');
+                }}
+                className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#888888] hover:text-white"
+              >
+                ABORT
+              </button>
             </div>
           </div>
         )}
       </div>
 
-      {/* About */}
-      <div className="bg-slate-900 rounded-2xl p-6 border border-slate-800 space-y-2">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-emerald-400 p-[2px]">
-            <div className="w-full h-full bg-slate-950 rounded-[6px] flex items-center justify-center">
-              <Activity className="w-4 h-4 text-cyan-400" />
-            </div>
-          </div>
-          <span className="font-bold text-white">VITAL<span className="text-cyan-400">OS</span></span>
-        </div>
-        <p className="text-xs text-slate-400">Personal Health Intelligence Platform v3.4.2</p>
-        <p className="text-[11px] text-slate-500">© {new Date().getFullYear()} VITALOS Health Intelligence Inc. Not a medical device. Consult your physician for clinical advice.</p>
-      </div>
     </div>
   );
 };

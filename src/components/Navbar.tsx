@@ -16,7 +16,9 @@ import {
   ShieldCheck,
   Calendar,
   Award,
-  BookOpen
+  BookOpen,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { auth, FirebaseUserProfile, signOutUser } from '../services/firebaseAuth';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -54,6 +56,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   isBleConnected,
   bleDeviceName,
   onOpenLifecycle,
+  theme = 'dark',
+  onToggleTheme
 }) => {
   const [firebaseUser, setFirebaseUser] = useState<FirebaseUserProfile | null>(null);
   const [showMoreDesks, setShowMoreDesks] = useState(false);
@@ -102,26 +106,28 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'journal', label: 'HEALTH JOURNAL' },
   ];
 
+  const isDark = theme === 'dark';
+
   return (
-    <header className="bg-[#111111] text-[#F9F9F7] border-b border-[#262626] select-none">
+    <header className={`${isDark ? 'bg-[#111111] text-[#F9F9F7] border-[#262626]' : 'bg-[#FFFFFF] text-[#111111] border-[#D4D4CE]'} border-b select-none transition-colors`}>
       
       {/* 1. Sub-Header Newspaper Volume Bar */}
-      <div className="border-b border-[#262626] text-[11px] font-mono py-1 px-4 sm:px-8 text-[#A3A3A3]">
+      <div className={`border-b ${isDark ? 'border-[#262626] bg-[#0d0d0d] text-[#A3A3A3]' : 'border-[#E2E2DC] bg-[#F8F8F5] text-[#666666]'} text-[11px] font-mono py-1 px-4 sm:px-8`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <span className="font-bold tracking-wider text-[#CCCCCC]">VOL. 1 - NO. 01</span>
-          <span className="tracking-widest uppercase text-center hidden sm:inline">
+          <span className={`font-bold tracking-wider ${isDark ? 'text-[#CCCCCC]' : 'text-[#222222]'}`}>VOL. 1 - NO. 01</span>
+          <span className="tracking-widest uppercase text-center hidden sm:inline font-medium">
             PERSONAL HEALTH INTELLIGENCE • PRINTED DAILY
           </span>
-          <span className="font-bold tracking-wider text-[#CCCCCC]">NEW YORK EDITION</span>
+          <span className={`font-bold tracking-wider ${isDark ? 'text-[#CCCCCC]' : 'text-[#222222]'}`}>NEW YORK EDITION</span>
         </div>
       </div>
 
       {/* 2. Main Masthead */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-4 border-b border-[#262626]">
+      <div className={`max-w-7xl mx-auto px-4 sm:px-8 py-4 border-b ${isDark ? 'border-[#262626]' : 'border-[#E2E2DC]'}`}>
         <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
           
           {/* Left: Date Display */}
-          <div className="text-xs font-mono font-medium tracking-wider text-[#A3A3A3] w-full lg:w-auto text-center lg:text-left">
+          <div className={`text-xs font-mono font-medium tracking-wider ${isDark ? 'text-[#A3A3A3]' : 'text-[#666666]'} w-full lg:w-auto text-center lg:text-left`}>
             {currentDateFormatted}
           </div>
 
@@ -130,31 +136,50 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => setActiveTab('command')}
             className="cursor-pointer text-center flex items-baseline justify-center gap-2 group"
           >
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-black tracking-tight text-white uppercase group-hover:text-[#F0F0ED] transition-colors">
+            <h1 className={`text-3xl sm:text-4xl lg:text-5xl font-serif font-black tracking-tight ${isDark ? 'text-white group-hover:text-[#F0F0ED]' : 'text-[#111111] group-hover:text-[#333333]'} uppercase transition-colors`}>
               VitalSync
             </h1>
-            <span className="text-xs font-serif italic text-[#A3A3A3] tracking-normal lowercase">
+            <span className={`text-xs font-serif italic ${isDark ? 'text-[#A3A3A3]' : 'text-[#777777]'} tracking-normal lowercase`}>
               est. 2026
             </span>
           </div>
 
-          {/* Right: Search & Action Pills */}
+          {/* Right: Search, Theme Toggle & Action Pills */}
           <div className="flex flex-wrap items-center justify-center lg:justify-end gap-2 text-xs font-mono w-full lg:w-auto">
             
             {/* Search Button */}
             <button
               onClick={onOpenGlobalSearch}
-              className="flex items-center gap-2 px-3 py-1.5 bg-[#1C1C1C] hover:bg-[#282828] text-[#A3A3A3] hover:text-white border border-[#333333] transition-colors"
+              className={`flex items-center gap-2 px-3 py-1.5 ${isDark ? 'bg-[#1C1C1C] hover:bg-[#282828] text-[#A3A3A3] hover:text-white border-[#333333]' : 'bg-[#F2F2EC] hover:bg-[#E8E8E0] text-[#555555] hover:text-[#111111] border-[#D4D4CE]'} border transition-colors`}
             >
-              <Search className="w-3.5 h-3.5 text-[#A3A3A3]" />
+              <Search className="w-3.5 h-3.5" />
               <span className="text-[11px] uppercase tracking-wider font-bold">SEARCH ARCHIVE</span>
-              <kbd className="text-[10px] bg-[#111111] px-1 border border-[#444444] text-[#888888]">⌘K</kbd>
+              <kbd className={`text-[10px] ${isDark ? 'bg-[#111111] border-[#444444] text-[#888888]' : 'bg-[#E5E5DE] border-[#C8C8BE] text-[#555555]'} px-1 border`}>⌘K</kbd>
+            </button>
+
+            {/* Light / Dark Mode Toggle */}
+            <button
+              onClick={onToggleTheme}
+              title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              className={`flex items-center gap-1.5 px-3 py-1.5 ${isDark ? 'bg-[#1C1C1C] hover:bg-[#282828] text-[#F9F9F7] border-[#333333]' : 'bg-[#111111] hover:bg-[#222222] text-[#FFFFFF] border-[#111111]'} border transition-colors font-bold uppercase text-[11px] tracking-wider`}
+            >
+              {isDark ? (
+                <>
+                  <Sun className="w-3.5 h-3.5 text-amber-400" />
+                  <span>LIGHT</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="w-3.5 h-3.5 text-cyan-300" />
+                  <span>DARK</span>
+                </>
+              )}
             </button>
 
             {/* Live HR Pill */}
             <button
               onClick={onOpenLiveWorkout}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#1C1C1C] hover:bg-[#282828] text-white border border-[#333333] transition-colors"
+              className={`flex items-center gap-1.5 px-3 py-1.5 ${isDark ? 'bg-[#1C1C1C] hover:bg-[#282828] text-white border-[#333333]' : 'bg-[#F2F2EC] hover:bg-[#E8E8E0] text-[#111111] border-[#D4D4CE]'} border transition-colors`}
             >
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#CC0000] opacity-75"></span>
@@ -166,7 +191,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* What Changed Button */}
             <button
               onClick={onOpenWhatChanged}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#1C1C1C] hover:bg-[#282828] text-white border border-[#333333] transition-colors font-bold uppercase text-[11px] tracking-wider"
+              className={`flex items-center gap-1.5 px-3 py-1.5 ${isDark ? 'bg-[#1C1C1C] hover:bg-[#282828] text-white border-[#333333]' : 'bg-[#F2F2EC] hover:bg-[#E8E8E0] text-[#111111] border-[#D4D4CE]'} border transition-colors font-bold uppercase text-[11px] tracking-wider`}
             >
               <Sparkles className="w-3 h-3 text-[#CC0000]" />
               <span>WHAT CHANGED?</span>
@@ -175,7 +200,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Doctor Export Button */}
             <button
               onClick={onOpenDoctorReport}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#1C1C1C] hover:bg-[#282828] text-white border border-[#333333] transition-colors font-bold uppercase text-[11px] tracking-wider"
+              className={`flex items-center gap-1.5 px-3 py-1.5 ${isDark ? 'bg-[#1C1C1C] hover:bg-[#282828] text-white border-[#333333]' : 'bg-[#F2F2EC] hover:bg-[#E8E8E0] text-[#111111] border-[#D4D4CE]'} border transition-colors font-bold uppercase text-[11px] tracking-wider`}
             >
               <Plus className="w-3 h-3 text-[#CC0000]" />
               <span>DOCTOR EXPORT</span>
@@ -204,8 +229,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onClick={() => setActiveTab(tab.id)}
                   className={`px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider transition-colors border ${
                     isActive
-                      ? 'bg-white text-[#111111] border-white'
-                      : 'bg-transparent text-[#A3A3A3] border-transparent hover:text-white hover:border-[#333333]'
+                      ? isDark
+                        ? 'bg-white text-[#111111] border-white'
+                        : 'bg-[#111111] text-white border-[#111111]'
+                      : isDark
+                        ? 'bg-transparent text-[#A3A3A3] border-transparent hover:text-white hover:border-[#333333]'
+                        : 'bg-transparent text-[#666666] border-transparent hover:text-[#111111] hover:border-[#CCCCCC]'
                   }`}
                 >
                   {tab.label}
@@ -218,14 +247,14 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="relative">
             <button
               onClick={() => setShowMoreDesks(!showMoreDesks)}
-              className="px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wider text-[#A3A3A3] hover:text-white border border-[#333333] flex items-center gap-1"
+              className={`px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wider ${isDark ? 'text-[#A3A3A3] hover:text-white border-[#333333]' : 'text-[#666666] hover:text-[#111111] border-[#CCCCCC]'} border flex items-center gap-1`}
             >
               <span>SPECIAL DESKS</span>
               <ChevronDown className="w-3.5 h-3.5" />
             </button>
 
             {showMoreDesks && (
-              <div className="absolute right-0 mt-1 w-56 bg-[#161616] border border-[#333333] z-50 py-1 hard-shadow font-mono text-xs">
+              <div className={`absolute right-0 mt-1 w-56 ${isDark ? 'bg-[#161616] border-[#333333]' : 'bg-[#FFFFFF] border-[#D4D4CE]'} border z-50 py-1 hard-shadow font-mono text-xs`}>
                 {secondaryDesks.map(d => (
                   <button
                     key={d.id}
@@ -233,8 +262,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                       setActiveTab(d.id);
                       setShowMoreDesks(false);
                     }}
-                    className={`w-full text-left px-3 py-2 hover:bg-[#242424] transition-colors flex items-center justify-between ${
-                      activeTab === d.id ? 'text-[#CC0000] font-bold' : 'text-[#CCCCCC]'
+                    className={`w-full text-left px-3 py-2 ${isDark ? 'hover:bg-[#242424]' : 'hover:bg-[#F2F2EC]'} transition-colors flex items-center justify-between ${
+                      activeTab === d.id ? 'text-[#CC0000] font-bold' : isDark ? 'text-[#CCCCCC]' : 'text-[#333333]'
                     }`}
                   >
                     <span>{d.label}</span>
