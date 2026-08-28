@@ -1,149 +1,252 @@
 import React, { useState, useEffect } from 'react';
-import { Activity, Radio, Sparkles, Search, Menu, X, Command } from 'lucide-react';
-import { ThemeToggle } from './production/ThemeToggle';
-import type { TabId } from '../App';
+import {
+  Search,
+  Radio,
+  Sparkles,
+  FileText,
+  Sliders,
+  Activity,
+  Heart,
+  Zap,
+  Layers,
+  Settings as SettingsIcon,
+  ChevronDown,
+  User,
+  Plus,
+  ShieldCheck,
+  Calendar,
+  Award,
+  BookOpen
+} from 'lucide-react';
+import { auth, FirebaseUserProfile, signOutUser } from '../services/firebaseAuth';
+import { onAuthStateChanged } from 'firebase/auth';
 
 interface NavbarProps {
-  activeTab: TabId;
-  setActiveTab: (t: TabId) => void;
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
   onOpenLiveWorkout: () => void;
   onOpenWhatChanged: () => void;
   onOpenDoctorReport: () => void;
-  onOpenGlobalSearch: () => void;
+  onOpenDataMap: () => void;
+  onOpenWorkspace?: (tab?: 'gmail' | 'sheets' | 'picker' | 'firebase') => void;
+  onOpenGlobalSearch?: () => void;
+  searchQuery: string;
+  setSearchQuery: (q: string) => void;
   liveBpm: number;
   isBleConnected: boolean;
   bleDeviceName: string;
-  theme: 'dark' | 'light';
-  onToggleTheme: () => void;
+  onOpenLifecycle?: (view: string) => void;
+  theme?: 'dark' | 'light';
+  onToggleTheme?: () => void;
 }
 
-const TABS: { id: TabId; label: string; icon: any }[] = [
-  { id: 'dashboard', label: 'Dashboard', icon: Activity },
-  { id: 'health', label: 'Health', icon: Activity },
-  { id: 'coach', label: 'AI Coach', icon: Sparkles },
-  { id: 'data', label: 'Data Hub', icon: Search },
-  { id: 'settings', label: 'Settings', icon: Activity },
-];
-
 export const Navbar: React.FC<NavbarProps> = ({
-  activeTab, setActiveTab, onOpenLiveWorkout, onOpenWhatChanged, onOpenDoctorReport,
-  onOpenGlobalSearch, liveBpm, isBleConnected, bleDeviceName, theme, onToggleTheme
+  activeTab,
+  setActiveTab,
+  onOpenLiveWorkout,
+  onOpenWhatChanged,
+  onOpenDoctorReport,
+  onOpenWorkspace,
+  onOpenGlobalSearch,
+  searchQuery,
+  setSearchQuery,
+  liveBpm,
+  isBleConnected,
+  bleDeviceName,
+  onOpenLifecycle,
 }) => {
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [firebaseUser, setFirebaseUser] = useState<FirebaseUserProfile | null>(null);
+  const [showMoreDesks, setShowMoreDesks] = useState(false);
+
+  const currentDateFormatted = new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }).toUpperCase();
 
   useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 10);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    const unsubscribe = onAuthStateChanged(auth, (u) => {
+      if (u) {
+        setFirebaseUser({
+          uid: u.uid,
+          email: u.email,
+          displayName: u.displayName || 'Dr. Vance',
+          photoURL: u.photoURL,
+          emailVerified: u.emailVerified,
+          role: 'user'
+        });
+      } else {
+        setFirebaseUser(null);
+      }
+    });
+    return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    document.body.style.overflow = isMobileOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [isMobileOpen]);
+  const primaryTabs = [
+    { id: 'command', label: 'FRONT PAGE' },
+    { id: 'vitals', label: 'HEALTH' },
+    { id: 'coach', label: 'AI COACH' },
+    { id: 'sources', label: 'DATA HUB' },
+    { id: 'settings', label: 'SETTINGS' },
+  ];
+
+  const secondaryDesks = [
+    { id: 'clinician', label: 'CLINICIAN EHR' },
+    { id: 'strength', label: 'STRENGTH & 1RM' },
+    { id: 'metabolic', label: 'METABOLIC & DEXA' },
+    { id: 'supplements', label: 'MEDS & SUPPLEMENTS' },
+    { id: 'circadian', label: 'CIRCADIAN & AQI' },
+    { id: 'experiments', label: 'EXPERIMENTS LAB' },
+    { id: 'twin', label: 'DIGITAL RADAR' },
+    { id: 'journal', label: 'HEALTH JOURNAL' },
+  ];
 
   return (
-    <>
-      <header className={`sticky top-0 z-40 transition-all duration-200 ${
-        isScrolled ? 'bg-slate-950/95 shadow-lg border-b border-slate-800 backdrop-blur-md' : 'bg-slate-950 border-b border-slate-900'
-      }`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 gap-3">
-            <button onClick={() => setIsMobileOpen(true)} className="lg:hidden p-2 rounded-lg text-slate-300 hover:text-white" aria-label="Open menu">
-              <Menu className="w-5 h-5" />
+    <header className="bg-[#111111] text-[#F9F9F7] border-b border-[#262626] select-none">
+      
+      {/* 1. Sub-Header Newspaper Volume Bar */}
+      <div className="border-b border-[#262626] text-[11px] font-mono py-1 px-4 sm:px-8 text-[#A3A3A3]">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <span className="font-bold tracking-wider text-[#CCCCCC]">VOL. 1 - NO. 01</span>
+          <span className="tracking-widest uppercase text-center hidden sm:inline">
+            PERSONAL HEALTH INTELLIGENCE • PRINTED DAILY
+          </span>
+          <span className="font-bold tracking-wider text-[#CCCCCC]">NEW YORK EDITION</span>
+        </div>
+      </div>
+
+      {/* 2. Main Masthead */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-4 border-b border-[#262626]">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
+          
+          {/* Left: Date Display */}
+          <div className="text-xs font-mono font-medium tracking-wider text-[#A3A3A3] w-full lg:w-auto text-center lg:text-left">
+            {currentDateFormatted}
+          </div>
+
+          {/* Center: Title Brand */}
+          <div
+            onClick={() => setActiveTab('command')}
+            className="cursor-pointer text-center flex items-baseline justify-center gap-2 group"
+          >
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-black tracking-tight text-white uppercase group-hover:text-[#F0F0ED] transition-colors">
+              VitalSync
+            </h1>
+            <span className="text-xs font-serif italic text-[#A3A3A3] tracking-normal lowercase">
+              est. 2026
+            </span>
+          </div>
+
+          {/* Right: Search & Action Pills */}
+          <div className="flex flex-wrap items-center justify-center lg:justify-end gap-2 text-xs font-mono w-full lg:w-auto">
+            
+            {/* Search Button */}
+            <button
+              onClick={onOpenGlobalSearch}
+              className="flex items-center gap-2 px-3 py-1.5 bg-[#1C1C1C] hover:bg-[#282828] text-[#A3A3A3] hover:text-white border border-[#333333] transition-colors"
+            >
+              <Search className="w-3.5 h-3.5 text-[#A3A3A3]" />
+              <span className="text-[11px] uppercase tracking-wider font-bold">SEARCH ARCHIVE</span>
+              <kbd className="text-[10px] bg-[#111111] px-1 border border-[#444444] text-[#888888]">⌘K</kbd>
             </button>
 
-            <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => setActiveTab('dashboard')}>
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-emerald-400 p-[2px] shadow-lg shadow-cyan-500/20">
-                <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-                  <Activity className="w-4 h-4 text-cyan-400" />
-                </div>
-              </div>
-              <span className="font-bold text-lg tracking-wider text-white hidden sm:block">
-                VITAL<span className="text-cyan-400">OS</span>
+            {/* Live HR Pill */}
+            <button
+              onClick={onOpenLiveWorkout}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#1C1C1C] hover:bg-[#282828] text-white border border-[#333333] transition-colors"
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#CC0000] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#CC0000]"></span>
               </span>
-            </div>
+              <span className="font-bold text-[11px] text-[#CC0000]">{liveBpm || 145} BPM</span>
+            </button>
 
-            <nav className="hidden lg:flex items-center gap-1">
-              {TABS.map(tab => {
-                const Icon = tab.icon;
-                const active = activeTab === tab.id;
-                return (
-                  <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                      active ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent'
-                    }`}>
-                    <Icon className="w-4 h-4" />
-                    {tab.label}
-                  </button>
-                );
-              })}
-            </nav>
+            {/* What Changed Button */}
+            <button
+              onClick={onOpenWhatChanged}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#1C1C1C] hover:bg-[#282828] text-white border border-[#333333] transition-colors font-bold uppercase text-[11px] tracking-wider"
+            >
+              <Sparkles className="w-3 h-3 text-[#CC0000]" />
+              <span>WHAT CHANGED?</span>
+            </button>
 
-            <div className="flex items-center gap-2">
-              <button onClick={onOpenGlobalSearch} className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-400 hover:text-slate-200 transition-all">
-                <Search className="w-3.5 h-3.5 text-cyan-400" />
-                <span className="hidden lg:inline">Search...</span>
-                <kbd className="hidden lg:inline-flex items-center gap-0.5 text-[10px] font-mono bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">
-                  <Command className="w-2.5 h-2.5" />K
-                </kbd>
-              </button>
+            {/* Doctor Export Button */}
+            <button
+              onClick={onOpenDoctorReport}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#1C1C1C] hover:bg-[#282828] text-white border border-[#333333] transition-colors font-bold uppercase text-[11px] tracking-wider"
+            >
+              <Plus className="w-3 h-3 text-[#CC0000]" />
+              <span>DOCTOR EXPORT</span>
+            </button>
 
-              <button onClick={onOpenGlobalSearch} className="md:hidden p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300" aria-label="Search">
-                <Search className="w-4 h-4 text-cyan-400" />
-              </button>
-
-              <button onClick={onOpenLiveWorkout}
-                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-all ${
-                  isBleConnected ? 'bg-rose-500/10 border-rose-500/40 text-rose-300' : 'bg-slate-900 border-slate-800 text-slate-400'
-                }`}>
-                <Radio className={`w-3.5 h-3.5 ${isBleConnected ? 'text-rose-400 animate-pulse' : ''}`} />
-                <span className="hidden sm:inline">{isBleConnected ? `${liveBpm} BPM` : 'Live'}</span>
-              </button>
-
-              <ThemeToggle theme={theme} onToggle={onToggleTheme} />
-
-              <button onClick={onOpenWhatChanged}
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-500/15 border border-amber-500/30 text-amber-300 hover:bg-amber-500/25 transition-all">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span className="hidden xl:inline">What Changed?</span>
-              </button>
-
-              <button onClick={onOpenDoctorReport}
-                className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-all">
-                Doctor Export
-              </button>
-            </div>
           </div>
-        </div>
-      </header>
 
-      {isMobileOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm lg:hidden" onClick={() => setIsMobileOpen(false)}>
-          <div className="w-72 h-full bg-slate-900 border-r border-slate-800 p-4 flex flex-col" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-              <span className="font-bold text-white">VITAL<span className="text-cyan-400">OS</span></span>
-              <button onClick={() => setIsMobileOpen(false)} className="text-slate-400 hover:text-white"><X className="w-5 h-5" /></button>
-            </div>
-            <div className="py-3 space-y-1">
-              {TABS.map(tab => {
-                const Icon = tab.icon;
-                const active = activeTab === tab.id;
-                return (
-                  <button key={tab.id} onClick={() => { setActiveTab(tab.id); setIsMobileOpen(false); }}
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                      active ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'text-slate-300 hover:bg-slate-800'
-                    }`}>
-                    <Icon className="w-4 h-4" />
-                    {tab.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
         </div>
-      )}
-    </>
+      </div>
+
+      {/* 3. Primary Navigation Tabs Bar */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-8">
+        <div className="flex items-center justify-between overflow-x-auto no-scrollbar">
+          <nav className="flex items-center gap-1 sm:gap-2 py-2">
+            {primaryTabs.map((tab) => {
+              const isActive =
+                activeTab === tab.id ||
+                (tab.id === 'vitals' && (activeTab === 'health' || activeTab === 'vitals' || activeTab === 'metabolic' || activeTab === 'circadian')) ||
+                (tab.id === 'coach' && (activeTab === 'coach' || activeTab === 'ask' || activeTab === 'experiments')) ||
+                (tab.id === 'sources' && (activeTab === 'sources' || activeTab === 'clinician' || activeTab === 'strength')) ||
+                (tab.id === 'settings' && (activeTab === 'settings' || activeTab === 'lifecycle' || activeTab === 'legal' || activeTab === 'help'));
+
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider transition-colors border ${
+                    isActive
+                      ? 'bg-white text-[#111111] border-white'
+                      : 'bg-transparent text-[#A3A3A3] border-transparent hover:text-white hover:border-[#333333]'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* Quick Desks Dropdown on Right */}
+          <div className="relative">
+            <button
+              onClick={() => setShowMoreDesks(!showMoreDesks)}
+              className="px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wider text-[#A3A3A3] hover:text-white border border-[#333333] flex items-center gap-1"
+            >
+              <span>SPECIAL DESKS</span>
+              <ChevronDown className="w-3.5 h-3.5" />
+            </button>
+
+            {showMoreDesks && (
+              <div className="absolute right-0 mt-1 w-56 bg-[#161616] border border-[#333333] z-50 py-1 hard-shadow font-mono text-xs">
+                {secondaryDesks.map(d => (
+                  <button
+                    key={d.id}
+                    onClick={() => {
+                      setActiveTab(d.id);
+                      setShowMoreDesks(false);
+                    }}
+                    className={`w-full text-left px-3 py-2 hover:bg-[#242424] transition-colors flex items-center justify-between ${
+                      activeTab === d.id ? 'text-[#CC0000] font-bold' : 'text-[#CCCCCC]'
+                    }`}
+                  >
+                    <span>{d.label}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+        </div>
+      </div>
+
+    </header>
   );
 };

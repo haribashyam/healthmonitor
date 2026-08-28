@@ -1,12 +1,12 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Helper functions
+    
+    // Core Helper Functions
     function isSignedIn() {
-      return request.auth != null;
+      return request.auth != null && request.auth.uid != null;
     }
-
+    
     function isOwner(userId) {
       return isSignedIn() && request.auth.uid == userId;
     }
@@ -15,145 +15,99 @@ service cloud.firestore {
       return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
     }
 
-    function incoming() {
-      return request.resource.data;
+    // Validation for User Profile
+    function isValidUserProfile(data, userId) {
+      return data.userId == userId
+        && data.email is string
+        && data.email.size() > 3
+        && data.email.size() <= 200
+        && (data.role == 'user' || data.role == 'clinician' || data.role == 'admin');
     }
 
-    function existing() {
-      return resource.data;
+    // Validation for User Partitioned Sub-collections
+    function isValidBiomarker(data, userId) {
+      return data.userId == userId
+        && data.id is string
+        && data.name is string
+        && data.value is string
+        && data.unit is string
+        && data.date is string;
     }
 
-    // Default deny all
-    match /{document=**} {
-      allow read, write: if false;
+    function isValidJournal(data, userId) {
+      return data.userId == userId
+        && data.id is string
+        && data.date is string
+        && data.energyLevel is number
+        && data.stressLevel is number;
     }
 
-    // Test connection doc
-    match /test/{testId} {
-      allow read: if isSignedIn();
-      allow write: if false;
+    function isValidActivity(data, userId) {
+      return data.userId == userId
+        && data.id is string
+        && data.title is string
+        && data.durationMinutes is number
+        && data.calories is number
+        && data.date is string;
     }
 
-    // User profile documents
+    function isValidGoal(data, userId) {
+      return data.userId == userId
+        && data.id is string
+        && data.title is string
+        && data.category is string
+        && data.targetValue is number
+        && data.unit is string;
+    }
+
+    // Root Users Collection: Partitioned Strictly by UID
     match /users/{userId} {
       allow get: if isOwner(userId);
-      allow list: if isOwner(userId);
-      allow create: if isOwner(userId)
-        && incoming().userId == userId
-        && incoming().email is string
-        && incoming().email.size() <= 200;
-      allow update: if isOwner(userId)
-        && incoming().userId == existing().userId;
+      allow list: if false; // Blanket enumeration forbidden
+      allow create: if isOwner(userId) && isValidUserProfile(request.resource.data, userId);
+      allow update: if isOwner(userId) && isValidUserProfile(request.resource.data, userId);
       allow delete: if isOwner(userId);
 
-      // Biometric & Health telemetry subcollection
-      match /metrics/{metricId} {
-        allow get: if isOwner(userId) && isValidId(metricId);
+      // Sub-collection: Biomarkers (Strictly Partitioned by UID)
+      match /biomarkers/{biomarkerId} {
+        allow get: if isOwner(userId) && isValidId(biomarkerId);
         allow list: if isOwner(userId);
-        allow create: if isOwner(userId) && isValidId(metricId)
-          && incoming().userId == userId
-          && incoming().id is string
-          && incoming().date is string;
-        allow update: if isOwner(userId) && isValidId(metricId)
-          && incoming().userId == existing().userId;
-        allow delete: if isOwner(userId) && isValidId(metricId);
+        allow create: if isOwner(userId) && isValidId(biomarkerId) && isValidBiomarker(request.resource.data, userId);
+        allow update: if isOwner(userId) && isValidId(biomarkerId) && isValidBiomarker(request.resource.data, userId);
+        allow delete: if isOwner(userId) && isValidId(biomarkerId);
       }
 
-      // AI Adaptive Plans subcollection
-      match /plans/{planId} {
-        allow get: if isOwner(userId) && isValidId(planId);
+      // Sub-collection: Health Journal (Strictly Partitioned by UID)
+      match /journal/{entryId} {
+        allow get: if isOwner(userId) && isValidId(entryId);
         allow list: if isOwner(userId);
-        allow create: if isOwner(userId) && isValidId(planId)
-          && incoming().userId == userId
-          && incoming().planName is string;
-        allow update: if isOwner(userId) && isValidId(planId)
-          && incoming().userId == existing().userId;
-        allow delete: if isOwner(userId) && isValidId(planId);
+        allow create: if isOwner(userId) && isValidId(entryId) && isValidJournal(request.resource.data, userId);
+        allow update: if isOwner(userId) && isValidId(entryId) && isValidJournal(request.resource.data, userId);
+        allow delete: if isOwner(userId) && isValidId(entryId);
       }
 
-      // Laboratory biomarker panels subcollection
-      match /labReports/{reportId} {
-        allow get: if isOwner(userId) && isValidId(reportId);
+      // Sub-collection: Activities (Strictly Partitioned by UID)
+      match /activities/{activityId} {
+        allow get: if isOwner(userId) && isValidId(activityId);
         allow list: if isOwner(userId);
-        allow create: if isOwner(userId) && isValidId(reportId)
-          && incoming().userId == userId
-          && incoming().title is string;
-        allow update: if isOwner(userId) && isValidId(reportId)
-          && incoming().userId == existing().userId;
-        allow delete: if isOwner(userId) && isValidId(reportId);
+        allow create: if isOwner(userId) && isValidId(activityId) && isValidActivity(request.resource.data, userId);
+        allow update: if isOwner(userId) && isValidId(activityId) && isValidActivity(request.resource.data, userId);
+        allow delete: if isOwner(userId) && isValidId(activityId);
       }
 
-      // Google Workspace integration audit logs
-      match /workspaceLogs/{logId} {
-        allow get: if isOwner(userId) && isValidId(logId);
+      // Sub-collection: Goals (Strictly Partitioned by UID)
+      match /goals/{goalId} {
+        allow get: if isOwner(userId) && isValidId(goalId);
         allow list: if isOwner(userId);
-        allow create: if isOwner(userId) && isValidId(logId)
-          && incoming().userId == userId
-          && incoming().actionType is string;
-        allow update: if isOwner(userId) && isValidId(logId)
-          && incoming().userId == existing().userId;
-        allow delete: if isOwner(userId) && isValidId(logId);
+        allow create: if isOwner(userId) && isValidId(goalId) && isValidGoal(request.resource.data, userId);
+        allow update: if isOwner(userId) && isValidId(goalId) && isValidGoal(request.resource.data, userId);
+        allow delete: if isOwner(userId) && isValidId(goalId);
       }
+    }
 
-      // Medications & Supplements subcollection
-      match /supplements/{suppId} {
-        allow get: if isOwner(userId) && isValidId(suppId);
-        allow list: if isOwner(userId);
-        allow create: if isOwner(userId) && isValidId(suppId)
-          && incoming().userId == userId
-          && incoming().name is string;
-        allow update: if isOwner(userId) && isValidId(suppId)
-          && incoming().userId == existing().userId;
-        allow delete: if isOwner(userId) && isValidId(suppId);
-      }
-
-      // Health Experiments & N=1 Trials subcollection
-      match /experiments/{expId} {
-        allow get: if isOwner(userId) && isValidId(expId);
-        allow list: if isOwner(userId);
-        allow create: if isOwner(userId) && isValidId(expId)
-          && incoming().userId == userId
-          && incoming().title is string;
-        allow update: if isOwner(userId) && isValidId(expId)
-          && incoming().userId == existing().userId;
-        allow delete: if isOwner(userId) && isValidId(expId);
-      }
-
-      // Injury & Mobility Rehabilitation subcollection
-      match /injuries/{injuryId} {
-        allow get: if isOwner(userId) && isValidId(injuryId);
-        allow list: if isOwner(userId);
-        allow create: if isOwner(userId) && isValidId(injuryId)
-          && incoming().userId == userId
-          && incoming().joint is string;
-        allow update: if isOwner(userId) && isValidId(injuryId)
-          && incoming().userId == existing().userId;
-        allow delete: if isOwner(userId) && isValidId(injuryId);
-      }
-
-      // Emergency & Medical ID subcollection
-      match /emergencyCare/{recordId} {
-        allow get: if isOwner(userId) && isValidId(recordId);
-        allow list: if isOwner(userId);
-        allow create: if isOwner(userId) && isValidId(recordId)
-          && incoming().userId == userId;
-        allow update: if isOwner(userId) && isValidId(recordId)
-          && incoming().userId == existing().userId;
-        allow delete: if isOwner(userId) && isValidId(recordId);
-      }
-
-      // Strength Training & 1RM subcollection
-      match /strengthLogs/{logId} {
-        allow get: if isOwner(userId) && isValidId(logId);
-        allow list: if isOwner(userId);
-        allow create: if isOwner(userId) && isValidId(logId)
-          && incoming().userId == userId
-          && incoming().exerciseName is string;
-        allow update: if isOwner(userId) && isValidId(logId)
-          && incoming().userId == existing().userId;
-        allow delete: if isOwner(userId) && isValidId(logId);
-      }
+    // Health / Connection Test Doc
+    match /test/{docId} {
+      allow read: if true;
     }
   }
 }
-

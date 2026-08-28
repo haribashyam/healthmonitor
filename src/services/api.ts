@@ -304,3 +304,184 @@ export async function simulateLifestyleOutcome(params: {
   }
 }
 
+// ============================================================================
+// AUTHENTICATION & SECURITY CLIENT API METHODS
+// ============================================================================
+
+export interface AuthUserProfile {
+  id: string;
+  email: string;
+  displayName: string;
+  role: 'user' | 'clinician' | 'admin';
+  emailVerified: boolean;
+  twoFactorEnabled: boolean;
+  createdAt: string;
+  updatedAt: string;
+  lastLoginAt?: string;
+}
+
+export interface AuthResponse {
+  success: boolean;
+  token?: string;
+  expiresAt?: number;
+  verificationToken?: string;
+  user?: AuthUserProfile;
+  error?: string;
+  code?: string;
+  attemptsRemaining?: number;
+  remainingLockoutSeconds?: number;
+  message?: string;
+  resetToken?: string;
+}
+
+export interface SecurityEventRecord {
+  id: string;
+  timestamp: string;
+  eventType: string;
+  severity: 'INFO' | 'WARNING' | 'CRITICAL';
+  userId?: string;
+  email?: string;
+  ip: string;
+  userAgent?: string;
+  details: Record<string, any>;
+}
+
+// In-Memory Token Manager (Client side)
+let memoryAuthToken: string | null = null;
+
+export function setClientAuthToken(token: string | null) {
+  memoryAuthToken = token;
+  if (token) {
+    sessionStorage.setItem('vitalos_session_token', token);
+  } else {
+    sessionStorage.removeItem('vitalos_session_token');
+  }
+}
+
+export function getClientAuthToken(): string | null {
+  if (memoryAuthToken) return memoryAuthToken;
+  try {
+    const saved = sessionStorage.getItem('vitalos_session_token');
+    if (saved) {
+      memoryAuthToken = saved;
+      return saved;
+    }
+  } catch {}
+  return null;
+}
+
+function getAuthHeaders(): HeadersInit {
+  const token = getClientAuthToken();
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  return headers;
+}
+
+export async function loginUser(credentials: { email: string; password: string }): Promise<AuthResponse> {
+  const res = await fetch('/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(credentials)
+  });
+  const data = await res.json();
+  if (res.ok && data.token) {
+    setClientAuthToken(data.token);
+  }
+  return data;
+}
+
+export async function registerUser(payload: { email: string; password: string; displayName: string; role?: 'user' | 'clinician' | 'admin' }): Promise<AuthResponse> {
+  const res = await fetch('/api/auth/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  const data = await res.json();
+  if (res.ok && data.token) {
+    setClientAuthToken(data.token);
+  }
+  return data;
+}
+
+export async function verifyEmailAddress(token: string): Promise<AuthResponse> {
+  const res = await fetch('/api/auth/verify-email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token })
+  });
+  return res.json();
+}
+
+export async function requestPasswordResetLink(email: string): Promise<AuthResponse> {
+  const res = await fetch('/api/auth/forgot-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email })
+  });
+  return res.json();
+}
+
+export async function submitPasswordReset(params: { token: string; newPassword: string }): Promise<AuthResponse> {
+  const res = await fetch('/api/auth/reset-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(params)
+  });
+  return res.json();
+}
+
+export async function logoutUser(): Promise<void> {
+  try {
+    await fetch('/api/auth/logout', {
+      method: 'POST',
+      headers: getAuthHeaders()
+    });
+  } finally {
+    setClientAuthToken(null);
+  }
+}
+
+export async function fetchCurrentUser(): Promise<AuthUserProfile | null> {
+  const token = getClientAuthToken();
+  if (!token) return null;
+
+  try {
+    const res = await fetch('/api/auth/me', {
+      headers: getAuthHeaders()
+    });
+    if (!res.ok) {
+      if (res.status === 401) {
+        setClientAuthToken(null);
+      }
+      return null;
+    }
+    const data = await res.json();
+    return data.user || null;
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchSecurityAuditLogs(limit = 50): Promise<SecurityEventRecord[]> {
+  const res = await fetch(`/api/admin/security-events?limit=${limit}`, {
+    headers: getAuthHeaders()
+  });
+  if (!res.ok) {
+    throw new Error('Failed to retrieve security audit logs (admin access required)');
+  }
+  const data = await res.json();
+  return data.events || [];
+}
+
+export async function fetchAdminSystemStats(): Promise<any> {
+  const res = await fetch('/api/admin/audit-logs', {
+    headers: getAuthHeaders()
+  });
+  if (!res.ok) {
+    throw new Error('Failed to retrieve system stats');
+  }
+  return res.json();
+}
+

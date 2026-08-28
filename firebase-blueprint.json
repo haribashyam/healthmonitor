@@ -1,115 +1,113 @@
 {
   "entities": {
-    "userProfile": {
+    "UserProfile": {
       "title": "UserProfile",
-      "description": "User profile, baseline physiological metrics, and integration settings",
+      "description": "User profile with personal identity and role information",
       "type": "object",
       "properties": {
-        "userId": { "type": "string", "description": "Firebase Auth UID" },
-        "email": { "type": "string", "description": "User email address" },
-        "displayName": { "type": "string", "description": "Display name" },
-        "targetReadiness": { "type": "number", "description": "Target daily readiness score" },
-        "restingHRBaseline": { "type": "number", "description": "Baseline resting heart rate in BPM" },
-        "hrvBaseline": { "type": "number", "description": "Baseline HRV in ms" },
-        "vo2MaxBaseline": { "type": "number", "description": "Baseline VO2 max in mL/kg/min" },
-        "createdAt": { "type": "string", "description": "ISO timestamp of profile creation" },
-        "updatedAt": { "type": "string", "description": "ISO timestamp of last update" }
+        "userId": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "role": { "type": "string", "enum": ["user", "clinician", "admin"] },
+        "emailVerified": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "photoURL": { "type": "string" }
       },
-      "required": ["userId", "email"]
+      "required": ["userId", "email", "role"]
     },
-    "healthMetricEntry": {
-      "title": "HealthMetricEntry",
-      "description": "Daily or real-time wearable telemetry and vitals record",
+    "BiomarkerRecord": {
+      "title": "BiomarkerRecord",
+      "description": "Clinical and lab biomarker datapoint",
       "type": "object",
       "properties": {
-        "id": { "type": "string", "description": "Metric entry ID" },
-        "userId": { "type": "string", "description": "User ID who owns this metric" },
-        "date": { "type": "string", "description": "Date string YYYY-MM-DD" },
-        "heartRate": { "type": "number", "description": "Heart rate in BPM" },
-        "restingHeartRate": { "type": "number", "description": "Resting heart rate in BPM" },
-        "hrv": { "type": "number", "description": "HRV in ms" },
-        "sleepScore": { "type": "number", "description": "Sleep recovery score 0-100" },
-        "steps": { "type": "number", "description": "Step count" },
-        "spo2": { "type": "number", "description": "Blood oxygen percentage" },
-        "vo2Max": { "type": "number", "description": "VO2 Max" },
-        "deviceSource": { "type": "string", "description": "Originating wearable device" },
-        "timestamp": { "type": "string", "description": "ISO timestamp" }
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "value": { "type": "string" },
+        "unit": { "type": "string" },
+        "referenceRange": { "type": "string" },
+        "status": { "type": "string", "enum": ["optimal", "normal", "borderline", "abnormal"] },
+        "category": { "type": "string" },
+        "date": { "type": "string" },
+        "source": { "type": "string" }
       },
-      "required": ["id", "userId", "date"]
+      "required": ["id", "userId", "name", "value", "unit", "status", "category", "date"]
     },
-    "adaptivePlanDoc": {
-      "title": "AdaptivePlanDoc",
-      "description": "AI-generated adaptive training split and nutrition regimen",
+    "JournalEntry": {
+      "title": "JournalEntry",
+      "description": "Subjective daily recovery, mood, energy, and symptom journal entry",
       "type": "object",
       "properties": {
-        "id": { "type": "string", "description": "Plan document ID" },
-        "userId": { "type": "string", "description": "User ID who owns this plan" },
-        "planName": { "type": "string", "description": "Title of the adaptive plan" },
-        "vitalScoreTarget": { "type": "number", "description": "Target VitalScore" },
-        "summary": { "type": "string", "description": "Executive summary" },
-        "workoutSplitJson": { "type": "string", "description": "JSON stringified workout days" },
-        "nutritionJson": { "type": "string", "description": "JSON stringified nutrition targets" },
-        "groceryJson": { "type": "string", "description": "JSON stringified groceries list" },
-        "adaptiveRulesJson": { "type": "string", "description": "JSON stringified adaptive recovery rules" },
-        "createdAt": { "type": "string", "description": "ISO timestamp" },
-        "updatedAt": { "type": "string", "description": "ISO timestamp" }
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "date": { "type": "string" },
+        "energyLevel": { "type": "number" },
+        "stressLevel": { "type": "number" },
+        "muscleSoreness": { "type": "number" },
+        "notes": { "type": "string" },
+        "tags": { "type": "array" }
       },
-      "required": ["id", "userId", "planName"]
+      "required": ["id", "userId", "date", "energyLevel", "stressLevel"]
     },
-    "labReportDoc": {
-      "title": "LabReportDoc",
-      "description": "Diagnostic laboratory biomarker panels and reports",
+    "ActivityRecord": {
+      "title": "ActivityRecord",
+      "description": "Fitness workout and endurance activity record",
       "type": "object",
       "properties": {
-        "id": { "type": "string", "description": "Lab report ID" },
-        "userId": { "type": "string", "description": "User ID who owns this report" },
-        "title": { "type": "string", "description": "Report title" },
-        "laboratory": { "type": "string", "description": "Lab vendor name" },
-        "collectionDate": { "type": "string", "description": "Date of collection" },
-        "summary": { "type": "string", "description": "Clinical summary" },
-        "biomarkersJson": { "type": "string", "description": "JSON stringified biomarkers array" },
-        "source": { "type": "string", "description": "Source (Google Drive, Quest, Manual Upload)" },
-        "driveFileId": { "type": "string", "description": "Optional Google Drive file ID if imported via Picker" },
-        "createdAt": { "type": "string", "description": "ISO timestamp" }
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "type": { "type": "string" },
+        "durationMinutes": { "type": "number" },
+        "calories": { "type": "number" },
+        "avgHeartRate": { "type": "number" },
+        "maxHeartRate": { "type": "number" },
+        "date": { "type": "string" },
+        "time": { "type": "string" },
+        "source": { "type": "string" }
       },
-      "required": ["id", "userId", "title"]
+      "required": ["id", "userId", "title", "type", "durationMinutes", "calories", "date"]
     },
-    "workspaceLog": {
-      "title": "WorkspaceLog",
-      "description": "Log of Google Workspace sync actions (Gmail, Sheets, Picker, Calendar, Tasks)",
+    "HealthGoal": {
+      "title": "HealthGoal",
+      "description": "User specific target physiological or lifestyle goal",
       "type": "object",
       "properties": {
-        "id": { "type": "string", "description": "Log entry ID" },
-        "userId": { "type": "string", "description": "User ID" },
-        "actionType": { "type": "string", "description": "gmail_send | sheets_export | sheets_import | picker_import | calendar_sync | tasks_sync" },
-        "target": { "type": "string", "description": "Recipient email, Sheet ID/name, or Drive File title" },
-        "details": { "type": "string", "description": "Summary description of what was synchronized" },
-        "status": { "type": "string", "description": "success | pending | error" },
-        "timestamp": { "type": "string", "description": "ISO timestamp" }
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "targetValue": { "type": "number" },
+        "currentValue": { "type": "number" },
+        "unit": { "type": "string" },
+        "targetDate": { "type": "string" },
+        "progressPercent": { "type": "number" },
+        "status": { "type": "string" }
       },
-      "required": ["id", "userId", "actionType", "timestamp"]
+      "required": ["id", "userId", "title", "category", "targetValue", "unit"]
     }
   },
   "firestore": {
     "/users/{userId}": {
-      "schema": "userProfile",
-      "description": "Stores user profile and health baseline preferences"
+      "schema": "UserProfile",
+      "description": "Root user profile document partitioned strictly by auth UID"
     },
-    "/users/{userId}/metrics/{metricId}": {
-      "schema": "healthMetricEntry",
-      "description": "Stores user biometric telemetry and daily vitals"
+    "/users/{userId}/biomarkers/{biomarkerId}": {
+      "schema": "BiomarkerRecord",
+      "description": "User-partitioned collection of blood and clinical biomarkers"
     },
-    "/users/{userId}/plans/{planId}": {
-      "schema": "adaptivePlanDoc",
-      "description": "Stores user AI health and training plans"
+    "/users/{userId}/journal/{entryId}": {
+      "schema": "JournalEntry",
+      "description": "User-partitioned health and recovery daily journal logs"
     },
-    "/users/{userId}/labReports/{reportId}": {
-      "schema": "labReportDoc",
-      "description": "Stores user laboratory biomarker panels and reports"
+    "/users/{userId}/activities/{activityId}": {
+      "schema": "ActivityRecord",
+      "description": "User-partitioned workout and endurance telemetry activities"
     },
-    "/users/{userId}/workspaceLogs/{logId}": {
-      "schema": "workspaceLog",
-      "description": "Stores logs of Google Workspace integrations"
+    "/users/{userId}/goals/{goalId}": {
+      "schema": "HealthGoal",
+      "description": "User-partitioned target health and biomarker goals"
     }
   }
 }

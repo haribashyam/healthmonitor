@@ -12,6 +12,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { HealthJournalEntry } from '../types';
+import { auth, UserFirestoreService } from '../services/firebaseAuth';
 
 interface HealthJournalViewProps {
   entries: HealthJournalEntry[];
@@ -24,8 +25,9 @@ export const HealthJournalView: React.FC<HealthJournalViewProps> = ({ entries, s
   const [stressLevel, setStressLevel] = useState<number>(3);
   const [mood, setMood] = useState<'Great' | 'Good' | 'Neutral' | 'Fatigued' | 'Stressed'>('Great');
   const [notes, setNotes] = useState('');
+  const [saveStatus, setSaveStatus] = useState<string | null>(null);
 
-  const handleAddEntry = (e: React.FormEvent) => {
+  const handleAddEntry = async (e: React.FormEvent) => {
     e.preventDefault();
     const newEntry: HealthJournalEntry = {
       id: `j-${Date.now()}`,
@@ -40,7 +42,20 @@ export const HealthJournalView: React.FC<HealthJournalViewProps> = ({ entries, s
 
     setEntries([newEntry, ...entries]);
     setNotes('');
-    alert('Subjective check-in saved to your health timeline.');
+
+    // If authenticated, persist to user's partitioned Firestore collection `/users/{userId}/journal/{entryId}`
+    if (auth.currentUser) {
+      try {
+        await UserFirestoreService.saveJournalEntry(auth.currentUser.uid, newEntry);
+        setSaveStatus('Synced to partitioned Firestore vault.');
+        setTimeout(() => setSaveStatus(null), 3000);
+      } catch (err) {
+        console.error('Firestore journal save error:', err);
+      }
+    } else {
+      setSaveStatus('Saved locally in browser memory.');
+      setTimeout(() => setSaveStatus(null), 3000);
+    }
   };
 
   return (
@@ -127,7 +142,10 @@ export const HealthJournalView: React.FC<HealthJournalViewProps> = ({ entries, s
             />
           </div>
 
-          <div className="flex justify-end pt-1">
+          <div className="flex items-center justify-between pt-1">
+            {saveStatus ? (
+              <span className="text-xs text-emerald-400 font-semibold animate-pulse">{saveStatus}</span>
+            ) : <span />}
             <button
               type="submit"
               className="px-5 py-2 rounded-xl text-xs font-bold bg-cyan-500 text-slate-950 hover:bg-cyan-400 transition-all flex items-center gap-1.5"
