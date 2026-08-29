@@ -201,12 +201,28 @@ textarea:focus-visible {
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+[data-theme="light"] .apple-liquid-glass-btn {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.02) 100%);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 1px 0.5px rgba(255, 255, 255, 0.9),
+              0 2px 8px rgba(0, 0, 0, 0.05);
+  color: #111111;
+}
+
 .apple-liquid-glass-btn:hover {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.05) 100%);
   border-color: rgba(255, 255, 255, 0.28);
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4),
               0 6px 20px rgba(0, 0, 0, 0.35);
   transform: translateY(-1px);
+}
+
+[data-theme="light"] .apple-liquid-glass-btn:hover {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.09) 0%, rgba(0, 0, 0, 0.04) 100%);
+  border-color: rgba(0, 0, 0, 0.28);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 1),
+              0 4px 12px rgba(0, 0, 0, 0.08);
+  color: #000000;
 }
 
 .apple-liquid-glass-btn:active {
@@ -228,6 +244,14 @@ textarea:focus-visible {
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+[data-theme="light"] .apple-liquid-glass-btn-primary {
+  background: linear-gradient(180deg, #18181B 0%, #09090B 100%);
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2),
+              0 6px 18px -3px rgba(0, 0, 0, 0.2);
+  color: #FFFFFF;
+}
+
 .apple-liquid-glass-btn-primary:hover {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0.18) 100%);
   border-color: rgba(255, 255, 255, 0.55);
@@ -236,33 +260,39 @@ textarea:focus-visible {
   transform: translateY(-1px);
 }
 
+[data-theme="light"] .apple-liquid-glass-btn-primary:hover {
+  background: linear-gradient(180deg, #27272A 0%, #18181B 100%);
+  border-color: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 22px -3px rgba(0, 0, 0, 0.25);
+}
+
 .apple-liquid-glass-btn-primary:active {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.05) 100%);
   transform: translateY(0);
 }
 
 .apple-liquid-glass-btn-accent {
-  background: linear-gradient(180deg, rgba(239, 68, 68, 0.40) 0%, rgba(185, 28, 28, 0.20) 100%);
+  background: linear-gradient(180deg, rgba(239, 68, 68, 0.85) 0%, rgba(185, 28, 28, 0.95) 100%);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(248, 113, 113, 0.35);
+  border: 1px solid rgba(248, 113, 113, 0.55);
   border-radius: 9999px;
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.35),
-              0 8px 24px -4px rgba(220, 38, 38, 0.3);
-  color: #FFFFFF;
+              0 8px 24px -4px rgba(220, 38, 38, 0.4);
+  color: #FFFFFF !important;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .apple-liquid-glass-btn-accent:hover {
-  background: linear-gradient(180deg, rgba(239, 68, 68, 0.55) 0%, rgba(185, 28, 28, 0.30) 100%);
-  border-color: rgba(248, 113, 113, 0.55);
+  background: linear-gradient(180deg, rgba(239, 68, 68, 1) 0%, rgba(185, 28, 28, 1) 100%);
+  border-color: rgba(248, 113, 113, 0.8);
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5),
-              0 10px 28px -4px rgba(239, 68, 68, 0.35);
+              0 10px 28px -4px rgba(239, 68, 68, 0.5);
   transform: translateY(-1px);
 }
 
 .apple-liquid-glass-btn-accent:active {
-  background: linear-gradient(180deg, rgba(239, 68, 68, 0.25) 0%, rgba(185, 28, 28, 0.10) 100%);
+  background: linear-gradient(180deg, rgba(239, 68, 68, 0.75) 0%, rgba(185, 28, 28, 0.85) 100%);
   transform: translateY(0);
 }
 
@@ -293,4 +323,112 @@ textarea:focus-visible {
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
 }
+
+/* Biometric Scan Beam Animations */
+@keyframes laser-sweep {
+  0% { top: 0%; opacity: 0.2; }
+  50% { top: 100%; opacity: 1; }
+  100% { top: 0%; opacity: 0.2; }
+}
+
+.animate-laser-sweep {
+  animation: laser-sweep 2s ease-in-out infinite;
+}
+
+@keyframes biometric-radar-pulse {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 0.3; }
+  100% { transform: scale(0.9); opacity: 0.8; }
+}
+
+.animate-biometric-pulse {
+  animation: biometric-radar-pulse 2s ease-in-out infinite;
+}
+
+@keyframes ecg-dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-ecg-path {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: ecg-dash 2.5s ease-in-out infinite alternate;
+}
+
+/* Conic Rotating Portal Ring for Logo */
+@keyframes portal-conic-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-portal-spin {
+  animation: portal-conic-spin 7s linear infinite;
+}
+
+.logo-conic-glow {
+  background: conic-gradient(from 0deg, #ef4444, #ec4899, #06b6d4, #10b981, #f59e0b, #ef4444);
+}
+
+/* Pre-scan Ripple Hover Animation */
+@keyframes prescan-wave {
+  0% { transform: scale(0.95); opacity: 0.7; }
+  50% { transform: scale(1.08); opacity: 0.2; }
+  100% { transform: scale(1.18); opacity: 0; }
+}
+
+.animate-prescan-wave {
+  animation: prescan-wave 1.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+/* Enhanced Verified Badge Breathing & Glowing Animation */
+@keyframes badge-breathe {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 6px rgba(6, 182, 212, 0.3), inset 0 0 4px rgba(6, 182, 212, 0.2);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 14px rgba(6, 182, 212, 0.7), inset 0 0 7px rgba(6, 182, 212, 0.4);
+    border-color: rgba(34, 211, 238, 0.8);
+  }
+}
+
+.animate-badge-breathe-cyan {
+  animation: badge-breathe 2.4s ease-in-out infinite;
+}
+
+@keyframes badge-breathe-emerald {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.3), inset 0 0 4px rgba(16, 185, 129, 0.2);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 14px rgba(16, 185, 129, 0.7), inset 0 0 7px rgba(16, 185, 129, 0.4);
+    border-color: rgba(52, 211, 153, 0.8);
+  }
+}
+
+.animate-badge-breathe-emerald {
+  animation: badge-breathe-emerald 2.4s ease-in-out infinite;
+}
+
+@keyframes badge-breathe-blue {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 6px rgba(59, 130, 246, 0.3), inset 0 0 4px rgba(59, 130, 246, 0.2);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 14px rgba(59, 130, 246, 0.7), inset 0 0 7px rgba(59, 130, 246, 0.4);
+    border-color: rgba(96, 165, 250, 0.8);
+  }
+}
+
+.animate-badge-breathe-blue {
+  animation: badge-breathe-blue 2.4s ease-in-out infinite;
+}
+
 

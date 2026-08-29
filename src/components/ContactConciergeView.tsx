@@ -74,8 +74,10 @@ export const ContactConciergeView: React.FC<ContactConciergeViewProps> = ({ onNa
 
   return (
     <div
-      className="p-4 sm:p-8 rounded-3xl border border-[var(--border-edge)] bg-[var(--bg-card)] shadow-2xl space-y-8 animate-fadeIn text-[var(--text-main)] font-mono text-xs max-w-5xl mx-auto"
+      className="relative overflow-hidden p-4 sm:p-8 rounded-3xl border border-[var(--border-edge)] bg-gradient-to-b from-[var(--bg-card)]/80 via-[var(--bg-card-alt)]/70 to-[var(--bg-card)]/90 backdrop-blur-2xl shadow-2xl space-y-8 animate-fadeIn text-[var(--text-main)] font-mono text-xs max-w-5xl mx-auto"
     >
+      {/* Top Specular Edge Glow */}
+      <div className="absolute top-0 inset-x-12 h-[1px] bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent pointer-events-none" />
       
       {/* 1. Header Banner */}
       <div className="border-b border-[var(--border-edge)] pb-6 text-center space-y-3">
@@ -94,15 +96,15 @@ export const ContactConciergeView: React.FC<ContactConciergeViewProps> = ({ onNa
       </div>
 
 
-      {/* 2. Emergency Medical Disclaimer Ticker */}
-      <div className="p-4 sm:p-5 bg-red-950/15 dark:bg-red-950/40 border-2 border-red-600 dark:border-red-500 rounded-2xl flex items-start gap-3.5 shadow-md">
+      {/* 2. Emergency Medical Disclaimer Notice */}
+      <div className="p-4 sm:p-5 bg-red-950/20 dark:bg-red-950/50 border-2 border-red-600 dark:border-red-500 rounded-2xl flex items-start gap-3.5 shadow-md backdrop-blur-md">
         <ShieldAlert className="w-6 h-6 flex-shrink-0 mt-0.5 text-red-600 dark:text-red-400" />
         <div className="space-y-1">
           <strong className="font-black font-mono text-xs uppercase tracking-wider block text-red-700 dark:text-red-400">
             IMPORTANT EMERGENCY TRIAGE NOTICE:
           </strong>
-          <p className="text-xs font-sans leading-relaxed text-[var(--text-main)] font-medium">
-            This contact channel is not monitored for acute medical emergencies. If you or someone in your care is experiencing acute chest pain, shortness of breath, sudden numbness, or life-threatening symptoms, immediately dial 911 (US) or your local emergency emergency response service.
+          <p className="text-xs font-sans leading-relaxed text-[var(--text-main)] font-semibold">
+            This contact channel is not monitored for acute medical emergencies. If you or someone in your care is experiencing acute chest pain, shortness of breath, sudden numbness, or life-threatening symptoms, immediately dial 911 (US) or your local emergency response service.
           </p>
         </div>
       </div>
@@ -111,7 +113,7 @@ export const ContactConciergeView: React.FC<ContactConciergeViewProps> = ({ onNa
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
         {/* Left: Contact Form */}
-        <div className="lg:col-span-7 bg-[var(--bg-card)] border border-[var(--border-edge)] rounded-2xl p-6 sm:p-8 space-y-6">
+        <div className="lg:col-span-7 bg-[var(--bg-card)]/70 backdrop-blur-xl border border-[var(--border-edge)] rounded-2xl p-6 sm:p-8 space-y-6 shadow-sm">
           <div className="border-b border-[var(--border-edge)] pb-4 space-y-1">
             <h2 className="font-serif font-black text-xl uppercase text-[var(--text-main)]">
               DISPATCH INQUIRY TO CONCIERGE DESK
@@ -123,7 +125,7 @@ export const ContactConciergeView: React.FC<ContactConciergeViewProps> = ({ onNa
 
           {submitted ? (
             <div className="py-12 text-center space-y-4 animate-scaleUp">
-              <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center justify-center mx-auto">
+              <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 border border-emerald-500/30 flex items-center justify-center mx-auto">
                 <CheckCircle2 className="w-7 h-7" />
               </div>
               <h3 className="font-serif font-black text-xl text-[var(--text-main)] uppercase">
@@ -194,7 +196,7 @@ export const ContactConciergeView: React.FC<ContactConciergeViewProps> = ({ onNa
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Alex Vance"
-                    className="w-full p-3 bg-[var(--bg-card-alt)] border border-[var(--border-edge)] rounded-xl text-[var(--text-main)] placeholder:text-[var(--text-dim)] focus:outline-none focus:border-[var(--text-main)]"
+                    className="w-full p-3 bg-[var(--bg-card-alt)]/80 border border-[var(--border-edge)] rounded-xl text-[var(--text-main)] placeholder:text-[var(--text-dim)] focus:outline-none focus:border-[var(--text-main)]"
                   />
                 </div>
 
@@ -208,7 +210,7 @@ export const ContactConciergeView: React.FC<ContactConciergeViewProps> = ({ onNa
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="alex@example.com"
-                    className="w-full p-3 bg-[var(--bg-card-alt)] border border-[var(--border-edge)] rounded-xl text-[var(--text-main)] placeholder:text-[var(--text-dim)] focus:outline-none focus:border-[var(--text-main)]"
+                    className="w-full p-3 bg-[var(--bg-card-alt)]/80 border border-[var(--border-edge)] rounded-xl text-[var(--text-main)] placeholder:text-[var(--text-dim)] focus:outline-none focus:border-[var(--text-main)]"
                   />
                 </div>
               </div>
@@ -222,7 +224,7 @@ export const ContactConciergeView: React.FC<ContactConciergeViewProps> = ({ onNa
                   value={organization}
                   onChange={(e) => setOrganization(e.target.value)}
                   placeholder="e.g. Stanford Sports Performance Lab, or Private Athlete"
-                  className="w-full p-3 bg-[var(--bg-card-alt)] border border-[var(--border-edge)] rounded-xl text-[var(--text-main)] placeholder:text-[var(--text-dim)] focus:outline-none focus:border-[var(--text-main)]"
+                  className="w-full p-3 bg-[var(--bg-card-alt)]/80 border border-[var(--border-edge)] rounded-xl text-[var(--text-main)] placeholder:text-[var(--text-dim)] focus:outline-none focus:border-[var(--text-main)]"
                 />
               </div>
 
@@ -235,7 +237,7 @@ export const ContactConciergeView: React.FC<ContactConciergeViewProps> = ({ onNa
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   placeholder="e.g. Inquiry regarding multi-patient EHR integration and BAA terms"
-                  className="w-full p-3 bg-[var(--bg-card-alt)] border border-[var(--border-edge)] rounded-xl text-[var(--text-main)] placeholder:text-[var(--text-dim)] focus:outline-none focus:border-[var(--text-main)]"
+                  className="w-full p-3 bg-[var(--bg-card-alt)]/80 border border-[var(--border-edge)] rounded-xl text-[var(--text-main)] placeholder:text-[var(--text-dim)] focus:outline-none focus:border-[var(--text-main)]"
                 />
               </div>
 
@@ -249,7 +251,7 @@ export const ContactConciergeView: React.FC<ContactConciergeViewProps> = ({ onNa
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Describe your inquiry, telemetry needs, or clinical parameters..."
-                  className="w-full p-3 bg-[var(--bg-card-alt)] border border-[var(--border-edge)] rounded-xl text-[var(--text-main)] placeholder:text-[var(--text-dim)] focus:outline-none focus:border-[var(--text-main)] font-sans"
+                  className="w-full p-3 bg-[var(--bg-card-alt)]/80 border border-[var(--border-edge)] rounded-xl text-[var(--text-main)] placeholder:text-[var(--text-dim)] focus:outline-none focus:border-[var(--text-main)] font-sans"
                 />
               </div>
 
@@ -267,7 +269,7 @@ export const ContactConciergeView: React.FC<ContactConciergeViewProps> = ({ onNa
 
         {/* Right: Global Desks & Direct Channels */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="bg-[var(--bg-card)] border border-[var(--border-edge)] rounded-2xl p-6 space-y-4">
+          <div className="bg-[var(--bg-card)]/70 backdrop-blur-xl border border-[var(--border-edge)] rounded-2xl p-6 space-y-4 shadow-sm">
             <h3 className="font-serif font-black text-lg uppercase text-[var(--text-main)] border-b border-[var(--border-edge)] pb-3">
               DIRECT TELEPHONE &amp; WIRE
             </h3>
@@ -284,7 +286,7 @@ export const ContactConciergeView: React.FC<ContactConciergeViewProps> = ({ onNa
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-[var(--bg-card-alt)] border border-[var(--border-edge)] text-emerald-400">
+                <div className="p-2 rounded-lg bg-[var(--bg-card-alt)] border border-[var(--border-edge)] text-emerald-500 dark:text-emerald-400">
                   <Mail className="w-4 h-4" />
                 </div>
                 <div>
@@ -294,7 +296,7 @@ export const ContactConciergeView: React.FC<ContactConciergeViewProps> = ({ onNa
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-[var(--bg-card-alt)] border border-[var(--border-edge)] text-cyan-400">
+                <div className="p-2 rounded-lg bg-[var(--bg-card-alt)] border border-[var(--border-edge)] text-cyan-600 dark:text-cyan-400">
                   <Clock className="w-4 h-4" />
                 </div>
                 <div>
@@ -313,7 +315,7 @@ export const ContactConciergeView: React.FC<ContactConciergeViewProps> = ({ onNa
             {offices.map((office, idx) => (
               <div
                 key={idx}
-                className="p-4 bg-[var(--bg-card)] border border-[var(--border-edge)] rounded-xl space-y-1"
+                className="p-4 bg-[var(--bg-card)]/70 backdrop-blur-xl border border-[var(--border-edge)] rounded-xl space-y-1 shadow-sm"
               >
                 <span className="font-serif font-bold text-xs text-[var(--text-main)] uppercase block">
                   {office.city}
