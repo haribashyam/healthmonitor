@@ -422,7 +422,7 @@ export const AuthPortalView: React.FC<AuthPortalViewProps> = ({
 
             {/* Notification & Feedback Badges */}
             {errorMsg && (
-              <div className="mb-4 p-3 bg-red-950/70 border border-red-500/40 rounded-2xl text-red-200 text-xs flex items-start gap-2.5 backdrop-blur-md">
+              <div className="mb-4 p-3 bg-red-950/80 border-2 border-red-500/60 rounded-2xl text-white font-medium text-xs flex items-start gap-2.5 backdrop-blur-md">
                 <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-red-400" />
                 <span className="leading-snug">{errorMsg}</span>
               </div>

@@ -74,37 +74,36 @@ export const ContactConciergeView: React.FC<ContactConciergeViewProps> = ({ onNa
 
   return (
     <div
-      style={{ background: 'linear-gradient(180deg, #D4D8DC 0%, #7D8288 45%, #23272A 100%)' }}
-      className="p-4 sm:p-8 rounded-3xl border border-white/30 shadow-2xl space-y-12 animate-fadeIn text-slate-900 font-mono text-xs max-w-5xl mx-auto shadow-black/80"
+      className="p-4 sm:p-8 rounded-3xl border border-[var(--border-edge)] bg-[var(--bg-card)] shadow-2xl space-y-8 animate-fadeIn text-[var(--text-main)] font-mono text-xs max-w-5xl mx-auto"
     >
       
       {/* 1. Header Banner */}
-      <div className="border-b border-slate-600/30 pb-8 text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-900 text-white rounded-full text-xs font-bold uppercase shadow-sm">
-          <Headphones className="w-3.5 h-3.5 text-cyan-400" />
+      <div className="border-b border-[var(--border-edge)] pb-6 text-center space-y-3">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[var(--text-main)] text-[var(--bg-canvas)] rounded-full text-xs font-bold uppercase shadow-sm">
+          <Headphones className="w-3.5 h-3.5 text-red-500" />
           <span>CLINICAL CONCIERGE &amp; ENTERPRISE DESK</span>
         </div>
 
-        <h1 className="font-serif font-black text-3xl sm:text-4xl lg:text-5xl uppercase tracking-tight text-slate-950 drop-shadow-sm">
+        <h1 className="font-serif font-black text-3xl sm:text-4xl lg:text-5xl uppercase tracking-tight text-[var(--text-main)]">
           DIRECT LINE TO EDITORIAL &amp; CLINICAL TEAMS
         </h1>
 
-        <p className="text-xs sm:text-sm text-slate-800 font-sans max-w-2xl mx-auto leading-relaxed font-medium">
+        <p className="text-xs sm:text-sm text-[var(--text-muted)] font-sans max-w-2xl mx-auto leading-relaxed font-medium">
           Whether you need assistance interpreting a biomarker differential, ordering enterprise clinical trials, or securing custom HIPAA BAA terms, our dedicated concierge team is on call.
         </p>
       </div>
 
 
       {/* 2. Emergency Medical Disclaimer Ticker */}
-      <div className="p-4 bg-rose-500/10 border border-rose-500/30 rounded-2xl flex items-start gap-3 text-rose-400 font-sans text-xs">
-        <ShieldAlert className="w-5 h-5 flex-shrink-0 mt-0.5" />
-        <div>
-          <strong className="font-bold font-mono uppercase tracking-wider block">
+      <div className="p-4 sm:p-5 bg-red-950/15 dark:bg-red-950/40 border-2 border-red-600 dark:border-red-500 rounded-2xl flex items-start gap-3.5 shadow-md">
+        <ShieldAlert className="w-6 h-6 flex-shrink-0 mt-0.5 text-red-600 dark:text-red-400" />
+        <div className="space-y-1">
+          <strong className="font-black font-mono text-xs uppercase tracking-wider block text-red-700 dark:text-red-400">
             IMPORTANT EMERGENCY TRIAGE NOTICE:
           </strong>
-          <span className="text-[11px] leading-relaxed">
+          <p className="text-xs font-sans leading-relaxed text-[var(--text-main)] font-medium">
             This contact channel is not monitored for acute medical emergencies. If you or someone in your care is experiencing acute chest pain, shortness of breath, sudden numbness, or life-threatening symptoms, immediately dial 911 (US) or your local emergency emergency response service.
-          </span>
+          </p>
         </div>
       </div>
 
@@ -149,8 +148,8 @@ export const ContactConciergeView: React.FC<ContactConciergeViewProps> = ({ onNa
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4 text-xs font-mono">
               {errorMsg && (
-                <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-400 text-xs flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                <div className="p-3 bg-red-950/20 dark:bg-red-950/40 border border-red-600 dark:border-red-500 rounded-xl text-red-700 dark:text-red-300 font-bold text-xs flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-600 dark:text-red-400" />
                   <span>{errorMsg}</span>
                 </div>
               )}

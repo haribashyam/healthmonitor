@@ -172,23 +172,23 @@ export const FamilyEmergencyCareView: React.FC = () => {
               <span className="text-xs text-slate-400 font-mono">DOB: {card.dob}</span>
             </div>
 
-            <div className="p-3 rounded-2xl bg-red-500/20 border border-red-500/40 text-center min-w-[90px]">
-              <span className="text-[10px] text-red-300 uppercase font-mono block">Blood Type</span>
-              <span className="text-3xl font-black font-mono text-red-400">{card.bloodType}</span>
+            <div className="p-3 rounded-2xl bg-red-950/40 border-2 border-red-500/60 text-center min-w-[90px] shadow-sm">
+              <span className="text-[10px] text-red-400 uppercase font-mono font-bold block">Blood Type</span>
+              <span className="text-3xl font-black font-mono text-red-500">{card.bloodType}</span>
             </div>
           </div>
 
           {/* Critical Allergies & Conditions */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="p-4 rounded-xl bg-red-950/30 border border-red-800/50 space-y-2">
-              <span className="text-xs font-bold text-red-300 flex items-center gap-1.5">
-                <AlertCircle className="w-4 h-4 text-red-400" />
+            <div className="p-4 rounded-xl bg-red-950/40 border border-red-600/50 space-y-2">
+              <span className="text-xs font-bold text-red-400 flex items-center gap-1.5">
+                <AlertCircle className="w-4 h-4 text-red-500" />
                 Critical Allergies & Anaphylaxis Risk
               </span>
               <div className="space-y-1">
                 {card.criticalAllergies.map((all, idx) => (
-                  <div key={idx} className="text-xs text-red-200 font-semibold flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
+                  <div key={idx} className="text-xs text-white font-medium flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
                     {all}
                   </div>
                 ))}

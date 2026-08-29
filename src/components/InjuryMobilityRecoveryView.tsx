@@ -220,12 +220,12 @@ export const InjuryMobilityRecoveryView: React.FC = () => {
             </div>
 
             {/* Restricted Exercises Warning */}
-            <div className="p-4 rounded-xl bg-red-950/20 border border-red-800/40 space-y-2">
-              <span className="text-xs font-bold text-red-300 flex items-center gap-1.5">
-                <AlertTriangle className="w-4 h-4 text-red-400" />
+            <div className="p-4 rounded-xl bg-red-950/40 border border-red-600/50 space-y-2">
+              <span className="text-xs font-bold text-red-400 flex items-center gap-1.5">
+                <AlertTriangle className="w-4 h-4 text-red-500" />
                 Automated Workout Engine Contraindications (Strictly Flagged)
               </span>
-              <ul className="list-disc list-inside space-y-1 text-xs text-red-200">
+              <ul className="list-disc list-inside space-y-1 text-xs text-white font-medium">
                 {selectedInjury.restrictedExercises.map((r, i) => (
                   <li key={i}>{r}</li>
                 ))}

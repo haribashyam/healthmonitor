@@ -929,8 +929,8 @@ export const GoogleMapsHealthPortalView: React.FC<GoogleMapsHealthPortalViewProp
                 />
               </div>
 
-              <div className="p-3 bg-red-950/20 border border-red-900/30 text-xs font-mono text-[var(--text-main)] space-y-1">
-                <div className="font-bold text-red-400">Supported Google Maps APIs:</div>
+              <div className="p-3 bg-red-950/20 border border-red-600/40 text-xs font-mono text-[var(--text-main)] space-y-1">
+                <div className="font-bold text-red-600 dark:text-red-400">Supported Google Maps APIs:</div>
                 <ul className="list-disc list-inside text-[11px] text-[var(--text-muted)] space-y-0.5">
                   <li>Maps JavaScript API (Vector & Raster rendering)</li>
                   <li>Places API (New) & Geocoding</li>
@@ -943,7 +943,7 @@ export const GoogleMapsHealthPortalView: React.FC<GoogleMapsHealthPortalViewProp
                   href="https://mapsplatform.google.com/maps-demo-key?utm_campaign=gmp_mcp_codeassist_v1_aistudio"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs font-mono text-red-400 hover:underline flex items-center gap-1"
+                  className="text-xs font-mono text-red-600 dark:text-red-400 font-bold hover:underline flex items-center gap-1"
                 >
                   <ExternalLink className="w-3 h-3" />
                   Get Demo Key

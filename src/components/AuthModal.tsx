@@ -339,14 +339,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         <div className="relative z-10 p-6 sm:p-8 space-y-6">
           {/* Feedback alerts */}
           {errorMsg && (
-            <div className="p-3.5 bg-red-950/70 border border-red-500/40 rounded-2xl text-red-200 text-xs flex items-start gap-2.5 backdrop-blur-md">
+            <div className="p-3.5 bg-red-950/80 border-2 border-red-500/60 rounded-2xl text-white font-medium text-xs flex items-start gap-2.5 backdrop-blur-md">
               <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-red-400" />
               <span className="leading-relaxed">{errorMsg}</span>
             </div>
           )}
 
           {successMsg && (
-            <div className="p-3.5 bg-emerald-950/70 border border-emerald-500/40 rounded-2xl text-emerald-200 text-xs flex items-start gap-2.5 backdrop-blur-md">
+            <div className="p-3.5 bg-emerald-950/80 border-2 border-emerald-500/60 rounded-2xl text-white font-medium text-xs flex items-start gap-2.5 backdrop-blur-md">
               <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5 text-emerald-400" />
               <span className="leading-relaxed">{successMsg}</span>
             </div>

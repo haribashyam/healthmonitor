@@ -233,15 +233,15 @@ export const ManualVitalEntryModal: React.FC<ManualVitalEntryModalProps> = ({
 
           {/* Error / Success alert */}
           {error && (
-            <div className="p-3 bg-red-950/30 border border-red-500/40 text-red-300 text-xs flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-400" />
+            <div className="p-3 bg-red-950/20 dark:bg-red-950/40 border border-red-600 dark:border-red-500 text-red-700 dark:text-red-300 font-semibold text-xs flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-600 dark:text-red-400" />
               <span>{error}</span>
             </div>
           )}
 
           {success && (
-            <div className="p-3 bg-emerald-950/30 border border-emerald-500/40 text-emerald-300 text-xs flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 flex-shrink-0 text-emerald-400" />
+            <div className="p-3 bg-emerald-950/20 dark:bg-emerald-950/40 border border-emerald-600 dark:border-emerald-500 text-emerald-700 dark:text-emerald-300 font-semibold text-xs flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 flex-shrink-0 text-emerald-600 dark:text-emerald-400" />
               <span>Reading stored successfully in patient database!</span>
             </div>
           )}

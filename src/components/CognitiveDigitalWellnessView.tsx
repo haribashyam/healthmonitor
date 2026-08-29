@@ -157,13 +157,13 @@ export const CognitiveDigitalWellnessView: React.FC = () => {
           <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-md space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <Smartphone className="w-4 h-4 text-rose-400" />
+                <Smartphone className="w-4 h-4 text-red-400" />
                 Pre-Bed Screen Time Impact
               </h3>
-              <span className="text-xs font-mono text-rose-400">Sleep Latency Risk</span>
+              <span className="text-xs font-mono text-red-400 font-bold">Sleep Latency Risk</span>
             </div>
-            <div className="p-3 rounded-xl bg-rose-950/20 border border-rose-800/40 text-xs text-slate-300">
-              <span className="font-bold text-rose-300 block mb-0.5">Behavioral Correlation Detected</span>
+            <div className="p-3 rounded-xl bg-red-950/40 border border-red-600/50 text-xs text-slate-200">
+              <span className="font-bold text-red-400 block mb-0.5">Behavioral Correlation Detected</span>
               Your phone screen exposure in the 60 minutes before bed increased 31% this week, correlating with a <strong className="text-white">+16 minute increase</strong> in nocturnal sleep latency.
             </div>
           </div>
