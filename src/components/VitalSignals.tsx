@@ -258,17 +258,17 @@ export const VitalSignals: React.FC<VitalSignalsProps> = ({
     <div className="space-y-4 select-none">
       
       {/* Section Header */}
-      <div className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b ${isDark ? 'border-[#262626]' : 'border-[#D4D4CE]'} pb-3`}>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[var(--border-edge)] pb-3">
         <div>
           <div className="flex items-center gap-2">
-            <span className={`${isDark ? 'bg-white text-[#111111]' : 'bg-[#111111] text-white'} px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-widest`}>
+            <span className="bg-[var(--text-main)] text-[var(--bg-canvas)] px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-widest">
               AUTHENTIC TELEMETRY
             </span>
-            <h3 className={`text-xl sm:text-2xl font-serif font-black uppercase tracking-tight ${isDark ? 'text-white' : 'text-[#111111]'}`}>
+            <h3 className="text-xl sm:text-2xl font-serif font-black uppercase tracking-tight text-[var(--text-main)]">
               LIVE &amp; LOGGED VITAL SIGNALS
             </h3>
           </div>
-          <p className={`text-xs font-mono mt-0.5 ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>
+          <p className="text-xs font-mono mt-0.5 text-[var(--text-muted)]">
             Real biometric feeds from Web Bluetooth hardware, verified lab reports, and direct user health entries.
           </p>
         </div>
@@ -291,12 +291,8 @@ export const VitalSignals: React.FC<VitalSignalsProps> = ({
               isConnecting
                 ? 'bg-amber-950/40 text-amber-400 border-amber-500/50 cursor-wait'
                 : isBleConnected
-                ? isDark
-                  ? 'bg-emerald-950/30 text-emerald-400 border-emerald-500/40 hover:bg-emerald-900/40 cursor-pointer'
-                  : 'bg-emerald-50 text-emerald-700 border-emerald-500 hover:bg-emerald-100 cursor-pointer'
-                : isDark
-                ? 'bg-[#1E1E1E] text-zinc-300 border-[#333333] hover:text-white hover:border-zinc-500 cursor-pointer'
-                : 'bg-[#F2F2EC] text-[#333333] border-[#CCCCCC] hover:text-black hover:border-black cursor-pointer'
+                ? 'bg-emerald-950/30 text-emerald-400 border-emerald-500/40 hover:bg-emerald-900/40 cursor-pointer'
+                : 'bg-[var(--bg-card-alt)] text-[var(--text-muted)] border-[var(--border-edge)] hover:text-[var(--text-main)] hover:border-[var(--text-main)] cursor-pointer'
             }`}
           >
             {isConnecting ? (
@@ -313,7 +309,7 @@ export const VitalSignals: React.FC<VitalSignalsProps> = ({
               </>
             ) : (
               <>
-                <Bluetooth className={`w-3.5 h-3.5 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`} />
+                <Bluetooth className="w-3.5 h-3.5 text-[var(--text-muted)]" />
                 <span>PAIR BLE</span>
               </>
             )}
@@ -323,14 +319,14 @@ export const VitalSignals: React.FC<VitalSignalsProps> = ({
           <button
             type="button"
             onClick={() => handleOpenLogModal('heart_rate')}
-            className="px-3 py-1.5 bg-[#CC0000] text-white font-mono text-xs font-bold uppercase tracking-wider hover:bg-red-700 transition-colors flex items-center gap-1.5 shadow-sm"
+            className="px-3 py-1.5 bg-[var(--editorial-red)] text-white font-mono text-xs font-bold uppercase tracking-wider hover:bg-red-700 transition-colors flex items-center gap-1.5 shadow-sm"
           >
             <Plus className="w-3.5 h-3.5" />
             + Log Real Reading
           </button>
 
           {/* Filter Bar */}
-          <div className={`flex items-center border ${isDark ? 'border-[#333333] bg-[#141414]' : 'border-[#CCCCCC] bg-[#F2F2EC]'} text-xs font-mono`}>
+          <div className="flex items-center border border-[var(--border-edge)] bg-[var(--bg-card-alt)] text-xs font-mono">
             {[
               { id: 'all', label: 'ALL' },
               { id: 'cardio', label: 'CARDIO' },
@@ -341,10 +337,10 @@ export const VitalSignals: React.FC<VitalSignalsProps> = ({
               <button
                 key={f.id}
                 onClick={() => setSelectedFilter(f.id as any)}
-                className={`px-2.5 py-1.5 font-bold uppercase transition-colors ${idx !== 0 ? (isDark ? 'border-l border-[#333333]' : 'border-l border-[#CCCCCC]') : ''} ${
+                className={`px-2.5 py-1.5 font-bold uppercase transition-colors ${idx !== 0 ? 'border-l border-[var(--border-edge)]' : ''} ${
                   selectedFilter === f.id
-                    ? isDark ? 'bg-white text-[#111111]' : 'bg-[#111111] text-white'
-                    : isDark ? 'bg-transparent text-[#888888] hover:text-white' : 'bg-transparent text-[#666666] hover:text-black'
+                    ? 'bg-[var(--text-main)] text-[var(--bg-canvas)]'
+                    : 'bg-transparent text-[var(--text-muted)] hover:text-[var(--text-main)]'
                 }`}
               >
                 {f.label}
@@ -355,46 +351,38 @@ export const VitalSignals: React.FC<VitalSignalsProps> = ({
       </div>
 
       {/* 4-Column Grid */}
-      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border ${
-        isDark
-          ? 'border-[#262626] bg-[#141414] divide-[#262626]'
-          : 'border-[#111111] bg-[#FFFFFF] divide-[#D4D4CE] hard-shadow-sm'
-      } divide-y sm:divide-y-0 sm:divide-x`}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border border-[var(--border-edge)] bg-[var(--bg-card)] divide-y sm:divide-y-0 sm:divide-x divide-[var(--border-edge)] hard-shadow-sm">
         {filteredCards.map((card, idx) => {
           const Icon = card.icon;
           return (
             <div
               key={card.id}
-              className={`p-5 flex flex-col justify-between space-y-4 ${
-                isDark ? 'hover:bg-[#1A1A1A]' : 'hover:bg-[#F9F9F6]'
-              } transition-colors group ${
-                idx >= 4 ? (isDark ? 'border-t sm:border-t border-[#262626]' : 'border-t sm:border-t border-[#D4D4CE]') : ''
+              className={`p-5 flex flex-col justify-between space-y-4 hover:bg-[var(--bg-card-alt)] transition-colors group ${
+                idx >= 4 ? 'border-t sm:border-t border-[var(--border-edge)]' : ''
               }`}
             >
               {/* Header inside Card */}
-              <div className={`flex items-start justify-between gap-2 border-b ${isDark ? 'border-[#222222]' : 'border-[#EAEAE4]'} pb-2`}>
+              <div className="flex items-start justify-between gap-2 border-b border-[var(--border-subtle)] pb-2">
                 <div className="flex items-center gap-2">
                   <div className={`w-7 h-7 border flex items-center justify-center ${
-                    isDark
-                      ? card.hasData ? 'border-[#333333] bg-[#1A1A1A] text-white group-hover:bg-white group-hover:text-black' : 'border-[#222222] bg-zinc-900 text-zinc-600'
-                      : card.hasData ? 'border-[#CCCCCC] bg-[#F2F2EC] text-[#111111] group-hover:bg-[#111111] group-hover:text-white' : 'border-[#EAEAE4] bg-zinc-100 text-zinc-400'
+                    card.hasData
+                      ? 'border-[var(--border-edge)] bg-[var(--bg-card-alt)] text-[var(--text-main)] group-hover:bg-[var(--text-main)] group-hover:text-[var(--bg-canvas)]'
+                      : 'border-[var(--border-subtle)] bg-[var(--bg-canvas)] text-[var(--text-dim)]'
                   } transition-colors`}>
                     <Icon className="w-3.5 h-3.5" />
                   </div>
                   <div>
-                    <span className={`font-mono text-[9px] uppercase font-bold ${isDark ? 'text-[#666666]' : 'text-[#888888]'} block`}>
+                    <span className="font-mono text-[9px] uppercase font-bold text-[var(--text-dim)] block">
                       FIG. 1.{idx + 1}
                     </span>
-                    <h4 className={`font-serif font-bold text-sm leading-tight ${isDark ? 'text-white' : 'text-[#111111]'}`}>
+                    <h4 className="font-serif font-bold text-sm leading-tight text-[var(--text-main)]">
                       {card.title}
                     </h4>
                   </div>
                 </div>
 
                 <div className="flex flex-col items-end gap-1">
-                  <span className={`px-1.5 py-0.5 border text-[9px] font-mono font-bold uppercase ${
-                    isDark ? 'bg-[#1E1E1E] border-[#333333] text-[#AAAAAA]' : 'bg-[#F2F2EC] border-[#CCCCCC] text-[#555555]'
-                  }`}>
+                  <span className="px-1.5 py-0.5 border text-[9px] font-mono font-bold uppercase bg-[var(--bg-card-alt)] border-[var(--border-edge)] text-[var(--text-muted)]">
                     {card.category}
                   </span>
                   {card.isEstimated && (
@@ -409,29 +397,29 @@ export const VitalSignals: React.FC<VitalSignalsProps> = ({
               <div>
                 {card.hasData ? (
                   <div className="flex items-baseline gap-1.5 font-mono">
-                    <span className={`text-3xl sm:text-4xl font-black font-serif tracking-tight ${isDark ? 'text-white' : 'text-[#111111]'}`}>
+                    <span className="text-3xl sm:text-4xl font-black font-serif tracking-tight text-[var(--text-main)]">
                       {card.value}
                     </span>
-                    <span className={`text-xs font-bold uppercase ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>
+                    <span className="text-xs font-bold uppercase text-[var(--text-muted)]">
                       {card.unit}
                     </span>
                   </div>
                 ) : (
                   <div className="py-2">
-                    <span className={`text-2xl font-mono font-bold ${isDark ? 'text-zinc-600' : 'text-zinc-400'}`}>--</span>
-                    <p className={`text-[11px] font-mono mt-1 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>
+                    <span className="text-2xl font-mono font-bold text-[var(--text-dim)]">--</span>
+                    <p className="text-[11px] font-mono mt-1 text-[var(--text-muted)]">
                       No data yet — click below to log or connect.
                     </p>
                   </div>
                 )}
-                <p className={`text-[11px] font-mono mt-0.5 truncate ${isDark ? 'text-[#888888]' : 'text-[#666666]'}`}>
+                <p className="text-[11px] font-mono mt-0.5 truncate text-[var(--text-muted)]">
                   {card.subtext}
                 </p>
               </div>
 
               {/* Footer Actions */}
-              <div className={`pt-2 border-t ${isDark ? 'border-[#222222]' : 'border-[#EAEAE4]'} text-[10px] font-mono flex items-center justify-between`}>
-                <span className={`truncate max-w-[120px] ${isDark ? 'text-[#777777]' : 'text-[#666666]'}`}>
+              <div className="pt-2 border-t border-[var(--border-subtle)] text-[10px] font-mono flex items-center justify-between">
+                <span className="truncate max-w-[120px] text-[var(--text-muted)]">
                   SRC: {card.device.toUpperCase()}
                 </span>
                 
@@ -439,7 +427,7 @@ export const VitalSignals: React.FC<VitalSignalsProps> = ({
                   <button
                     type="button"
                     onClick={() => handleOpenLogModal(card.type)}
-                    className="font-bold text-[#CC0000] hover:text-red-700 flex items-center gap-0.5 transition-colors"
+                    className="font-bold text-[var(--editorial-red)] hover:opacity-80 flex items-center gap-0.5 transition-colors"
                   >
                     + UPDATE <ChevronRight className="w-3 h-3" />
                   </button>
@@ -447,13 +435,9 @@ export const VitalSignals: React.FC<VitalSignalsProps> = ({
                   <button
                     type="button"
                     onClick={() => handleOpenLogModal(card.type)}
-                    className={`font-bold px-2 py-0.5 border flex items-center gap-1 transition-colors ${
-                      isDark
-                        ? 'text-white bg-zinc-800 hover:bg-zinc-700 border-zinc-700'
-                        : 'text-black bg-[#EAEAE4] hover:bg-[#DCDCD4] border-[#CCCCCC]'
-                    }`}
+                    className="font-bold px-2 py-0.5 border flex items-center gap-1 transition-colors text-[var(--text-main)] bg-[var(--bg-card-alt)] hover:bg-[var(--bg-card-contrast)] border-[var(--border-edge)]"
                   >
-                    <Plus className="w-3 h-3 text-[#CC0000]" />
+                    <Plus className="w-3 h-3 text-[var(--editorial-red)]" />
                     LOG DATA
                   </button>
                 )}

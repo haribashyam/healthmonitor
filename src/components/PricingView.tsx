@@ -262,7 +262,7 @@ export const PricingView: React.FC<PricingViewProps> = ({
               key={tier.id}
               className={`relative rounded-2xl border p-6 flex flex-col justify-between transition-all bg-[var(--bg-card)] ${
                 isHighlight
-                  ? 'border-[#CC0000] shadow-xl ring-2 ring-[#CC0000]/20'
+                  ? 'border-[var(--editorial-red)] shadow-xl ring-2 ring-[var(--editorial-red)]/20'
                   : 'border-[var(--border-edge)] hover:border-[var(--text-main)]'
               }`}
             >
@@ -274,7 +274,7 @@ export const PricingView: React.FC<PricingViewProps> = ({
                 <span
                   className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase ${
                     isHighlight
-                      ? 'bg-[#CC0000] text-white'
+                      ? 'bg-[var(--editorial-red)] text-white'
                       : 'bg-[var(--bg-card-alt)] text-[var(--text-muted)] border border-[var(--border-edge)]'
                   }`}
                 >
@@ -308,7 +308,7 @@ export const PricingView: React.FC<PricingViewProps> = ({
                 onClick={() => handlePlanCta(tier)}
                 className={`w-full py-3 rounded-xl font-bold uppercase tracking-wider text-xs transition-colors flex items-center justify-center gap-2 mb-6 ${
                   isHighlight
-                    ? 'bg-[#CC0000] hover:bg-[#CC0000]/90 text-white shadow-lg shadow-[#CC0000]/20'
+                    ? 'bg-[var(--editorial-red)] hover:bg-[var(--editorial-red)]/90 text-white shadow-lg shadow-[var(--editorial-red)]/20'
                     : 'bg-[var(--text-main)] text-[var(--bg-canvas)] hover:opacity-90'
                 }`}
               >

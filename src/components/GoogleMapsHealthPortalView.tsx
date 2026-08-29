@@ -373,21 +373,21 @@ export const GoogleMapsHealthPortalView: React.FC<GoogleMapsHealthPortalViewProp
   return (
     <div className="space-y-6">
       {/* Header Newspaper Banner */}
-      <div className={`p-6 border rounded-none ${isDark ? 'bg-[#141414] border-[#262626]' : 'bg-[#FFFFFF] border-[#D4D4CE]'} shadow-sm`}>
+      <div className="p-6 border border-[var(--border-edge)] bg-[var(--bg-card)] shadow-sm">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <span className="px-2.5 py-0.5 text-xs font-mono font-bold bg-[#CC0000] text-white tracking-widest uppercase">
+              <span className="px-2.5 py-0.5 text-xs font-mono font-bold bg-[var(--editorial-red)] text-white tracking-widest uppercase">
                 GEOSPATIAL TELEMETRY
               </span>
-              <span className={`text-xs font-mono ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
+              <span className="text-xs font-mono text-[var(--text-muted)]">
                 POWERED BY GOOGLE MAPS PLATFORM
               </span>
             </div>
-            <h1 className={`text-2xl sm:text-3xl font-serif font-bold ${isDark ? 'text-white' : 'text-black'} tracking-tight`}>
+            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-[var(--text-main)] tracking-tight">
               Clinical Facility Locator & Outdoor Workout GPS
             </h1>
-            <p className={`text-sm font-sans mt-1 max-w-3xl ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
+            <p className="text-sm font-sans mt-1 max-w-3xl text-[var(--text-muted)]">
               Real-time mapping of pathology diagnostic laboratories, cardiac emergency wings, sports physiology testing hubs, and high-resolution GPS workout routes with simulated biometric telemetry.
             </p>
           </div>
@@ -395,11 +395,9 @@ export const GoogleMapsHealthPortalView: React.FC<GoogleMapsHealthPortalViewProp
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={handleCenterOnUser}
-              className={`px-3 py-2 text-xs font-mono font-semibold border flex items-center gap-1.5 transition-colors ${
-                isDark ? 'border-zinc-700 bg-zinc-800 text-zinc-200 hover:bg-zinc-700' : 'border-zinc-300 bg-zinc-100 text-zinc-800 hover:bg-zinc-200'
-              }`}
+              className="px-3 py-2 text-xs font-mono font-semibold border border-[var(--border-edge)] bg-[var(--bg-card-alt)] text-[var(--text-main)] hover:bg-[var(--bg-card-contrast)] flex items-center gap-1.5 transition-colors"
             >
-              <Navigation className="w-3.5 h-3.5 text-[#CC0000]" />
+              <Navigation className="w-3.5 h-3.5 text-[var(--editorial-red)]" />
               MY LOCATION
             </button>
             <button
@@ -415,13 +413,13 @@ export const GoogleMapsHealthPortalView: React.FC<GoogleMapsHealthPortalViewProp
         </div>
 
         {/* View Mode Switcher */}
-        <div className="flex flex-wrap items-center gap-2 mt-6 pt-4 border-t border-zinc-700/40">
+        <div className="flex flex-wrap items-center gap-2 mt-6 pt-4 border-t border-[var(--border-subtle)]">
           <button
             onClick={() => setMapViewMode('facilities')}
             className={`px-4 py-2 text-xs font-mono font-bold tracking-wider uppercase border transition-all flex items-center gap-2 ${
               mapViewMode === 'facilities'
-                ? 'bg-[#CC0000] text-white border-[#CC0000]'
-                : isDark ? 'bg-zinc-900 text-zinc-300 border-zinc-700 hover:border-zinc-500' : 'bg-zinc-100 text-zinc-700 border-zinc-300 hover:border-zinc-400'
+                ? 'bg-[var(--editorial-red)] text-white border-[var(--editorial-red)]'
+                : 'bg-[var(--bg-card-alt)] text-[var(--text-muted)] border-[var(--border-edge)] hover:text-[var(--text-main)] hover:border-[var(--text-main)]'
             }`}
           >
             <Building2 className="w-3.5 h-3.5" />
@@ -431,8 +429,8 @@ export const GoogleMapsHealthPortalView: React.FC<GoogleMapsHealthPortalViewProp
             onClick={() => setMapViewMode('routes')}
             className={`px-4 py-2 text-xs font-mono font-bold tracking-wider uppercase border transition-all flex items-center gap-2 ${
               mapViewMode === 'routes'
-                ? 'bg-[#CC0000] text-white border-[#CC0000]'
-                : isDark ? 'bg-zinc-900 text-zinc-300 border-zinc-700 hover:border-zinc-500' : 'bg-zinc-100 text-zinc-700 border-zinc-300 hover:border-zinc-400'
+                ? 'bg-[var(--editorial-red)] text-white border-[var(--editorial-red)]'
+                : 'bg-[var(--bg-card-alt)] text-[var(--text-muted)] border-[var(--border-edge)] hover:text-[var(--text-main)] hover:border-[var(--text-main)]'
             }`}
           >
             <Activity className="w-3.5 h-3.5" />
@@ -442,8 +440,8 @@ export const GoogleMapsHealthPortalView: React.FC<GoogleMapsHealthPortalViewProp
             onClick={() => setMapViewMode('aqi_zones')}
             className={`px-4 py-2 text-xs font-mono font-bold tracking-wider uppercase border transition-all flex items-center gap-2 ${
               mapViewMode === 'aqi_zones'
-                ? 'bg-[#CC0000] text-white border-[#CC0000]'
-                : isDark ? 'bg-zinc-900 text-zinc-300 border-zinc-700 hover:border-zinc-500' : 'bg-zinc-100 text-zinc-700 border-zinc-300 hover:border-zinc-400'
+                ? 'bg-[var(--editorial-red)] text-white border-[var(--editorial-red)]'
+                : 'bg-[var(--bg-card-alt)] text-[var(--text-muted)] border-[var(--border-edge)] hover:text-[var(--text-main)] hover:border-[var(--text-main)]'
             }`}
           >
             <Wind className="w-3.5 h-3.5" />
@@ -457,7 +455,7 @@ export const GoogleMapsHealthPortalView: React.FC<GoogleMapsHealthPortalViewProp
         
         {/* Left Column: Google Map Canvas */}
         <div className="lg:col-span-8 space-y-4">
-          <div className={`relative w-full h-[540px] sm:h-[620px] border rounded-none overflow-hidden ${isDark ? 'border-[#262626] bg-zinc-950' : 'border-[#D4D4CE] bg-zinc-100'}`}>
+          <div className="relative w-full h-[540px] sm:h-[620px] border border-[var(--border-edge)] bg-[var(--bg-canvas)] overflow-hidden">
             
             {/* The Google Maps APIProvider and Map */}
             <APIProvider apiKey={apiKey || 'DEMO_KEY'}>
@@ -661,18 +659,18 @@ export const GoogleMapsHealthPortalView: React.FC<GoogleMapsHealthPortalViewProp
                     }}
                     className={`p-3 border cursor-pointer transition-all ${
                       isSelected
-                        ? 'border-[#CC0000] bg-red-950/10'
-                        : isDark ? 'border-[#262626] bg-[#141414] hover:border-zinc-600' : 'border-[#D4D4CE] bg-white hover:border-zinc-400'
+                        ? 'border-[var(--editorial-red)] bg-red-950/10'
+                        : 'border-[var(--border-edge)] bg-[var(--bg-card)] hover:border-[var(--text-muted)]'
                     }`}
                   >
                     <div className="flex items-center justify-between text-[10px] font-mono mb-1">
-                      <span className="font-bold text-[#CC0000]">{route.type}</span>
-                      <span className={isDark ? 'text-zinc-400' : 'text-zinc-600'}>{route.distanceKm} KM</span>
+                      <span className="font-bold text-[var(--editorial-red)]">{route.type}</span>
+                      <span className="text-[var(--text-muted)]">{route.distanceKm} KM</span>
                     </div>
-                    <div className={`text-xs font-bold font-sans line-clamp-1 ${isDark ? 'text-zinc-100' : 'text-zinc-900'}`}>
+                    <div className="text-xs font-bold font-sans line-clamp-1 text-[var(--text-main)]">
                       {route.title}
                     </div>
-                    <div className="flex items-center justify-between text-[10px] font-mono mt-2 pt-1 border-t border-zinc-700/30 text-zinc-400">
+                    <div className="flex items-center justify-between text-[10px] font-mono mt-2 pt-1 border-t border-[var(--border-subtle)] text-[var(--text-muted)]">
                       <span>Elev: +{route.elevationGainM}m</span>
                       <span>AQI: {route.aqiScore}</span>
                     </div>
@@ -688,10 +686,10 @@ export const GoogleMapsHealthPortalView: React.FC<GoogleMapsHealthPortalViewProp
           
           {/* Facilities Filter & Search List */}
           {mapViewMode === 'facilities' && (
-            <div className={`p-4 border ${isDark ? 'bg-[#141414] border-[#262626]' : 'bg-[#FFFFFF] border-[#D4D4CE]'}`}>
-              <div className="flex items-center justify-between mb-3 pb-2 border-b border-zinc-700/40">
-                <h3 className={`font-serif font-bold text-base ${isDark ? 'text-white' : 'text-black'} flex items-center gap-2`}>
-                  <Building2 className="w-4 h-4 text-[#CC0000]" />
+            <div className="p-4 border border-[var(--border-edge)] bg-[var(--bg-card)]">
+              <div className="flex items-center justify-between mb-3 pb-2 border-b border-[var(--border-subtle)]">
+                <h3 className="font-serif font-bold text-base text-[var(--text-main)] flex items-center gap-2">
+                  <Building2 className="w-4 h-4 text-[var(--editorial-red)]" />
                   Clinical Network
                 </h3>
                 <span className="text-[10px] font-mono px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">
@@ -714,8 +712,8 @@ export const GoogleMapsHealthPortalView: React.FC<GoogleMapsHealthPortalViewProp
                     onClick={() => setSelectedCategory(cat.id)}
                     className={`px-2.5 py-1 text-[11px] font-mono font-semibold transition-all ${
                       selectedCategory === cat.id
-                        ? 'bg-[#CC0000] text-white font-bold'
-                        : isDark ? 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700' : 'bg-zinc-200 text-zinc-700 hover:bg-zinc-300'
+                        ? 'bg-[var(--editorial-red)] text-white font-bold'
+                        : 'bg-[var(--bg-card-alt)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-card-contrast)]'
                     }`}
                   >
                     {cat.label}
@@ -737,30 +735,30 @@ export const GoogleMapsHealthPortalView: React.FC<GoogleMapsHealthPortalViewProp
                       }}
                       className={`p-3 border cursor-pointer transition-all ${
                         isSelected
-                          ? 'border-[#CC0000] bg-red-950/20 shadow-md'
-                          : isDark ? 'border-[#262626] bg-zinc-900/60 hover:border-zinc-600' : 'border-[#E2E2DC] bg-zinc-50 hover:border-zinc-400'
+                          ? 'border-[var(--editorial-red)] bg-red-950/20 shadow-md'
+                          : 'border-[var(--border-subtle)] bg-[var(--bg-card-alt)] hover:border-[var(--border-edge)]'
                       }`}
                     >
                       <div className="flex items-start justify-between gap-2">
                         <span className={`text-[9px] font-mono uppercase font-bold px-1.5 py-0.5 border ${getCategoryBadgeColor(facility.category)}`}>
                           {facility.categoryLabel}
                         </span>
-                        <span className="text-[10px] font-mono text-zinc-400 font-semibold">
+                        <span className="text-[10px] font-mono text-[var(--text-dim)] font-semibold">
                           {facility.distanceKm} km away
                         </span>
                       </div>
 
-                      <h4 className={`text-xs font-bold font-sans mt-1.5 leading-snug ${isDark ? 'text-zinc-100' : 'text-zinc-900'}`}>
+                      <h4 className="text-xs font-bold font-sans mt-1.5 leading-snug text-[var(--text-main)]">
                         {facility.name}
                       </h4>
 
-                      <p className={`text-[11px] font-mono mt-1 ${isDark ? 'text-zinc-400' : 'text-zinc-600'} line-clamp-1`}>
+                      <p className="text-[11px] font-mono mt-1 text-[var(--text-muted)] line-clamp-1">
                         {facility.address}
                       </p>
 
-                      <div className="mt-2 pt-2 border-t border-zinc-700/30 flex items-center justify-between text-[10px] font-mono">
+                      <div className="mt-2 pt-2 border-t border-[var(--border-subtle)] flex items-center justify-between text-[10px] font-mono">
                         <span className="text-emerald-400 font-medium">Wait: ~{facility.waitTimeMins}m</span>
-                        <span className="text-zinc-300 font-bold">Rating: ★ {facility.rating}</span>
+                        <span className="text-[var(--text-muted)] font-bold">Rating: ★ {facility.rating}</span>
                       </div>
                     </div>
                   );
@@ -771,10 +769,10 @@ export const GoogleMapsHealthPortalView: React.FC<GoogleMapsHealthPortalViewProp
 
           {/* Route Deep-Dive Panel */}
           {mapViewMode === 'routes' && (
-            <div className={`p-4 border ${isDark ? 'bg-[#141414] border-[#262626]' : 'bg-[#FFFFFF] border-[#D4D4CE]'}`}>
-              <div className="flex items-center justify-between mb-3 pb-2 border-b border-zinc-700/40">
-                <h3 className={`font-serif font-bold text-base ${isDark ? 'text-white' : 'text-black'} flex items-center gap-2`}>
-                  <Navigation className="w-4 h-4 text-[#CC0000]" />
+            <div className="p-4 border border-[var(--border-edge)] bg-[var(--bg-card)]">
+              <div className="flex items-center justify-between mb-3 pb-2 border-b border-[var(--border-subtle)]">
+                <h3 className="font-serif font-bold text-base text-[var(--text-main)] flex items-center gap-2">
+                  <Navigation className="w-4 h-4 text-[var(--editorial-red)]" />
                   Route Telemetry Profile
                 </h3>
                 <span className="text-[10px] font-mono px-2 py-0.5 bg-red-500/10 text-red-400 border border-red-500/20 font-bold">
@@ -782,38 +780,38 @@ export const GoogleMapsHealthPortalView: React.FC<GoogleMapsHealthPortalViewProp
                 </span>
               </div>
 
-              <h4 className={`text-sm font-bold font-sans ${isDark ? 'text-zinc-100' : 'text-zinc-900'}`}>
+              <h4 className="text-sm font-bold font-sans text-[var(--text-main)]">
                 {activeRoute.title}
               </h4>
-              <p className={`text-xs font-sans mt-1.5 leading-relaxed ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
+              <p className="text-xs font-sans mt-1.5 leading-relaxed text-[var(--text-muted)]">
                 {activeRoute.description}
               </p>
 
               <div className="grid grid-cols-2 gap-2 mt-4 text-xs font-mono">
-                <div className={`p-2.5 border ${isDark ? 'border-zinc-800 bg-zinc-900/60' : 'border-zinc-200 bg-zinc-50'}`}>
-                  <span className="text-[9px] uppercase text-zinc-400 block">DISTANCE</span>
-                  <span className="font-bold text-sm text-zinc-100">{activeRoute.distanceKm} km</span>
+                <div className="p-2.5 border border-[var(--border-subtle)] bg-[var(--bg-card-alt)]">
+                  <span className="text-[9px] uppercase text-[var(--text-dim)] block">DISTANCE</span>
+                  <span className="font-bold text-sm text-[var(--text-main)]">{activeRoute.distanceKm} km</span>
                 </div>
-                <div className={`p-2.5 border ${isDark ? 'border-zinc-800 bg-zinc-900/60' : 'border-zinc-200 bg-zinc-50'}`}>
-                  <span className="text-[9px] uppercase text-zinc-400 block">TOTAL CLIMB</span>
-                  <span className="font-bold text-sm text-zinc-100">+{activeRoute.elevationGainM} m</span>
+                <div className="p-2.5 border border-[var(--border-subtle)] bg-[var(--bg-card-alt)]">
+                  <span className="text-[9px] uppercase text-[var(--text-dim)] block">TOTAL CLIMB</span>
+                  <span className="font-bold text-sm text-[var(--text-main)]">+{activeRoute.elevationGainM} m</span>
                 </div>
-                <div className={`p-2.5 border ${isDark ? 'border-zinc-800 bg-zinc-900/60' : 'border-zinc-200 bg-zinc-50'}`}>
-                  <span className="text-[9px] uppercase text-zinc-400 block">TARGET HR</span>
+                <div className="p-2.5 border border-[var(--border-subtle)] bg-[var(--bg-card-alt)]">
+                  <span className="text-[9px] uppercase text-[var(--text-dim)] block">TARGET HR</span>
                   <span className="font-bold text-sm text-red-400">{activeRoute.avgHrBpm} bpm</span>
                 </div>
-                <div className={`p-2.5 border ${isDark ? 'border-zinc-800 bg-zinc-900/60' : 'border-zinc-200 bg-zinc-50'}`}>
-                  <span className="text-[9px] uppercase text-zinc-400 block">SURFACE</span>
-                  <span className="font-bold text-xs text-zinc-200">{activeRoute.surface}</span>
+                <div className="p-2.5 border border-[var(--border-subtle)] bg-[var(--bg-card-alt)]">
+                  <span className="text-[9px] uppercase text-[var(--text-dim)] block">SURFACE</span>
+                  <span className="font-bold text-xs text-[var(--text-main)]">{activeRoute.surface}</span>
                 </div>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-zinc-700/40 space-y-2">
+              <div className="mt-4 pt-3 border-t border-[var(--border-subtle)] space-y-2">
                 <button
                   onClick={() => {
                     if (onOpenLiveWorkout) onOpenLiveWorkout();
                   }}
-                  className="w-full py-2.5 text-xs font-mono font-bold bg-[#CC0000] text-white hover:bg-red-700 transition-colors uppercase tracking-wider flex items-center justify-center gap-2"
+                  className="w-full py-2.5 text-xs font-mono font-bold bg-[var(--editorial-red)] text-white hover:bg-red-700 transition-colors uppercase tracking-wider flex items-center justify-center gap-2"
                 >
                   <Play className="w-3.5 h-3.5" />
                   Launch Route in Live Workout
@@ -824,9 +822,9 @@ export const GoogleMapsHealthPortalView: React.FC<GoogleMapsHealthPortalViewProp
 
           {/* Environmental Air Quality & Pollen Matrix */}
           {mapViewMode === 'aqi_zones' && (
-            <div className={`p-4 border ${isDark ? 'bg-[#141414] border-[#262626]' : 'bg-[#FFFFFF] border-[#D4D4CE]'}`}>
-              <div className="flex items-center justify-between mb-3 pb-2 border-b border-zinc-700/40">
-                <h3 className={`font-serif font-bold text-base ${isDark ? 'text-white' : 'text-black'} flex items-center gap-2`}>
+            <div className="p-4 border border-[var(--border-edge)] bg-[var(--bg-card)]">
+              <div className="flex items-center justify-between mb-3 pb-2 border-b border-[var(--border-subtle)]">
+                <h3 className="font-serif font-bold text-base text-[var(--text-main)] flex items-center gap-2">
                   <Wind className="w-4 h-4 text-emerald-500" />
                   Outdoor Environmental Safety
                 </h3>
@@ -835,35 +833,35 @@ export const GoogleMapsHealthPortalView: React.FC<GoogleMapsHealthPortalViewProp
                 </span>
               </div>
 
-              <p className={`text-xs leading-relaxed ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
+              <p className="text-xs leading-relaxed text-[var(--text-muted)]">
                 Continuous geospatial environmental sensing combines particulate matter (PM2.5), Ozone (O3), and Pollen counts to optimize outdoor aerobic windows.
               </p>
 
               <div className="space-y-2.5 mt-4 text-xs font-mono">
-                <div className={`p-2.5 border flex items-center justify-between ${isDark ? 'border-zinc-800 bg-zinc-900/60' : 'border-zinc-200 bg-zinc-50'}`}>
+                <div className="p-2.5 border border-[var(--border-subtle)] bg-[var(--bg-card-alt)] flex items-center justify-between">
                   <div>
-                    <span className="font-bold text-zinc-200 block">Manhattan Central Corridor</span>
-                    <span className="text-[10px] text-zinc-400">PM2.5: 6.2 µg/m³ • NO2: Normal</span>
+                    <span className="font-bold text-[var(--text-main)] block">Manhattan Central Corridor</span>
+                    <span className="text-[10px] text-[var(--text-muted)]">PM2.5: 6.2 µg/m³ • NO2: Normal</span>
                   </div>
                   <span className="text-xs font-bold text-emerald-400 bg-emerald-950/40 px-2 py-1 border border-emerald-800/40">
                     AQI 32 (Good)
                   </span>
                 </div>
 
-                <div className={`p-2.5 border flex items-center justify-between ${isDark ? 'border-zinc-800 bg-zinc-900/60' : 'border-zinc-200 bg-zinc-50'}`}>
+                <div className="p-2.5 border border-[var(--border-subtle)] bg-[var(--bg-card-alt)] flex items-center justify-between">
                   <div>
-                    <span className="font-bold text-zinc-200 block">Hudson River Greenway Strip</span>
-                    <span className="text-[10px] text-zinc-400">Pollen Count: Low • High Negative Ions</span>
+                    <span className="font-bold text-[var(--text-main)] block">Hudson River Greenway Strip</span>
+                    <span className="text-[10px] text-[var(--text-muted)]">Pollen Count: Low • High Negative Ions</span>
                   </div>
                   <span className="text-xs font-bold text-emerald-400 bg-emerald-950/40 px-2 py-1 border border-emerald-800/40">
                     AQI 24 (Prime)
                   </span>
                 </div>
 
-                <div className={`p-2.5 border flex items-center justify-between ${isDark ? 'border-zinc-800 bg-zinc-900/60' : 'border-zinc-200 bg-zinc-50'}`}>
+                <div className="p-2.5 border border-[var(--border-subtle)] bg-[var(--bg-card-alt)] flex items-center justify-between">
                   <div>
-                    <span className="font-bold text-zinc-200 block">Circadian UV Peak Window</span>
-                    <span className="text-[10px] text-zinc-400">UV Index: 4.8 (Moderate)</span>
+                    <span className="font-bold text-[var(--text-main)] block">Circadian UV Peak Window</span>
+                    <span className="text-[10px] text-[var(--text-muted)]">UV Index: 4.8 (Moderate)</span>
                   </div>
                   <span className="text-xs font-bold text-amber-400 bg-amber-950/40 px-2 py-1 border border-amber-800/40">
                     11:30 AM - 2:00 PM
@@ -874,22 +872,20 @@ export const GoogleMapsHealthPortalView: React.FC<GoogleMapsHealthPortalViewProp
           )}
 
           {/* Quick Doctor Export Card */}
-          <div className={`p-4 border ${isDark ? 'bg-[#141414] border-[#262626]' : 'bg-[#FFFFFF] border-[#D4D4CE]'}`}>
-            <h4 className={`text-xs font-mono font-bold uppercase tracking-wider mb-2 ${isDark ? 'text-zinc-300' : 'text-zinc-700'}`}>
+          <div className="p-4 border border-[var(--border-edge)] bg-[var(--bg-card)]">
+            <h4 className="text-xs font-mono font-bold uppercase tracking-wider mb-2 text-[var(--text-main)]">
               Geospatial Emergency Care
             </h4>
-            <p className={`text-xs leading-relaxed mb-3 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
+            <p className="text-xs leading-relaxed mb-3 text-[var(--text-muted)]">
               In event of acute cardiac arrhythmia or elevated biomarker anomaly, one-click geofence alerts dispatch your full VitalSync clinical dossier to the closest participating hospital.
             </p>
             <button
               onClick={() => {
                 if (onOpenDoctorReport) onOpenDoctorReport();
               }}
-              className={`w-full py-2 text-xs font-mono font-semibold border flex items-center justify-center gap-1.5 transition-colors ${
-                isDark ? 'border-zinc-700 bg-zinc-900 text-zinc-200 hover:bg-zinc-800' : 'border-zinc-300 bg-zinc-100 text-zinc-800 hover:bg-zinc-200'
-              }`}
+              className="w-full py-2 text-xs font-mono font-semibold border border-[var(--border-edge)] bg-[var(--bg-card-alt)] text-[var(--text-main)] hover:bg-[var(--bg-card-contrast)] flex items-center justify-center gap-1.5 transition-colors"
             >
-              <Share2 className="w-3.5 h-3.5 text-[#CC0000]" />
+              <Share2 className="w-3.5 h-3.5 text-[var(--editorial-red)]" />
               PREPARE EMERGENCY CLINICAL DOSSIER
             </button>
           </div>
@@ -901,27 +897,27 @@ export const GoogleMapsHealthPortalView: React.FC<GoogleMapsHealthPortalViewProp
       {/* Google Maps API Key Modal */}
       {showKeyModal && (
         <div className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className={`w-full max-w-lg p-6 border shadow-2xl ${isDark ? 'bg-[#121212] border-zinc-700 text-white' : 'bg-white border-zinc-300 text-black'}`}>
-            <div className="flex items-center justify-between mb-4 pb-2 border-b border-zinc-700/40">
+          <div className="w-full max-w-lg p-6 border border-[var(--border-edge)] bg-[var(--bg-card)] text-[var(--text-main)] shadow-2xl">
+            <div className="flex items-center justify-between mb-4 pb-2 border-b border-[var(--border-subtle)]">
               <h3 className="font-serif font-bold text-lg flex items-center gap-2">
-                <Key className="w-5 h-5 text-[#CC0000]" />
+                <Key className="w-5 h-5 text-[var(--editorial-red)]" />
                 Google Maps Platform Configuration
               </h3>
               <button
                 onClick={() => setShowKeyModal(false)}
-                className="text-xs font-mono px-2 py-1 border border-zinc-700 hover:bg-zinc-800"
+                className="text-xs font-mono px-2 py-1 border border-[var(--border-edge)] hover:bg-[var(--bg-card-alt)]"
               >
                 ✕
               </button>
             </div>
 
-            <p className="text-xs font-sans text-zinc-400 leading-relaxed mb-4">
+            <p className="text-xs font-sans text-[var(--text-muted)] leading-relaxed mb-4">
               To render live dynamic tiles, high-precision routes, and custom cloud-styled layers, provide your Google Maps Platform API Key or use a Maps Demo Key.
             </p>
 
             <div className="space-y-3">
               <div>
-                <label className="block text-[11px] font-mono font-semibold uppercase text-zinc-300 mb-1">
+                <label className="block text-[11px] font-mono font-semibold uppercase text-[var(--text-muted)] mb-1">
                   Google Maps API Key
                 </label>
                 <input
@@ -929,22 +925,20 @@ export const GoogleMapsHealthPortalView: React.FC<GoogleMapsHealthPortalViewProp
                   value={keyInput}
                   onChange={e => setKeyInput(e.target.value)}
                   placeholder={apiKey ? '••••••••••••••••••••••••••••' : 'AIzaSy...'}
-                  className={`w-full px-3 py-2 text-xs font-mono border ${
-                    isDark ? 'bg-zinc-900 border-zinc-700 text-white focus:border-red-500' : 'bg-zinc-50 border-zinc-300 text-black focus:border-red-600'
-                  } outline-none`}
+                  className="w-full px-3 py-2 text-xs font-mono border border-[var(--border-edge)] bg-[var(--bg-card-alt)] text-[var(--text-main)] focus:border-red-500 outline-none"
                 />
               </div>
 
-              <div className="p-3 bg-red-950/20 border border-red-900/30 text-xs font-mono text-zinc-300 space-y-1">
+              <div className="p-3 bg-red-950/20 border border-red-900/30 text-xs font-mono text-[var(--text-main)] space-y-1">
                 <div className="font-bold text-red-400">Supported Google Maps APIs:</div>
-                <ul className="list-disc list-inside text-[11px] text-zinc-400 space-y-0.5">
+                <ul className="list-disc list-inside text-[11px] text-[var(--text-muted)] space-y-0.5">
                   <li>Maps JavaScript API (Vector & Raster rendering)</li>
                   <li>Places API (New) & Geocoding</li>
                   <li>Routes API & Advanced Markers</li>
                 </ul>
               </div>
 
-              <div className="flex items-center justify-between pt-3 border-t border-zinc-700/40">
+              <div className="flex items-center justify-between pt-3 border-t border-[var(--border-subtle)]">
                 <a
                   href="https://mapsplatform.google.com/maps-demo-key?utm_campaign=gmp_mcp_codeassist_v1_aistudio"
                   target="_blank"
@@ -963,7 +957,7 @@ export const GoogleMapsHealthPortalView: React.FC<GoogleMapsHealthPortalViewProp
                       }
                       setShowKeyModal(false);
                     }}
-                    className="px-4 py-2 text-xs font-mono font-bold bg-[#CC0000] text-white hover:bg-red-700 uppercase"
+                    className="px-4 py-2 text-xs font-mono font-bold bg-[var(--editorial-red)] text-white hover:bg-red-700 uppercase"
                   >
                     Save & Activate Key
                   </button>

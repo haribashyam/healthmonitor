@@ -170,28 +170,28 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Search Button */}
             <button
               onClick={onOpenGlobalSearch}
-              className="flex items-center gap-2 px-3 py-1.5 bg-[var(--bg-card-alt)] hover:bg-[var(--bg-card-contrast)] text-[var(--text-muted)] hover:text-[var(--text-main)] border border-[var(--border-edge)] transition-colors"
+              className="flex items-center gap-2 px-3.5 py-1.5 apple-liquid-glass-btn rounded-full text-white transition-all"
             >
-              <Search className="w-3.5 h-3.5" />
-              <span className="text-[11px] uppercase tracking-wider font-bold">SEARCH ARCHIVE</span>
-              <kbd className="text-[10px] bg-[var(--bg-card)] border border-[var(--border-edge)] text-[var(--text-muted)] px-1">⌘K</kbd>
+              <Search className="w-3.5 h-3.5 text-white/70" />
+              <span className="text-[11px] uppercase tracking-wider font-semibold">SEARCH</span>
+              <kbd className="text-[10px] bg-white/10 border border-white/20 text-white/80 px-1.5 py-0.5 rounded">⌘K</kbd>
             </button>
 
             {/* Light / Dark Mode Toggle */}
             <button
               onClick={onToggleTheme}
               title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--text-main)] hover:opacity-90 text-[var(--bg-canvas)] border border-[var(--text-main)] transition-colors font-bold uppercase text-[11px] tracking-wider"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 apple-liquid-glass-btn rounded-full transition-all font-semibold uppercase text-[11px] tracking-wider text-white"
             >
               {isDark ? (
                 <>
                   <Sun className="w-3.5 h-3.5 text-amber-400" />
-                  <span>LIGHT MODE</span>
+                  <span>LIGHT</span>
                 </>
               ) : (
                 <>
                   <Moon className="w-3.5 h-3.5 text-cyan-300" />
-                  <span>DARK MODE</span>
+                  <span>DARK</span>
                 </>
               )}
             </button>
@@ -199,21 +199,21 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Live HR Pill */}
             <button
               onClick={onOpenLiveWorkout}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--bg-card-alt)] hover:bg-[var(--bg-card-contrast)] text-[var(--text-main)] border border-[var(--border-edge)] transition-colors"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 apple-liquid-glass-btn rounded-full text-white transition-all"
             >
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#CC0000] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#CC0000]"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
               </span>
-              <span className="font-bold text-[11px] text-[#CC0000]">{liveBpm || 145} BPM</span>
+              <span className="font-bold text-[11px] text-red-400">{liveBpm || 145} BPM</span>
             </button>
 
             {/* Doctor Export Button */}
             <button
               onClick={onOpenDoctorReport}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--bg-card-alt)] hover:bg-[var(--bg-card-contrast)] text-[var(--text-main)] border border-[var(--border-edge)] transition-colors font-bold uppercase text-[11px] tracking-wider"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 apple-liquid-glass-btn rounded-full text-white transition-all font-semibold uppercase text-[11px] tracking-wider"
             >
-              <Plus className="w-3 h-3 text-[#CC0000]" />
+              <Plus className="w-3.5 h-3.5 text-emerald-400" />
               <span>DOCTOR EXPORT</span>
             </button>
 
@@ -224,7 +224,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   if (onOpenAuthModal) onOpenAuthModal('profile');
                   else if (onOpenLifecycle) onOpenLifecycle('account-settings');
                 }}
-                className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition-colors font-bold uppercase text-[11px]"
+                className="flex items-center gap-2 px-3.5 py-1.5 apple-liquid-glass-btn rounded-full text-emerald-300 border-emerald-400/30 transition-all font-semibold uppercase text-[11px]"
               >
                 <div className="w-4 h-4 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-[9px] font-bold">
                   {firebaseUser.displayName?.charAt(0) || 'A'}
@@ -238,9 +238,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                     if (onOpenAuthModal) onOpenAuthModal('login');
                     else if (onOpenLifecycle) onOpenLifecycle('login');
                   }}
-                  className="flex items-center gap-1 px-3 py-1.5 bg-[var(--bg-card-alt)] hover:bg-[var(--bg-card-contrast)] text-[var(--text-main)] border border-[var(--border-edge)] transition-colors font-bold uppercase text-[11px] tracking-wider"
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 apple-liquid-glass-btn rounded-full text-white transition-all font-semibold uppercase text-[11px] tracking-wider"
                 >
-                  <LogIn className="w-3 h-3" />
+                  <LogIn className="w-3.5 h-3.5 text-white/70" />
                   <span>SIGN IN</span>
                 </button>
 
@@ -249,9 +249,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                     if (onOpenAuthModal) onOpenAuthModal('register');
                     else if (onOpenLifecycle) onOpenLifecycle('register');
                   }}
-                  className="flex items-center gap-1 px-3 py-1.5 bg-[#CC0000] hover:bg-[#CC0000]/90 text-white transition-colors font-bold uppercase text-[11px] tracking-wider"
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 apple-liquid-glass-btn-accent rounded-full text-white transition-all font-bold uppercase text-[11px] tracking-wider"
                 >
-                  <UserPlus className="w-3 h-3" />
+                  <UserPlus className="w-3.5 h-3.5" />
                   <span>GET STARTED</span>
                 </button>
               </div>

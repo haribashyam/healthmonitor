@@ -113,21 +113,19 @@ export const HardwareConfigPanel: React.FC<HardwareConfigPanelProps> = ({
   };
 
   return (
-    <div className={`border rounded-none ${isDark ? 'bg-[#141414] border-[#262626]' : 'bg-[#FFFFFF] border-[#D4D4CE]'} shadow-sm overflow-hidden font-mono text-xs`}>
+    <div className="border border-[var(--border-edge)] bg-[var(--bg-card)] shadow-sm overflow-hidden font-mono text-xs">
       {/* Header Bar / Collapsible Trigger */}
       <div
         onClick={() => setIsExpanded(!isExpanded)}
-        className={`px-4 py-3 cursor-pointer flex items-center justify-between transition-colors border-b ${
-          isDark ? 'border-zinc-800 hover:bg-zinc-900/60' : 'border-zinc-200 hover:bg-zinc-50'
-        }`}
+        className="px-4 py-3 cursor-pointer flex items-center justify-between transition-colors border-b border-[var(--border-subtle)] hover:bg-[var(--bg-card-alt)]"
       >
         <div className="flex items-center gap-2.5">
-          <div className={`p-1.5 rounded-none ${isConnected ? 'bg-emerald-500/20 text-emerald-400' : 'bg-[#CC0000]/20 text-[#CC0000]'}`}>
+          <div className={`p-1.5 ${isConnected ? 'bg-emerald-500/20 text-emerald-400' : 'bg-[var(--editorial-red)]/20 text-[var(--editorial-red)]'}`}>
             <Bluetooth className="w-4 h-4" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className={`font-bold tracking-wider uppercase ${isDark ? 'text-zinc-100' : 'text-zinc-900'}`}>
+              <span className="font-bold tracking-wider uppercase text-[var(--text-main)]">
                 Web Bluetooth Hardware Console & GATT Debugger
               </span>
               {isConnected && (
@@ -140,12 +138,12 @@ export const HardwareConfigPanel: React.FC<HardwareConfigPanelProps> = ({
                 </span>
               )}
               {!isConnected && (
-                <span className="text-[10px] px-2 py-0.2 font-bold uppercase tracking-wider bg-zinc-800 text-zinc-400 border border-zinc-700">
+                <span className="text-[10px] px-2 py-0.2 font-bold uppercase tracking-wider bg-[var(--bg-card-alt)] text-[var(--text-muted)] border border-[var(--border-subtle)]">
                   ○ STANDBY / READY
                 </span>
               )}
             </div>
-            <p className={`text-[11px] font-sans ${isDark ? 'text-zinc-400' : 'text-zinc-600'} mt-0.5`}>
+            <p className="text-[11px] font-sans text-[var(--text-muted)] mt-0.5">
               Native GATT Services (0x180D HR, 0x1810 BP, Battery) • Real DataView byte parsing
             </p>
           </div>
@@ -154,7 +152,7 @@ export const HardwareConfigPanel: React.FC<HardwareConfigPanelProps> = ({
         <div className="flex items-center gap-2">
           <button
             type="button"
-            className={`p-1 text-zinc-400 hover:text-zinc-200`}
+            className="p-1 text-[var(--text-muted)] hover:text-[var(--text-main)]"
             onClick={(e) => {
               e.stopPropagation();
               setIsExpanded(!isExpanded);
@@ -186,7 +184,7 @@ export const HardwareConfigPanel: React.FC<HardwareConfigPanelProps> = ({
           {/* Controls & Configuration Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 font-sans">
             <div>
-              <label className="block text-[10px] font-mono font-semibold uppercase text-zinc-400 mb-1">
+              <label className="block text-[10px] font-mono font-semibold uppercase text-[var(--text-muted)] mb-1">
                 Custom Service UUID (Optional)
               </label>
               <input
@@ -194,14 +192,12 @@ export const HardwareConfigPanel: React.FC<HardwareConfigPanelProps> = ({
                 placeholder="e.g. 0x180D or heart_rate"
                 value={customServiceUuid}
                 onChange={(e) => setCustomServiceUuid(e.target.value)}
-                className={`w-full px-2.5 py-1.5 text-xs font-mono border ${
-                  isDark ? 'bg-zinc-900 border-zinc-700 text-zinc-100' : 'bg-zinc-50 border-zinc-300 text-zinc-900'
-                } outline-none focus:border-red-500`}
+                className="w-full px-2.5 py-1.5 text-xs font-mono border border-[var(--border-edge)] bg-[var(--bg-card-alt)] text-[var(--text-main)] outline-none focus:border-red-500"
               />
             </div>
 
             <div>
-              <label className="block text-[10px] font-mono font-semibold uppercase text-zinc-400 mb-1">
+              <label className="block text-[10px] font-mono font-semibold uppercase text-[var(--text-muted)] mb-1">
                 Custom Characteristic UUID
               </label>
               <input
@@ -209,14 +205,12 @@ export const HardwareConfigPanel: React.FC<HardwareConfigPanelProps> = ({
                 placeholder="e.g. 0x2A37 (heart_rate_measurement)"
                 value={customCharUuid}
                 onChange={(e) => setCustomCharUuid(e.target.value)}
-                className={`w-full px-2.5 py-1.5 text-xs font-mono border ${
-                  isDark ? 'bg-zinc-900 border-zinc-700 text-zinc-100' : 'bg-zinc-50 border-zinc-300 text-zinc-900'
-                } outline-none focus:border-red-500`}
+                className="w-full px-2.5 py-1.5 text-xs font-mono border border-[var(--border-edge)] bg-[var(--bg-card-alt)] text-[var(--text-main)] outline-none focus:border-red-500"
               />
             </div>
 
             <div>
-              <label className="block text-[10px] font-mono font-semibold uppercase text-zinc-400 mb-1">
+              <label className="block text-[10px] font-mono font-semibold uppercase text-[var(--text-muted)] mb-1">
                 Device Name Filter Prefix
               </label>
               <input
@@ -224,15 +218,13 @@ export const HardwareConfigPanel: React.FC<HardwareConfigPanelProps> = ({
                 placeholder="e.g. Polar, Garmin, Wahoo"
                 value={namePrefix}
                 onChange={(e) => setNamePrefix(e.target.value)}
-                className={`w-full px-2.5 py-1.5 text-xs font-mono border ${
-                  isDark ? 'bg-zinc-900 border-zinc-700 text-zinc-100' : 'bg-zinc-50 border-zinc-300 text-zinc-900'
-                } outline-none focus:border-red-500`}
+                className="w-full px-2.5 py-1.5 text-xs font-mono border border-[var(--border-edge)] bg-[var(--bg-card-alt)] text-[var(--text-main)] outline-none focus:border-red-500"
               />
             </div>
           </div>
 
           {/* Action Buttons Row */}
-          <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-zinc-800">
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[var(--border-subtle)]">
             <div className="flex flex-wrap items-center gap-2">
               {!isConnected ? (
                 <button
@@ -241,10 +233,10 @@ export const HardwareConfigPanel: React.FC<HardwareConfigPanelProps> = ({
                   disabled={isConnecting || !compat.supported}
                   className={`px-4 py-2 text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 transition-all ${
                     !compat.supported
-                      ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed border border-zinc-700'
+                      ? 'bg-[var(--bg-card-alt)] text-[var(--text-dim)] cursor-not-allowed border border-[var(--border-subtle)]'
                       : isConnecting
                       ? 'bg-zinc-700 text-white cursor-wait'
-                      : 'bg-[#CC0000] text-white hover:bg-red-700 shadow-sm'
+                      : 'bg-[var(--editorial-red)] text-white hover:bg-red-700 shadow-sm'
                   }`}
                 >
                   {isConnecting ? (
@@ -263,7 +255,7 @@ export const HardwareConfigPanel: React.FC<HardwareConfigPanelProps> = ({
                 <button
                   type="button"
                   onClick={handleDisconnect}
-                  className="px-4 py-2 text-xs font-mono font-bold uppercase tracking-wider bg-zinc-800 text-red-400 border border-red-500/40 hover:bg-zinc-700 flex items-center gap-1.5"
+                  className="px-4 py-2 text-xs font-mono font-bold uppercase tracking-wider bg-[var(--bg-card-alt)] text-red-400 border border-red-500/40 hover:bg-[var(--bg-card-contrast)] flex items-center gap-1.5"
                 >
                   <Square className="w-3.5 h-3.5" />
                   Disconnect {activeDeviceName}
@@ -277,7 +269,7 @@ export const HardwareConfigPanel: React.FC<HardwareConfigPanelProps> = ({
                 className={`px-3 py-2 text-xs font-mono font-semibold border flex items-center gap-1.5 transition-colors ${
                   isDemoActive
                     ? 'bg-amber-950/40 border-amber-500/50 text-amber-300 hover:bg-amber-900/50'
-                    : isDark ? 'border-zinc-700 bg-zinc-900 text-zinc-300 hover:bg-zinc-800' : 'border-zinc-300 bg-zinc-100 text-zinc-800 hover:bg-zinc-200'
+                    : 'border-[var(--border-edge)] bg-[var(--bg-card-alt)] text-[var(--text-main)] hover:bg-[var(--bg-card-contrast)]'
                 }`}
               >
                 <Zap className="w-3.5 h-3.5 text-amber-400" />
@@ -295,11 +287,11 @@ export const HardwareConfigPanel: React.FC<HardwareConfigPanelProps> = ({
                   </span>
                 )}
                 {lastReading.systolic && (
-                  <span className="text-zinc-300 font-bold">
+                  <span className="text-[var(--text-main)] font-bold">
                     {lastReading.systolic}/{lastReading.diastolic} mmHg
                   </span>
                 )}
-                <span className="text-zinc-500 text-[10px]">
+                <span className="text-[var(--text-dim)] text-[10px]">
                   Raw: [{lastReading.rawBytes.slice(0, 4).join(', ')}]
                 </span>
               </div>
@@ -308,8 +300,8 @@ export const HardwareConfigPanel: React.FC<HardwareConfigPanelProps> = ({
 
           {/* Terminal Log Box */}
           <div className="space-y-1.5 pt-2">
-            <div className="flex items-center justify-between text-[10px] text-zinc-400">
-              <span className="flex items-center gap-1 font-bold uppercase tracking-wider text-zinc-300">
+            <div className="flex items-center justify-between text-[10px] text-[var(--text-muted)]">
+              <span className="flex items-center gap-1 font-bold uppercase tracking-wider text-[var(--text-main)]">
                 <Terminal className="w-3 h-3 text-red-500" />
                 Live Hardware Diagnostic Stream
               </span>
@@ -318,9 +310,7 @@ export const HardwareConfigPanel: React.FC<HardwareConfigPanelProps> = ({
 
             <div
               ref={terminalRef}
-              className={`h-36 overflow-y-auto p-2.5 border font-mono text-[11px] leading-relaxed space-y-1 ${
-                isDark ? 'bg-black/90 border-zinc-800 text-zinc-300' : 'bg-zinc-900 border-zinc-800 text-zinc-200'
-              }`}
+              className="h-36 overflow-y-auto p-2.5 border font-mono text-[11px] leading-relaxed space-y-1 bg-black/90 border-zinc-800 text-zinc-300"
             >
               {logs.length === 0 ? (
                 <div className="text-zinc-600 italic">No hardware events recorded yet. Click "Pair Hardware" or "Test UI" to begin.</div>

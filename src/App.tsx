@@ -30,7 +30,9 @@ import { AboutView } from './components/AboutView';
 import { SecurityTrustCenterView } from './components/SecurityTrustCenterView';
 import { ContactConciergeView } from './components/ContactConciergeView';
 import { LegalComplianceView } from './components/LegalComplianceView';
+import { AuthPortalView } from './components/AuthPortalView';
 import { AuthModal } from './components/AuthModal';
+import { FirebaseUserProfile } from './services/Auth';
 import { GoogleWorkspaceModal } from './components/GoogleWorkspaceModal';
 import { DataMapModal } from './components/DataMapModal';
 import { Footer } from './components/Footer';
@@ -78,6 +80,22 @@ export default function App() {
   }, [theme]);
 
   const toggleTheme = () => setTheme(p => p === 'dark' ? 'light' : 'dark');
+
+  // Commercial Auth Gateway state - App defaults to full screen Apple UI Auth Portal
+  const [isGatewayUnlocked, setIsGatewayUnlocked] = useState(false);
+  const [currentUserProfile, setCurrentUserProfile] = useState<FirebaseUserProfile | null>(null);
+
+  const handleEnterDashboard = (user?: FirebaseUserProfile) => {
+    if (user) setCurrentUserProfile(user);
+    setIsGatewayUnlocked(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleNavigateFromGateway = (tab: string) => {
+    setActiveTab(tab);
+    setIsGatewayUnlocked(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Modals state
   const [isLiveWorkoutOpen, setIsLiveWorkoutOpen] = useState(false);
@@ -173,6 +191,17 @@ export default function App() {
     recentActivity: activities[0]?.title || 'Interval Running',
     criticalBiomarkers: biomarkers.filter(b => b.status === 'attention' || b.status === 'warning').map(b => `${b.name}: ${b.value} ${b.unit}`)
   };
+
+  // 0. Full-Screen Commercial Auth Gateway (Apple UI Dark Mode & Liquid Glass)
+  if (!isGatewayUnlocked) {
+    return (
+      <AuthPortalView
+        onEnterDashboard={handleEnterDashboard}
+        onNavigateTab={handleNavigateFromGateway}
+        initialMode="login"
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-[var(--bg-canvas)] text-[var(--text-main)] transition-colors duration-200">

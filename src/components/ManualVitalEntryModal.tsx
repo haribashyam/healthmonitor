@@ -100,21 +100,21 @@ export const ManualVitalEntryModal: React.FC<ManualVitalEntryModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs">
-      <div className={`w-full max-w-lg border rounded-none ${isDark ? 'bg-[#141414] border-[#262626] text-zinc-100' : 'bg-[#FFFFFF] border-[#D4D4CE] text-zinc-900'} shadow-2xl overflow-hidden`}>
+      <div className="w-full max-w-lg border border-[var(--border-edge)] bg-[var(--bg-card)] text-[var(--text-main)] shadow-2xl overflow-hidden">
         {/* Header */}
-        <div className={`px-6 py-4 border-b flex items-center justify-between ${isDark ? 'border-zinc-800 bg-zinc-900/50' : 'border-zinc-200 bg-zinc-50'}`}>
+        <div className="px-6 py-4 border-b border-[var(--border-subtle)] flex items-center justify-between bg-[var(--bg-card-alt)]">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 bg-[#CC0000]/10 text-[#CC0000]">
+            <div className="p-2 bg-[var(--editorial-red)]/10 text-[var(--editorial-red)]">
               <PlusCircle className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-base tracking-tight uppercase font-mono">Log Authentic Health Reading</h3>
-              <p className={`text-xs ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>Direct user data input stored securely in local database</p>
+              <h3 className="font-bold text-base tracking-tight uppercase font-mono text-[var(--text-main)]">Log Authentic Health Reading</h3>
+              <p className="text-xs text-[var(--text-muted)]">Direct user data input stored securely in local database</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 text-zinc-400 hover:text-zinc-200"
+            className="p-1 text-[var(--text-muted)] hover:text-[var(--text-main)]"
           >
             <X className="w-5 h-5" />
           </button>
@@ -124,7 +124,7 @@ export const ManualVitalEntryModal: React.FC<ManualVitalEntryModalProps> = ({
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
           {/* Select Vital Type */}
           <div>
-            <label className="block text-xs font-mono font-bold uppercase text-zinc-400 mb-2">
+            <label className="block text-xs font-mono font-bold uppercase text-[var(--text-muted)] mb-2">
               Select Metric Category
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -143,11 +143,11 @@ export const ManualVitalEntryModal: React.FC<ManualVitalEntryModalProps> = ({
                     }}
                     className={`p-2.5 text-left border flex flex-col gap-1.5 transition-all text-xs ${
                       isSelected
-                        ? 'border-[#CC0000] bg-[#CC0000]/10 text-white font-bold'
-                        : isDark ? 'border-zinc-800 bg-zinc-900/40 text-zinc-400 hover:bg-zinc-800' : 'border-zinc-200 bg-zinc-50 text-zinc-600 hover:bg-zinc-100'
+                        ? 'border-[var(--editorial-red)] bg-[var(--editorial-red)]/10 text-[var(--text-main)] font-bold'
+                        : 'border-[var(--border-subtle)] bg-[var(--bg-card-alt)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-card-contrast)]'
                     }`}
                   >
-                    <Icon className={`w-4 h-4 ${isSelected ? 'text-[#CC0000]' : 'text-zinc-400'}`} />
+                    <Icon className={`w-4 h-4 ${isSelected ? 'text-[var(--editorial-red)]' : 'text-[var(--text-muted)]'}`} />
                     <span className="font-mono truncate">{item.label}</span>
                   </button>
                 );
@@ -158,15 +158,15 @@ export const ManualVitalEntryModal: React.FC<ManualVitalEntryModalProps> = ({
           {/* Value Input */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <label className="block text-xs font-mono font-bold uppercase text-zinc-400">
+              <label className="block text-xs font-mono font-bold uppercase text-[var(--text-muted)]">
                 {currentConfig.label} Value ({currentConfig.unit})
               </label>
-              <label className="flex items-center gap-1.5 text-xs font-sans text-zinc-400 cursor-pointer">
+              <label className="flex items-center gap-1.5 text-xs font-sans text-[var(--text-muted)] cursor-pointer">
                 <input
                   type="checkbox"
                   checked={isEstimated}
                   onChange={(e) => setIsEstimated(e.target.checked)}
-                  className="rounded-none border-zinc-700 text-red-600 focus:ring-0"
+                  className="rounded-none border-[var(--border-edge)] text-red-600 focus:ring-0"
                 />
                 <span>Mark as Estimated Reading</span>
               </label>
@@ -181,18 +181,16 @@ export const ManualVitalEntryModal: React.FC<ManualVitalEntryModalProps> = ({
                   placeholder={currentConfig.placeholder}
                   value={value}
                   onChange={(e) => setValue(e.target.value)}
-                  className={`w-full px-3.5 py-2.5 text-base font-mono border ${
-                    isDark ? 'bg-zinc-900 border-zinc-700 text-zinc-100' : 'bg-zinc-50 border-zinc-300 text-zinc-900'
-                  } outline-none focus:border-red-500`}
+                  className="w-full px-3.5 py-2.5 text-base font-mono border border-[var(--border-edge)] bg-[var(--bg-card-alt)] text-[var(--text-main)] outline-none focus:border-red-500"
                 />
-                <span className="absolute right-3.5 top-3 text-xs font-mono text-zinc-500 uppercase">
+                <span className="absolute right-3.5 top-3 text-xs font-mono text-[var(--text-dim)] uppercase">
                   {currentConfig.unit}
                 </span>
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <span className="text-[11px] text-zinc-400 block mb-1 font-mono">Systolic (Top)</span>
+                  <span className="text-[11px] text-[var(--text-muted)] block mb-1 font-mono">Systolic (Top)</span>
                   <input
                     type="number"
                     step="any"
@@ -200,13 +198,11 @@ export const ManualVitalEntryModal: React.FC<ManualVitalEntryModalProps> = ({
                     placeholder="118"
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
-                    className={`w-full px-3 py-2 text-base font-mono border ${
-                      isDark ? 'bg-zinc-900 border-zinc-700 text-zinc-100' : 'bg-zinc-50 border-zinc-300 text-zinc-900'
-                    } outline-none focus:border-red-500`}
+                    className="w-full px-3 py-2 text-base font-mono border border-[var(--border-edge)] bg-[var(--bg-card-alt)] text-[var(--text-main)] outline-none focus:border-red-500"
                   />
                 </div>
                 <div>
-                  <span className="text-[11px] text-zinc-400 block mb-1 font-mono">Diastolic (Bottom)</span>
+                  <span className="text-[11px] text-[var(--text-muted)] block mb-1 font-mono">Diastolic (Bottom)</span>
                   <input
                     type="number"
                     step="any"
@@ -214,9 +210,7 @@ export const ManualVitalEntryModal: React.FC<ManualVitalEntryModalProps> = ({
                     placeholder="78"
                     value={secondaryValue}
                     onChange={(e) => setSecondaryValue(e.target.value)}
-                    className={`w-full px-3 py-2 text-base font-mono border ${
-                      isDark ? 'bg-zinc-900 border-zinc-700 text-zinc-100' : 'bg-zinc-50 border-zinc-300 text-zinc-900'
-                    } outline-none focus:border-red-500`}
+                    className="w-full px-3 py-2 text-base font-mono border border-[var(--border-edge)] bg-[var(--bg-card-alt)] text-[var(--text-main)] outline-none focus:border-red-500"
                   />
                 </div>
               </div>
@@ -225,7 +219,7 @@ export const ManualVitalEntryModal: React.FC<ManualVitalEntryModalProps> = ({
 
           {/* Notes / Clinical Context */}
           <div>
-            <label className="block text-xs font-mono font-bold uppercase text-zinc-400 mb-1">
+            <label className="block text-xs font-mono font-bold uppercase text-[var(--text-muted)] mb-1">
               Context Notes (Optional)
             </label>
             <input
@@ -233,9 +227,7 @@ export const ManualVitalEntryModal: React.FC<ManualVitalEntryModalProps> = ({
               placeholder="e.g. Fasting 12h, Post-workout, Resting on couch"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className={`w-full px-3 py-2 text-xs font-sans border ${
-                isDark ? 'bg-zinc-900 border-zinc-700 text-zinc-100' : 'bg-zinc-50 border-zinc-300 text-zinc-900'
-              } outline-none focus:border-red-500`}
+              className="w-full px-3 py-2 text-xs font-sans border border-[var(--border-edge)] bg-[var(--bg-card-alt)] text-[var(--text-main)] outline-none focus:border-red-500"
             />
           </div>
 
@@ -255,19 +247,17 @@ export const ManualVitalEntryModal: React.FC<ManualVitalEntryModalProps> = ({
           )}
 
           {/* Footer Actions */}
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-zinc-800">
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--border-subtle)]">
             <button
               type="button"
               onClick={onClose}
-              className={`px-4 py-2 text-xs font-mono font-semibold uppercase ${
-                isDark ? 'text-zinc-400 hover:text-zinc-200' : 'text-zinc-600 hover:text-zinc-900'
-              }`}
+              className="px-4 py-2 text-xs font-mono font-semibold uppercase text-[var(--text-muted)] hover:text-[var(--text-main)]"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2 text-xs font-mono font-bold uppercase tracking-wider bg-[#CC0000] text-white hover:bg-red-700 transition-colors shadow-sm flex items-center gap-2"
+              className="px-5 py-2 text-xs font-mono font-bold uppercase tracking-wider bg-[var(--editorial-red)] text-white hover:bg-red-700 transition-colors shadow-sm flex items-center gap-2"
             >
               <CheckCircle2 className="w-4 h-4" />
               Save Reading

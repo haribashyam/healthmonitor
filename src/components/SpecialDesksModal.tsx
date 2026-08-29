@@ -268,7 +268,7 @@ export const SpecialDesksModal: React.FC<SpecialDesksModalProps> = ({
         <div className="p-4 sm:p-6 border-b border-[var(--border-edge)] bg-[var(--bg-card-alt)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 flex-shrink-0">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="bg-[#CC0000] text-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider font-mono">
+              <span className="bg-[var(--editorial-red)] text-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider font-mono">
                 SPECIAL EDITIONS DIRECTORY
               </span>
               <span className="text-[10px] uppercase font-bold tracking-wider text-[var(--text-muted)]">
